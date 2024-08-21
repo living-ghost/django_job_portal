@@ -28,6 +28,9 @@ urlpatterns = [
     path('user/password/reset/', views.user_pwd_reset, name='user_reset_pwd'),
     path('user/account/delete/', views.user_del_ac, name='user_del_ac'),
 
+    # 404 Error
+    path('user/404/error/', views.user_404_view, name='user_404'),
+
     # Redirect for old URL format
     re_path(r'^register/verify/$', RedirectView.as_view(url='/user/register/verify/otp/', permanent=True)),
 ]

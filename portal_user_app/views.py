@@ -387,3 +387,9 @@ def user_logout_view(request):
 def user_dashboard_view(request):
     username = request.user
     return render(request, "portal_user_app/users/user_dashboard.html", {'username' : username})
+
+# 404 Page
+
+@login_required
+def user_404_view(request):
+    return render(request, "portal_user_app/users/404.html")

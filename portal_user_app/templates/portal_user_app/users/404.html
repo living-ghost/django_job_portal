@@ -27,7 +27,7 @@
     <!-- AOS CSS -->
     <link href="{% static 'portal_user_app/css/aos.css' %}" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href="{% static 'portal_user_app/css/user_dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_user_app/css/user_404.css' %}" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
@@ -70,75 +70,10 @@
         <!-- Hero Section -->
         <section id="home" class="hero bg-primary text-white text-center py-5">
             <div class="container">
-                <h3 class="display-3">Hi, {{ username | capfirst }} </h3>
-                <p class="lead">Your dashboard to exciting career opportunities is ready!</p>
             </div>
         </section>
 
-        <!-- Main Content Wrapper -->
-        <main class="container text-center my-5">
-            <div class="row justify-content-center">
-                <div class="col-md-4 mb-4">
-                    <div class="tabular">
-                        <div class="icon">📋</div>
-                        <div class="text"><a href="{% url 'portal_resume_app:resume_index' %}">Resume Builder</a></div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="tabular">
-                        <div class="icon">📄</div>
-                        <div class="text"><a href="{% url 'portal_user_app:user_404' %}">File Converter</a></div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="tabular">
-                        <div class="icon">🔍</div>
-                        <div class="text"><a href="{% url 'portal_user_app:user_404' %}">ATS Checker</a></div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Contact Us Section -->
-        <section id="contact-us" class="contact-section">
-            <div class="container text-center">
-                <i class="fas fa-envelope fa-2x mb-1"></i>
-                <p class="mb-2">Got Questions? We’d Love to Hear From You!</p>
-                <a href="mailto:info@fresherspark.com" class="btn btn-primary btn-lg">Email Us</a>
-            </div>
-        </section>
     </main>
-
-    <!-- Resume and ATS Importance Section -->
-    <section id="resume-ats" class="resume-ats-section py-3 bg-light">
-        <div class="container">
-            <h4 class="mb-3">Resume & ATS Importance</h4>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="info-card p-4 bg-white border rounded">
-                        <h4>Professional Resume</h4>
-                        <ul>
-                            <li><strong>First Impressions:</strong> Your resume is often the first impression you make on a potential employer.</li>
-                            <li><strong>Showcase Skills:</strong> Highlights your skills and qualifications in a clear manner.</li>
-                            <li><strong>Career Progression:</strong> Reflects your career achievements and growth.</li>
-                            <li><strong>Increased Opportunities:</strong> Enhances your chances of landing interviews.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="info-card p-4 bg-white border rounded">
-                        <h4>ATS Check</h4>
-                        <ul>
-                            <li><strong>Automated Screening:</strong> Ensures your resume passes initial ATS filters.</li>
-                            <li><strong>Keyword Optimization:</strong> Improves visibility to recruiters.</li>
-                            <li><strong>Formatting:</strong> Checks for compatibility with ATS formatting requirements.</li>
-                            <li><strong>Increased Visibility:</strong> Increases your chances of being noticed by employers.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="footer text-center">
