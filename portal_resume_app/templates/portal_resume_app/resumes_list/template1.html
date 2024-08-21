@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <style>
+        /* Base Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Page Container */
+        .page-container {
+            width: 21cm;
+            min-height: 29.7cm;
+            background: #ffffff;
+            padding: 20mm;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        .name-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .contact-info-container {
+            margin-top: 0px;
+        }
+
+        .contact-info-container p {
+            margin: 0px 0;
+        }
+
+        .label-address, .label-email, .label-phone {
+            font-weight: bold;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        .section-item {
+            margin-bottom: 0px;
+        }
+
+        .summary_para {
+            text-align: justify;
+        }
+
+        /* Education Section Specific */
+        .education-item, .experience-item, .certificate-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+
+        .education-item .education-details, 
+        .experience-item .experience-details, 
+        .certificate-item .certificate-details {
+            flex: 1;
+        }
+
+        .education-year, 
+        .experience-year, 
+        .certificate-year {
+            float: right;
+            white-space: nowrap; /* Prevent line breaks */
+        }
+
+        /* List Styling */
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header Section -->
+        {% if personal_data %}
+        <div class="header-section">
+            <h1 class="name-title">{{ personal_data.name }}</h1>
+            <div class="contact-info-container">
+                <p><span class="label-address"></span> {{ personal_data.address }}</p>
+                <p><span class="label-email"></span> {{ personal_data.email }}</p>
+                <p><span class="label-phone"></span> {{ personal_data.phone }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Summary Section -->
+        {% if summary_data %}
+        <div class="section">
+            <h3 class="section-title">Summary</h3>
+            <p class="summary_para">{{ summary_data.description }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Education Section -->
+        {% if education_data %}
+        <div class="section">
+            <h3 class="section-title">Education</h3>
+            {% for education in education_data %}
+            <div class="education-item">
+                <div class="education-details">
+                    {{ education.degree }}, {{ education.college }}<span class="education-year">{{ education.year }}</span>
+                    {% if education.cgpa %}
+                        - CGPA / % : {{ education.cgpa }}
+                    {% endif %}
+                </div>
+                <div>
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Experience Section -->
+        {% if experience_data %}
+        <div class="section">
+            <h3 class="section-title">Experience</h3>
+            {% for experience in experience_data %}
+            <div class="experience-item">
+                <div class="experience-details">
+                    {{ experience.role }}, {{ experience.company }}<span class="experience-year">{{ experience.year }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% load custom_filters %}
+        <!-- Projects Section -->
+        {% if project_data %}
+        <div class="section">
+            <h3 class="section-title">Projects</h3>
+            {% for project in project_data %}
+            <div class="section-item">
+                <strong>{{ project.title }}</strong>
+                <p>{{ project.description|format_description|safe }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Skills Section -->
+        <div class="section">
+            <h3 class="section-title">Skills</h3>
+            {% if skill_data %}
+            <ul>
+                {% for skill in skill_data %}
+                <li>{{ skill.skill }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <!-- Certificates Section -->
+        {% if certificate_data %}
+        <div class="section">
+            <h3 class="section-title">Certificates</h3>
+            {% for certificate in certificate_data %}
+            <div class="certificate-item">
+                <div class="certificate-details">
+                    {{ certificate.certificate }}<span class="certificate-year">{{ certificate.year }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Languages Section -->
+        <div class="section">
+            <h3 class="section-title">Languages</h3>
+            {% if language_data %}
+                {% for language in language_data %}
+                    {{ language.language }}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Hobbies Section -->
+        {% if hobbie_data %}
+        <div class="section">
+            <h3 class="section-title">Hobbies</h3>
+            {% for hobbie in hobbie_data %}
+            <div class="section-item">
+                <p>{{ hobbie.hobbie }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

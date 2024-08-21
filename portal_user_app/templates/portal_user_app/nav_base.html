@@ -1,0 +1,75 @@
+{% load static %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'portal_user_app:user_index' %}">
+            <img src="{% static 'portal_user_app/images/logo3.png' %}" width="150px" class="navbar-logo">
+        </a>
+        <!--
+        <i class="fas fa-laptop-code navbar-icon"></i><a class="navbar-brand" href="{% url 'portal_user_app:user_index' %}">Freshers Park</a>
+        -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'portal_user_app:user_index' %}">Home</a>
+                </li>
+                <!-- Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle no-icon" href="#" id="jobListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Job List
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="jobListDropdown">
+                        <li><a class="dropdown-item" href="{% url 'portal_user_app:fresher_jobs' %}">Freshers</a></li>
+                        <li><a class="dropdown-item" href="{% url 'portal_user_app:experienced_jobs' %}">Professionals</a></li>
+                    </ul>
+                </li>
+                <!-- Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle no-icon" href="#" id="jobListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Free Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="jobListDropdown">
+                        <li><a class="dropdown-item" id="LoginBtn1">Resume Builder</a></li>
+                        <li><a class="dropdown-item" id="LoginBtn2">File Converter</a></li>
+                        <li><a class="dropdown-item" id="LoginBtn3">Tech RoadMap's</a></li>
+                    </ul>
+                </li>
+                <!-- Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle no-icon" href="#" id="jobListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Paid Services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="jobListDropdown">
+                        <li><a class="dropdown-item" id="LoginBtn4">Python Project</a></li>
+                        <li><a class="dropdown-item" id="LoginBtn5">Django Project</a></li>
+                        <li><a class="dropdown-item" id="LoginBtn6">Flask Project</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item" data-bs-toggle="modal" data-bs-target="#subscriptionModal">
+                    <a class="nav-link" id="SubBtn">Subscribe</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle no-icon" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Search Job
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end p-1 custom-dropdown" aria-labelledby="navbarDropdown">
+                        <form class="d-flex" action="{% url 'portal_user_app:user_search' %}" method="GET" id="searchForm">
+                            <input class="form-control me-2" type="search" placeholder="Python, Java" aria-label="Search" name="query" id="searchQuery">
+                            <button class="btn btn-outline-light" type="submit">
+                                <i class="fas fa-search btn-outline-dark"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'portal_user_app:user_about' %}">About Us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,20 @@
+{% extends "portal_resume_app/base_resume.html" %}
+
+{% load static %}
+
+<style>    
+    /* Mobile styles */
+    @media (max-width: 768px) { /* You can adjust the max-width value as needed */
+        .img_size {
+            width: 100%; /* Image size for smaller screens */
+        }
+    }
+</style>
+
+{% block content %}
+<div class="resume-content">
+    {% if resume %}
+        <img class="img_size" src="{{ resume.image.url }}" style="width: 55%;">
+    {% endif %}
+</div>
+{% endblock %}

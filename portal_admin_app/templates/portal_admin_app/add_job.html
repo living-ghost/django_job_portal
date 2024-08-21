@@ -1,0 +1,57 @@
+{% extends "portal_admin_app/base_one.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="content">
+        <div class="container">
+            <h1 class="mt-4">Add New Job</h1>
+            <p>Select the job type and fill out the details to add a new job or featured position.</p>
+            <hr>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-plus"></i> Add Job
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{% url 'portal_admin_app:admin_add_job' %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="job_type">Select Job Type</label>
+                                    <select id="job_type" name="job_type" class="form-control" required>
+                                        <option value="" disabled selected>Select an option</option>
+                                        <option value="fresher">Fresher</option>
+                                        <option value="experienced">Experienced</option>
+                                        <option value="featured">Featured</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="job_heading">Job Heading</label>
+                                    <input type="text" id="job_heading" name="job_heading" class="form-control" placeholder="Enter job heading" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="job_eligibility">Job Eligibility</label>
+                                    <textarea id="job_eligibility" name="job_eligibility" class="form-control" placeholder="Enter job eligibility" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="job_description">Job Description</label>
+                                    <textarea id="job_description" name="job_description" class="form-control" placeholder="Enter job description" rows="3">Click on Apply Now to know more !</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="job_details">Job Details</label>
+                                    <textarea id="job_details" name="job_details" class="form-control" placeholder="Enter job details" rows="3">#</textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Add Job</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "portal_admin_app/base_one.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="content">
+        <div class="container">
+            <h1 class="mt-4">Job Listings</h1>
+            <p>View and manage the jobs posted on Freshers Park.</p>
+            <hr>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container">
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'portal_admin_app:admin_fresher_jobs' %}">Fresher</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'portal_admin_app:admin_feat_jobs' %}">Featured</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'portal_admin_app:admin_del_jobs' %}">Deleted</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="col-md-12">
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-briefcase"></i> Experienced Jobs
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Job Type</th>
+                                        <th>Company</th>
+                                        <th>Eligibility</th>
+                                        <th>Details</th>
+                                        <th>Date Posted</th>
+                                        <th>Added By</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for job in jobs %}
+                                        {% if job.job_type == 'experienced' and not job.job_deleted %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ job.job_type }}</td>
+                                                <td>{{ job.job_heading }}</td>
+                                                <td>{{ job.job_eligibility }}</td>
+                                                <td>{{ job.job_details }}</td>
+                                                <td>{{ job.job_created_at }}</td>
+                                                <td>{{ job.job_added_by }}</td>
+                                                <td>
+                                                    <a href="{% url 'portal_admin_app:admin_edit_job' job.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                                    <a href="{% url 'portal_admin_app:admin_delete_job' job.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No jobs available</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <a href="{% url 'portal_admin_app:admin_add_job' %}" class="btn btn-primary">Add New Job</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

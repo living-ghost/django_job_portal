@@ -1,0 +1,62 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freshers Park | Admin</title>
+    <link href="{% static 'portal_admin_app/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_user_app/images/favicon.ico' %}" rel="icon"  type="image/x-icon">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'portal_admin_app:admin_index' %}">Freshers Park Admin</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal_admin_app:admin_index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal_admin_app:admin_profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal_admin_app:admin_logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+
+    {% endblock %}
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Freshers Park. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <button class="back-to-top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="{% static 'portal_admin_app/scripts/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/popper.min.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/bootstrap.min.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/aos.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/aos_init.js' %}"></script>
+
+</body>
+</html>

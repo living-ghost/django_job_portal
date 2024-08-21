@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .page {
+            width: 21cm;
+            min-height: 29.7cm;
+            padding: 2cm;
+            padding-bottom: 3.6cm;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: right;
+            margin-bottom: 1cm;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #333;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 1em;
+            color: #666;
+        }
+
+        h2 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 0em;
+            margin-bottom: 0em;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .section-content {
+            margin-bottom: 1em;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .row {
+            display: flex;
+            margin-bottom: 0em;
+        }
+
+        .col {
+            flex: 1;
+            padding: 0 1em;
+        }
+
+        .col:not(:last-child) {
+            border-right: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- Header -->
+        <div class="header">
+            <h1>{{ personal_data.name }}</h1>
+            <p>{{ personal_data.title }}</p>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="section-content">
+            <h2>Personal Information</h2>
+            <p><span class="highlight">Email:</span> {{ personal_data.email }}</p>
+            <p><span class="highlight">Address:</span> {{ personal_data.address }}</p>
+            <p><span class="highlight">Phone:</span> {{ personal_data.phone }}</p>
+        </div>
+
+        <!-- Education -->
+        <div class="section-content">
+            <h2>Education</h2>
+            <p><span class="highlight">Degree:</span> {{ education_data.degree }}</p>
+            <p><span class="highlight">College:</span> {{ education_data.college }}</p>
+            <p><span class="highlight">Year:</span> {{ education_data.year }}</p>
+        </div>
+
+        <!-- Experience -->
+        <div class="section-content">
+            <h2>Experience</h2>
+            <p><span class="highlight">Role:</span> {{ experience_data.role }}</p>
+            <p><span class="highlight">Company:</span> {{ experience_data.company }}</p>
+            <p><span class="highlight">Year:</span> {{ experience_data.year }}</p>
+            <p><span class="highlight">Location:</span> {{ experience_data.location }}</p>
+            <p><span class="highlight">Description:</span> {{ experience_data.description }}</p>
+        </div>
+
+        <!-- Projects -->
+        <div class="section-content">
+            <h2>Projects</h2>
+            <p><span class="highlight">Project Title:</span> {{ project_data.title }}</p>
+            <p><span class="highlight">Description:</span> {{ project_data.description }}</p>
+        </div>
+
+        <!-- Skills and Languages -->
+        <div class="row">
+            <div class="col">
+                <div class="section-content">
+                    <h2>Skills</h2>
+                    <p><span class="highlight">Skill:</span> {{ skill_data.skill }}</p>
+                    <p><span class="highlight">Proficiency:</span> {{ skill_data.proficiency }}</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="section-content">
+                    <h2>Languages</h2>
+                    <p><span class="highlight">Language:</span> {{ language_data.language }}</p>
+                    <p><span class="highlight">Proficiency:</span> {{ language_data.proficiency }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="section-content">
+            <h2>Contact</h2>
+            <p><span class="highlight">Email:</span> {{ contact_data.email }}</p>
+            <p><span class="highlight">Phone:</span> {{ contact_data.phone }}</p>
+        </div>
+    </div>
+</body>
+</html>

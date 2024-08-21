@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'portal_user_app/css/confirmation.css' %}" rel="stylesheet">
+    <title>Unsubscribed Successfully</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Unsubscribed Successfully</h1>
+        <p>Hi {{ subscriber }},</p>
+        <p>You have successfully unsubscribed from our job alerts.</p>
+        <p>We're sorry to see you go. If you ever want to re-subscribe, you can always visit our website and sign up again.</p>
+        <p>Thank you for being a part of our community. We hope to see you again in the future!</p>
+        <div class="footer">
+            <p>Best regards,</p>
+            <p>The Freshers Park Team</p>
+            <p><a href="#">Visit our site</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Freshers Park - Your gateway to exciting career opportunities!">
+    <meta name="keywords" content="jobs, freshers, careers, job portal, Freshers Park">
+    <meta name="author" content="Freshers Park">
+    <meta property="og:title" content="Freshers Park - Job Portal">
+    <meta property="og:description" content="Your gateway to exciting career opportunities!">
+    <meta property="og:image" content="{% static 'portal_user_app/images/favicon.png' %}">
+    <meta property="og:url" content="https://www.fresherspark.in">
+    <meta name="twitter:card" content="summary_large_image">
+    <link href="{% static 'portal_user_app/images/favicon.ico' %}" rel="icon" type="image/x-icon">
+
+    <title>Freshers Park | Resume Builder</title>
+
+    <link href="{% static 'portal_resume_app/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_resume_app/css/resume_index.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_resume_app/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_resume_app/css/a4size.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <a class="navbar-brand" href="{% url 'portal_resume_app:resume_index' %}">Resume Builder</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'portal_resume_app:resume_index' %}"><i class="fas fa-user"></i> Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'portal_user_app:user_dashboard' %}"><i class="fas fa-home"></i> Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div>
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-md-10 col-lg-12 form-container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <h5>About Freshers Park</h5>
+            <p>Empowering fresh talent to connect with top companies. Your gateway to the best job opportunities.</p>
+            <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script src="{% static 'portal_resume_app/scripts/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'portal_resume_app/scripts/jquery.3.6.0.min.js' %}"></script>
+    <script src="{% static 'portal_resume_app/scripts/popper.min.j' %}s"></script>
+    <script src="{% static 'portal_resume_app/scripts/bootstrap.min.js' %}"></script>
+    <script src="{% static 'portal_resume_app/scripts/profile.js' %}"></script>
+    <script src="{% static 'portal_resume_app/scripts/muse_efet_res_list.js' %}"></script>
+</body>
+
+</html>

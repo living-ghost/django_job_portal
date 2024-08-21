@@ -1,0 +1,165 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Freshers Park - Your gateway to exciting career opportunities!">
+    <meta name="keywords" content="jobs, freshers, careers, job portal, Freshers Park">
+    <meta name="author" content="Freshers Park">
+    <meta property="og:title" content="Freshers Park - Job Portal">
+    <meta property="og:description" content="Your gateway to exciting career opportunities!">
+    <meta property="og:image" content="{% static 'portal_user_app/images/favicon.png' %}">
+    <meta property="og:url" content="https://www.fresherspark.in">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link href="{% static 'portal_user_app/images/favicon.ico' %}" rel="icon" type="image/x-icon">
+
+    <title>Freshers Park | Dashboard</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'portal_user_app/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="{% static 'portal_user_app/css/all.min.css' %}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="{% static 'portal_user_app/css/animate.min.css' %}" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="{% static 'portal_user_app/css/aos.css' %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'portal_user_app/css/user_dashboard.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'portal_user_app:user_dashboard' %}">
+                <img src="{% static 'portal_user_app/images/logo3.png' %}" width="150px" class="navbar-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal_user_app:user_dashboard' %}">Home</a>
+                    </li>
+                    <!-- Dropdown Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle no-icon" href="#" id="jobListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="jobListDropdown">
+                            <li><a class="dropdown-item" id="resetPasswordBtn">Reset Password</a></li>
+                            <li><a class="dropdown-item" id="deleteAccountBtn">Delete Account</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'portal_user_app:user_logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% include 'portal_user_app/users/modals_base.html' %}
+
+    <!-- Main Content Wrapper -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero bg-primary text-white text-center py-5">
+            <div class="container">
+                <h3 class="display-3">Hi, {{ username | capfirst }} </h3>
+                <p class="lead">Your dashboard to exciting career opportunities is ready!</p>
+            </div>
+        </section>
+
+        <!-- Main Content Wrapper -->
+        <main class="container text-center my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-4 mb-4">
+                    <div class="tabular">
+                        <div class="icon">📋</div>
+                        <div class="text"><a href="{% url 'portal_resume_app:resume_index' %}">Resume Builder</a></div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="tabular">
+                        <div class="icon">📄</div>
+                        <div class="text"><a href="{% url 'portal_converter_app:converter_index' %}">File Converter</a></div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="tabular">
+                        <div class="icon">🔍</div>
+                        <div class="text">ATS Checker</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Contact Us Section -->
+        <section id="contact-us" class="contact-section">
+            <div class="container text-center">
+                <i class="fas fa-envelope fa-2x mb-1"></i>
+                <p class="mb-2">Got Questions? We’d Love to Hear From You!</p>
+                <a href="mailto:info@fresherspark.com" class="btn btn-primary btn-lg">Email Us</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Resume and ATS Importance Section -->
+    <section id="resume-ats" class="resume-ats-section py-3 bg-light">
+        <div class="container">
+            <h4 class="mb-3">Resume & ATS Importance</h4>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="info-card p-4 bg-white border rounded">
+                        <h4>Professional Resume</h4>
+                        <ul>
+                            <li><strong>First Impressions:</strong> Your resume is often the first impression you make on a potential employer.</li>
+                            <li><strong>Showcase Skills:</strong> Highlights your skills and qualifications in a clear manner.</li>
+                            <li><strong>Career Progression:</strong> Reflects your career achievements and growth.</li>
+                            <li><strong>Increased Opportunities:</strong> Enhances your chances of landing interviews.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="info-card p-4 bg-white border rounded">
+                        <h4>ATS Check</h4>
+                        <ul>
+                            <li><strong>Automated Screening:</strong> Ensures your resume passes initial ATS filters.</li>
+                            <li><strong>Keyword Optimization:</strong> Improves visibility to recruiters.</li>
+                            <li><strong>Formatting:</strong> Checks for compatibility with ATS formatting requirements.</li>
+                            <li><strong>Increased Visibility:</strong> Increases your chances of being noticed by employers.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <h5>About Freshers Park</h5>
+            <p>Empowering fresh talent to connect with top companies. Your gateway to the best job opportunities.</p>
+            <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript and Bootstrap Bundle with Popper -->
+    <script src="{% static 'portal_user_app/scripts/popper.min.js' %}"></script>
+    <script src="{% static 'portal_user_app/scripts/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'portal_user_app/scripts/jquery.3.6.0.min.js' %}"></script>
+    <script src="{% static 'portal_user_app/scripts/sweetalert2.all.min.js' %}"></script>
+    <script src="{% static 'portal_user_app/scripts/reset_modal.js' %}"></script>
+    <script src="{% static 'portal_user_app/scripts/jq_delete_user.js' %}"></script>
+    <script>
+        var UserPwdReset = '{% url "portal_user_app:user_reset_pwd" %}';
+        var UserAcDel = '{% url "portal_user_app:user_del_ac" %}';
+        var UserIndexUrl = '{% url "portal_user_app:user_index" %}';
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "portal_user_app/base_jobs.html" %}
+
+{% block content %}
+
+    <!-- Job List Section -->
+    <section id="job-list" class="py-5">
+        <div class="container">
+            <h4 class="mb-4">For Freshers</h4>
+            <ul class="list-group job-list">
+                {% if jobs %}
+                    {% for job in jobs %}
+                        {% if job.job_type == 'fresher' and not job.job_deleted %}
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="job-details">
+                                    <span class="badge bg-danger ms-2">Freshers</span>
+                                    <h5 class="mb-1">{{ job.job_heading }}</h5>
+                                    <p class="mb-1">Eligibility: {{ job.job_eligibility }}</p>
+                                    <p class="mb-1">{{ job.job_description }}</p>
+                                </div>
+                                <div class="job-actions">
+                                    <a href="{{ job.job_details }}" target="_blank" class="btn btn-primary btn-sm">Apply Now</a>
+                                    <p class="mb-0 days-ago">{{ job.days_ago_display }}</p>
+                                </div>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info" role="alert">
+                            No job postings found.
+                        </div>
+                    </div>
+                {% endif %}
+            </ul>
+
+            <!-- Pagination -->
+            {% if jobs and jobs.job_deleted == null %}
+                <div class="col-12 mt-4">
+                    <nav aria-label="Job Pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if jobs.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1">First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ jobs.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in jobs.paginator.page_range %}
+                                <li class="page-item {% if num == jobs.number %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endfor %}
+                            
+                            {% if jobs.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ jobs.next_page_number }}">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ jobs.paginator.num_pages }}">Last</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    
+{% endblock %}

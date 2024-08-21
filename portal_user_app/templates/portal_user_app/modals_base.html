@@ -1,0 +1,141 @@
+<!-- Login Modal -->
+<div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="LoginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="LoginModalLabel">User Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="LoginForm" method="post" action="{% url 'portal_user_app:user_login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="loginUsername">Username:</label>
+                        <input type="text" id="loginUsername" name="username" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword">Password:</label>
+                        <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block" id="SignInBtn">Sign in</button>
+                    <button type="button" class="btn btn-outline-dark btn-block" id="RegisterBtn" data-bs-toggle="modal" data-bs-target="#RegisterModal">Sign up</button>
+                    <button type="button" class="btn btn-block " id="ForgotPWDBtn" data-bs-toggle="modal" data-bs-target="#ForgotModal">Forgot Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Registration Modal -->
+<div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="RegisterModalLabel">User Registration</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="RegisterForm" method="post" action="{% url 'portal_user_app:user_register' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="first_name" class="form-control" placeholder="First Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="last_name" class="form-control" placeholder="Last Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block" id="OtpBtn">Get OTP</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OTP Verification Modal -->
+<div class="modal fade" id="OtpModal" tabindex="-1" aria-labelledby="OtpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="OtpModalLabel">OTP Verification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="otpForm" method="post" action="{% url 'portal_user_app:user_reg_verify_otp' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="otp">Enter OTP:</label>
+                        <input type="password" id="otp" name="otp" class="form-control" placeholder="Enter One Time Password" required>
+                    </div>
+                    <button type="submit" name="action" value="verify_otp" class="btn btn-success btn-block" id="verifyButton">Verify</button>
+                    <button type="button" name="action" value="resend_otp" class="btn btn-outline-dark btn-block" id="resendButton">Resend</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password Reset Modal -->
+<div class="modal fade" id="ForgotPWDModal" tabindex="-1" aria-labelledby="ForgotPWDModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ForgotPWDModalLabel">Password Reset</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="ForgotPWDForm" method="post" action="{% url 'portal_user_app:user_forgot_pwd' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="email">Enter Username:</label>
+                        <input type="text" id="email" name="email" class="form-control" placeholder="Enter Email or Username" required>
+                    </div>
+                    <button type="submit" class="btn btn-outline-dark btn-block">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Subscription and OTP Verification Modal -->
+<div class="modal fade" id="subscriptionModal" tabindex="-1" aria-labelledby="subscriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="subscriptionModalLabel">User Subscribe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="subscriptionForm" method="post" action="{% url 'portal_user_app:user_subscribe' %}">
+                    {% csrf_token %}
+                    <!-- Email Input (visible only when OTP is not yet requested) -->
+                    <div id="emailSection" class="mb-3">
+                        <label for="subscriberEmail">Email:</label>
+                        <input type="email" id="subscriberEmail" name="subscriber_email" class="form-control" placeholder="Enter your email" required>
+                        <button type="submit" name="action" value="requestOtp" class="btn btn-info btn-block mt-2" id="requestOtpBtn">Request OTP</button>
+                    </div>
+                    <!-- OTP Input (visible only after requesting OTP) -->
+                    <div id="otpSection" class="mb-3 d-none">
+                        <input type="hidden" id="hiddenEmail" name="subscriber_email" value="{{ subscriber_email }}">
+                        <label for="otpCode">Enter OTP:</label>
+                        <input type="password" id="otpCode" name="otp_code" class="form-control" placeholder="Enter OTP" required>
+                        <button type="submit" name="action" value="verifyOtp" class="btn btn-success btn-block mt-2" id="verifyOtpBtn">Verify OTP</button>
+                        <button type="button" name="action" value="resendOtp" class="btn btn-outline-dark btn-block mt-2" id="resendOtpBtn">Resend OTP</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freshers Park | Admin Login</title>
+    <link href="{% static 'portal_admin_app/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/css/login.css' %}" rel="stylesheet">
+    <link href="{% static 'portal_admin_app/images/favicon.ico' %}" rel="icon"  type="image/x-icon">
+</head>
+<body>
+    <div class="login-container">        
+        <div class="login-box">
+            <h4>ADMIN LOGIN</h4>
+            <form action="{% url 'portal_admin_app:admin_login' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+        </div>
+    </div>
+    <!-- Display success or error messages -->
+    <div class="message-container">
+        {% if messages %}
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'portal_admin_app/scripts/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/popper.min.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/bootstrap.min.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/aos.js' %}"></script>
+    <script src="{% static 'portal_admin_app/scripts/aos_init.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "portal_resume_app/base_resume.html" %}
+
+{% block content %}
+
+<div class="page-content">
+    <div class="resume-container">
+        {% if resumes %}
+            {% for resume in resumes %}
+                <div class="resume-card">
+                    <div class="resume-content">
+                        {% if resume.image %}
+                            <!-- Use img tag if content is an image -->
+                            <img src="{{ resume.image.url }}" alt="Resume Image">
+                            <div class="view-overlay">
+                                <a href="{% url 'portal_resume_app:resume_display' resume.id %}" target="_blank">View</a>
+                            </div>
+                        {% else %}
+                            <p>No image available</p>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'portal_resume_app:resume_download' resume.id %}" class="download-link">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No resumes generated</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

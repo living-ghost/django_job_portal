@@ -1,0 +1,146 @@
+{% extends "portal_admin_app/base_one.html" %}
+
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freshers Park | Admin Profile</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .profile-header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+        }
+        .profile-header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .profile-header p {
+            font-size: 1.2em;
+        }
+        .profile-content {
+            padding: 20px;
+        }
+        .profile-card {
+            margin-bottom: 20px;
+        }
+        .profile-card .card-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .profile-card .card-body {
+            padding: 15px;
+        }
+        .profile-card .card-body p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-header">
+    <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Admin Image">
+    <h1>Admin Name</h1>
+    <p>Managing Director & CEO</p>
+</div>
+
+<div class="container profile-content">
+    <div class="row">
+        <!-- Personal Information -->
+        <div class="col-md-6 profile-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> Admin Name</p>
+                    <p><strong>Email:</strong> admin@example.com</p>
+                    <p><strong>Phone:</strong> +123 456 7890</p>
+                    <p><strong>Address:</strong> 1234 Street, City, Country</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Details -->
+        <div class="col-md-6 profile-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Contact Details</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Email:</strong> admin@example.com</p>
+                    <p><strong>Phone:</strong> +123 456 7890</p>
+                    <p><strong>LinkedIn:</strong> <a href="#">linkedin.com/admin</a></p>
+                    <p><strong>Twitter:</strong> <a href="#">twitter.com/admin</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Activity Logs -->
+        <div class="col-md-12 profile-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Activity Logs</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">Logged in at 10:00 AM, 17 July 2024</li>
+                        <li class="list-group-item">Updated job listing at 2:00 PM, 16 July 2024</li>
+                        <li class="list-group-item">Created new user at 5:00 PM, 15 July 2024</li>
+                        <li class="list-group-item">Logged out at 6:00 PM, 14 July 2024</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Settings -->
+        <div class="col-md-12 profile-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Settings</h5>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" value="admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" value="password123">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" value="admin@example.com">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Settings</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+{% endblock %}

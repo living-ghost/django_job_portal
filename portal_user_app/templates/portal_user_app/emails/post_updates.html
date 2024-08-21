@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Job Posted</title>
+    <style>
+        /* Basic reset and styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            color: #333333;
+        }
+        .content p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .content a {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .content a:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            color: #777777;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ job.job_heading }} Hiring</h1>
+        </div>
+        <div class="content">
+            <p><strong>Eligibility:</strong> {{ job.job_eligibility }}</p>
+            <p><strong>Description:</strong> Click on the button below to apply.</p>
+            <p><strong>Posted on:</strong> {{ job.job_created_at }}</p>
+            <a href="#">View Job</a>
+            <p>If you no longer wish to receive job alerts, you can <a href="{{ unsubscribe_url }}">unsubscribe here</a>.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Freshers Park. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

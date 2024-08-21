@@ -1,0 +1,1 @@
+default_app_config = 'portal_admin_app.apps.PortalAdminAppConfig'

@@ -1,0 +1,44 @@
+{% extends "portal_user_app/base_about.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <!-- About Us Section -->
+    <section id="about-us" class="about-us section-padding">
+        <div class="container">
+            <div class="row">
+                <!-- Section Title -->
+                <div class="col-12 text-center mb-4">
+                    <h2 class="section-title">About Us</h2>
+                    <p class="section-subtitle">We are passionate about helping you achieve your career goals.</p>
+                </div>
+            </div>
+            <div class="row">
+                <!-- About Us Content -->
+                <div class="col-md-6 mb-4 mb-md-0">
+                    <img src="{% static 'portal_user_app/images/teamwork.jpg' %}" alt="About Us" class="img-fluid rounded shadow about-image">
+                </div>
+                <div class="col-md-6">
+                    <h3 class="about-heading">Who We Are</h3>
+                    <p class="about-text">Our platform, Freshers Park, connects aspiring candidates with top companies, providing a range of job listings and career resources.</p>
+                    <p class="about-text">We believe in fostering growth and creating a positive impact in the job market.</p>
+                    <p class="about-text">We are passionate about empowering individuals and organizations through innovative solutions and exceptional service.</p>
+                    <ul class="list-unstyled about-list">
+                        <li><i class="fa fa-check-circle"></i> <strong>Experienced Team:</strong> Years of industry experience.</li>
+                        <li><i class="fa fa-check-circle"></i> <strong>Comprehensive Resources:</strong> Job listings, career advice, and more.</li>
+                        <li><i class="fa fa-check-circle"></i> <strong>Personalized Support:</strong> Tailored assistance for both job seekers and employers.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <!-- Our Mission -->
+                <div class="col-12 text-center">
+                    <h3 class="mission-heading">Our Mission</h3>
+                    <p class="mission-text">Our mission is to bridge the gap between job seekers and employers, providing a seamless and efficient platform for career growth.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
