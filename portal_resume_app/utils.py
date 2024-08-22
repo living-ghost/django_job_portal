@@ -1,7 +1,24 @@
-from .models import PersonalInfo, Education, Experience,  Language, Project, Certificate, Hobbie, Skill, Summary
+from .models import PersonalInfo, Education, Experience, Language, Project, Certificate, Hobbie, Skill, Summary
 
 def get_user_data(user):
+    """
+    Retrieve and return all relevant data for a specific user.
 
+    Args:
+        user (User): The user for whom data is being retrieved.
+
+    Returns:
+        tuple: A tuple containing:
+            - personal_data (PersonalInfo): The personal information of the user.
+            - education_data (QuerySet): The user's education data.
+            - experience_data (QuerySet): The user's experience data.
+            - language_data (QuerySet): The user's language data.
+            - project_data (QuerySet): The user's project data.
+            - certificate_data (QuerySet): The user's certificate data.
+            - hobbie_data (QuerySet): The user's hobbie data.
+            - skill_data (QuerySet): The user's skill data.
+            - summary_data (Summary): The user's summary information.
+    """
     personal_data = PersonalInfo.objects.filter(user=user).first()
     education_data = Education.objects.filter(user=user)
     experience_data = Experience.objects.filter(user=user)

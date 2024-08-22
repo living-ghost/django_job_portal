@@ -1,3 +1,6 @@
+# ================================
+#        Django Imports
+# ================================
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -5,19 +8,27 @@ from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from io import BytesIO
 from django.core.files.base import ContentFile
-from . models import *
-from . utils import get_user_data
+from .models import *
+from .utils import get_user_data
 import imgkit
 import pdfkit
 import json
 
-#
-
+# ================================
+# View to Handle Resume Index Page and Form Submissions
+# ================================
 @login_required(login_url='portal_user_app:user_login')
 def resume_index_view(request):
+    """
+    Handle requests to the resume index page. This view processes form submissions
+    to update personal information, education, experience, languages, projects, 
+    certificates, skills, hobbies, and summaries. It also renders the resume 
+    index page with the user's data.
+    """
     if request.method == 'POST':
         response_data = {}
         try:
+            # Personal Information Update
             if 'name' in request.POST:
                 name = request.POST.get('name')
                 email = request.POST.get('email')
@@ -29,6 +40,7 @@ def resume_index_view(request):
                 })
                 response_data['message'] = 'Personal Information updated successfully!'
             
+            # Education Information Update
             elif 'degree1' in request.POST:
                 degree = request.POST.get('degree1')
                 college = request.POST.get('college1')
@@ -36,9 +48,9 @@ def resume_index_view(request):
                 cgpa = request.POST.get('cgpa1')
                 user = get_object_or_404(User, id=request.user.id)
                 Education.objects.create(user=user, degree=degree, college=college, year=year, cgpa=cgpa)
-
                 response_data['message'] = 'Education Information updated successfully!'
 
+            # Experience Information Update
             elif 'role1' in request.POST:
                 role = request.POST.get('role1')
                 company = request.POST.get('company1')
@@ -47,56 +59,55 @@ def resume_index_view(request):
                 description = request.POST.get('description1')
                 user = get_object_or_404(User, id=request.user.id)
                 Experience.objects.create(user=user, role=role, company=company, year=year)
-
                 response_data['message'] = 'Experience Information updated successfully!'
             
+            # Language Information Update
             elif 'language1' in request.POST:
                 language = request.POST.get('language1')
                 proficiency = request.POST.get('proficiency1')
                 user = get_object_or_404(User, id=request.user.id)
                 Language.objects.create(user=user, language=language, proficiency=proficiency)
-
                 response_data['message'] = 'Language Information updated successfully!'
             
+            # Project Information Update
             elif 'project1' in request.POST:
                 project_title = request.POST.get('project1')
                 description = request.POST.get('project_description1')
                 year = request.POST.get('project_year1')
                 user = get_object_or_404(User, id=request.user.id)
                 Project.objects.create(user=user, title=project_title, description=description, year=year)
-
                 response_data['message'] = 'Project Information updated successfully!'
             
+            # Certificate Information Update
             elif 'certificate1' in request.POST:
                 certificate = request.POST.get('certificate1')
                 year = request.POST.get('certificateyear1')
                 user = get_object_or_404(User, id=request.user.id)
                 Certificate.objects.create(user=user, certificate=certificate, year=year)
-
                 response_data['message'] = 'Certificate Information updated successfully!'
             
+            # Skill Information Update
             elif 'skill1' in request.POST:
                 skill = request.POST.get('skill1')
                 proficiency = request.POST.get('proficiency_skill1')
                 user = get_object_or_404(User, id=request.user.id)
                 Skill.objects.create(user=user, skill=skill, proficiency=proficiency)
-
                 response_data['message'] = 'Skill Information updated successfully!'
 
+            # Hobbie Information Update
             elif 'hobbies1' in request.POST:
                 hobbie = request.POST.get('hobbies1')
                 user = get_object_or_404(User, id=request.user.id)
                 Hobbie.objects.create(user=user, hobbie=hobbie)
-
                 response_data['message'] = 'Hobbie Information updated successfully!'
             
+            # Summary Information Update
             elif 'description2' in request.POST:
                 description2 = request.POST.get('description2')
                 user = get_object_or_404(User, id=request.user.id)
                 Summary.objects.update_or_create(user=user, defaults={
                     'description': description2,
                 })
-
                 response_data['message'] = 'Summary Information updated successfully!'
 
             return JsonResponse({'success': True, 'message': response_data.get('message', 'Data saved successfully!')})
@@ -119,16 +130,23 @@ def resume_index_view(request):
          'summary_data': summary_data
     })
 
-#
-
+# ================================
+# View to List All Resumes
+# ================================
 def resume_list_view(request):
-     resumes = Resume.objects.filter(user=request.user)
+    """
+    Render a page listing all resumes for the logged-in user.
+    """
+    resumes = Resume.objects.filter(user=request.user)
+    return render(request, "portal_resume_app/resume_list.html", {'resumes': resumes})
 
-     return render(request, "portal_resume_app/resume_list.html", {'resumes' : resumes})
-
-#
-
+# ================================
+# View to Download Resume as PDF
+# ================================
 def resume_download_view(request, resume_id):
+    """
+    Handle the request to download a specific resume as a PDF file.
+    """
     try:
         # Retrieve the resume object
         resume_download = Resume.objects.get(id=resume_id)
@@ -163,9 +181,13 @@ def resume_download_view(request, resume_id):
     except Resume.DoesNotExist:
         return HttpResponse("Resume not found.", status=404)
 
-#
-    
+# ================================
+# Save Resume as Image
+# ================================
 def save_resume_image(user, resume, html_content):
+    """
+    Convert the HTML content of a resume to an image and save it.
+    """
     # Configure imgkit with path to wkhtmltoimage executable
     imgkit_config = imgkit.config(wkhtmltoimage=settings.IMGKIT_CONFIG['wkhtmltoimage'])
     img_options = {
@@ -193,9 +215,13 @@ def save_resume_image(user, resume, html_content):
     except Exception as e:
         print(f"Error saving image: {e}")
 
-#
-
+# ================================
+# Save Resume as PDF
+# ================================
 def save_resume_pdf(user, resume, html_content):
+    """
+    Convert the HTML content of a resume to a PDF and save it.
+    """
     # Convert SafeString to a regular string if needed
     if hasattr(html_content, 'unsafe'):
         html_content_str = str(html_content)
@@ -206,18 +232,18 @@ def save_resume_pdf(user, resume, html_content):
     pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.PDFKIT_CONFIG['wkhtmltopdf'])
     pdf_options = {
         'page-size': 'A4',
-            'margin-top': '0mm',
-            'margin-right': '0mm',
-            'margin-bottom': '0mm',
-            'margin-left': '0mm',
-            'zoom': '1.05',
-            'print-media-type': '',
-            'orientation': 'Portrait',
-            'enable-local-file-access': '',
-            'dpi': 300,
-            'image-dpi': 300,
-            'image-quality': 100,
-        }
+        'margin-top': '0mm',
+        'margin-right': '0mm',
+        'margin-bottom': '0mm',
+        'margin-left': '0mm',
+        'zoom': '1.05',
+        'print-media-type': '',
+        'orientation': 'Portrait',
+        'enable-local-file-access': '',
+        'dpi': 300,
+        'image-dpi': 300,
+        'image-quality': 100,
+    }
 
     try:
         # Convert HTML to PDF
@@ -225,23 +251,30 @@ def save_resume_pdf(user, resume, html_content):
 
         # Save PDF to a file-like object
         pdf_file = BytesIO(pdf_data)
+        pdf_file.seek(0)
 
         # Create a ContentFile for Django
         pdf_content = ContentFile(pdf_file.read(), name=f'{resume.name}.pdf')
 
         # Save the PDF to the Resume instance
-        resume.pdf_file.save(f'{user}_{resume.name}.pdf', pdf_content, save=True)
+        resume.pdf.save(f'{user}_{resume.name}.pdf', pdf_content, save=True)
 
     except Exception as e:
         print(f"Error saving PDF: {e}")
 
-#
-
+# ================================
+# View to Save Resume and Generate PDF/Image
+# ================================
 def resume_save_view(request):
+    """
+    Generate and save resumes for the logged-in user based on available templates.
+    Deletes old resumes and saves new ones in HTML, PDF, and image formats.
+    """
     # Fetch user and other data
     user = request.user
     personal_data, education_data, experience_data, language_data, project_data, certificate_data, hobbie_data, skill_data, summary_data = get_user_data(user)
 
+    # Delete old resumes
     old_resumes = Resume.objects.filter(user=user)
     if old_resumes:
         for resume in old_resumes:
@@ -274,7 +307,7 @@ def resume_save_view(request):
         # Create a Resume instance and save to the database
         resume = Resume.objects.create(
             user=user,
-            name=f'{template_name}',  # You can customize the title as needed
+            name=f'{template_name}',  # Customize the title as needed
             html_content=html_content
         )
 
@@ -284,20 +317,25 @@ def resume_save_view(request):
 
     return redirect('portal_resume_app:resume_list')
 
-#
-
+# ================================
+# View to Display a Specific Resume
+# ================================
 def resume_display_view(request, resume_id):
+    """
+    Render a page to display a specific resume.
+    """
     resume = Resume.objects.get(id=resume_id)
-    return render(request, "portal_resume_app/resume_view.html", {'resume' : resume})
+    return render(request, "portal_resume_app/resume_view.html", {'resume': resume})
 
-#
-
-# Resume Fields Deleting Section
-
-#
+# ================================
+# Views for Deleting Resume Fields
+# ================================
 
 @login_required
 def delete_hobbie_view(request):
+    """
+    Delete a specific hobbie entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -306,13 +344,14 @@ def delete_hobbie_view(request):
             hobbie.delete()
             return JsonResponse({'success': True})
         except Hobbie.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Hobby does not exist.'})
+            return JsonResponse({'success': False, 'error': 'Hobbie does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
-
-#
 
 @login_required
 def delete_skill_view(request):
+    """
+    Delete a specific skill entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -324,10 +363,11 @@ def delete_skill_view(request):
             return JsonResponse({'success': False, 'error': 'Skill does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-#
-
 @login_required
 def delete_certi_view(request):
+    """
+    Delete a specific certificate entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -339,10 +379,11 @@ def delete_certi_view(request):
             return JsonResponse({'success': False, 'error': 'Certificate does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-#
-
 @login_required
 def delete_pro_view(request):
+    """
+    Delete a specific project entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -354,10 +395,11 @@ def delete_pro_view(request):
             return JsonResponse({'success': False, 'error': 'Project does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-#
-
 @login_required
 def delete_lang_view(request):
+    """
+    Delete a specific language entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -369,10 +411,11 @@ def delete_lang_view(request):
             return JsonResponse({'success': False, 'error': 'Language does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-#
-
 @login_required
 def delete_exp_view(request):
+    """
+    Delete a specific experience entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -384,10 +427,11 @@ def delete_exp_view(request):
             return JsonResponse({'success': False, 'error': 'Experience does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-#
-
 @login_required
 def delete_edu_view(request):
+    """
+    Delete a specific education entry.
+    """
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -399,9 +443,13 @@ def delete_edu_view(request):
             return JsonResponse({'success': False, 'error': 'Education does not exist.'})
     return JsonResponse({'success': False, 'error': 'Invalid request method.'})
 
-# For TEST
-
+# ================================
+# View for Testing Resume Template
+# ================================
 def resume_test_view(request):
+    """
+    Render a test page for a specific resume template.
+    """
     personal_data, education_data, experience_data, language_data, project_data, certificate_data, hobbie_data, skill_data, summary_data = get_user_data(request.user)
 
     return render(request, "portal_resume_app/resumes_list/template2.html", {

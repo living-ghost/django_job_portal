@@ -1,24 +1,49 @@
+# ================================
+#          Django Imports
+# ================================
+
 from django.contrib import admin
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.utils.http import urlencode
 from django.urls import reverse
 from urllib.parse import urlencode
-from portal_admin_app.models import Admin, Job
-from . models import Subscriber
 
+# ================================
+#          App Imports
+# ================================
+
+from portal_admin_app.models import Admin, Job
+from .models import Subscriber
+
+# ================================
+#          Admin Models
+# ================================
 
 class JobAdmin(admin.ModelAdmin):
+    """
+    Admin interface for the Job model, including custom save behavior.
+    """
     list_display = ('job_heading', 'job_created_at')
     search_fields = ('job_heading',)
 
     def save_model(self, request, obj, form, change):
+        """
+        Save the Job model instance and notify subscribers if the job is newly created.
+
+        Args:
+            request (HttpRequest): The request object.
+            obj (Job): The Job model instance.
+            form (ModelForm): The form used to create/update the Job instance.
+            change (bool): True if the object is being changed, False if being created.
+
+        """
         # Check if the job is being created (not updated)
         if not change:
+            # Save the new job instance
             super().save_model(request, obj, form, change)
 
-            # Send email to subscribers
+            # Notify all subscribers about the new job posting
             subscribers = Subscriber.objects.all()
             for subscriber in subscribers:
                 subject = 'Freshers Park: ' + obj.job_heading + ' Hiring'
@@ -46,9 +71,10 @@ class JobAdmin(admin.ModelAdmin):
                     print(f"Error sending email to {subscriber.subscriber_email}: {e}")
 
         else:
+            # Save the job instance if it is being updated
             super().save_model(request, obj, form, change)
 
-
+# Register the admin classes with the Django admin site
 admin.site.register(Job, JobAdmin)
 admin.site.register(Subscriber)
 admin.site.register(Admin)
