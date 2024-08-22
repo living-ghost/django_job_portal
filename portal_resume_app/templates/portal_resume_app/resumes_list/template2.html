@@ -323,7 +323,9 @@
                 <li class="certificate-item">
                     <p class="certificate-description">
                         <span class="certificate-text">{{ certificate.certificate }}</span>
-                        <span class="certificate-year">{{ certificate.year }}</span>
+                        {% if certificate.year %}
+                            <span class="certificate-year">, {{ certificate.year }}</span>
+                        {% endif %}
                     </p>
                 </li>
             </ul>
