@@ -36,6 +36,9 @@ INSTALLED_APPS = [
     'portal_admin_app',
     'portal_resume_app',
     'portal_converter_app',
+
+    # DRF
+    'rest_framework',
 ]   
 
 # Set the SITE_ID variable

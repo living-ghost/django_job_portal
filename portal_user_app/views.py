@@ -1,28 +1,31 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.db.models import Q 
-from django.utils import timezone
-from .models import Subscriber, User
-from django.contrib import messages
-from portal_admin_app.models import Job
+# Standard Library Imports
 from datetime import datetime, timedelta
+
+# Third-Party Imports
+from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import make_aware
-from . utils import (
+from django.utils import timezone
+from django.db.models import Q
+from django.shortcuts import render, redirect
+
+# Django App Imports
+from .models import Subscriber, User
+from portal_admin_app.models import Job
+from .utils import (
     generate_otp, 
-    send_account_created_email, send_subscription_email, send_otp_email,
-    generate_password, send_reset_email
-    )
-from django.contrib.auth import update_session_auth_hash
+    send_account_created_email, 
+    send_otp_email,
+    generate_password, 
+    send_reset_email
+)
+from .verify import verify_otp, handle_successful_otp_verification
 
-# Create your views here.
+#
 
-
-''' adding/viewing/searching jobs section '''
-
-# home page listing featured items
+# Home Page
 
 def index_view(request):
     featureds = Job.objects.all().order_by('-job_created_at')  # Sort by latest date first
@@ -40,7 +43,7 @@ def index_view(request):
 
     return render(request, "portal_user_app/index.html", {'featureds': featureds})
 
-# jobs page listing freshers jobs
+# Fresher Job Page
 
 def fresher_jobs_view(request):
     jobs = Job.objects.all().order_by('-job_created_at')  # Sort by latest date first
@@ -69,7 +72,7 @@ def fresher_jobs_view(request):
 
     return render(request, "portal_user_app/fresher_jobs.html", {'jobs': paginated_jobs})
 
-# jobs page listing Experienced jobs
+# Experienced Job Page
 
 def exp_jobs_view(request):
     jobs = Job.objects.all().order_by('-job_created_at')  # Sort by latest date first
@@ -98,22 +101,21 @@ def exp_jobs_view(request):
 
     return render(request, "portal_user_app/exp_jobs.html", {'jobs': paginated_jobs})
     
-# job search box handling
+# Fresher Job Search
 
 def search_jobs_view(request):
     query = request.GET.get('query', '')
     results = Job.objects.filter(Q(job_heading__icontains=query))
     return render(request, "portal_user_app/fresher_jobs.html", {'jobs': results})
 
-# about page
+# About Page
 
 def about_view(request):
     return render(request, "portal_user_app/about.html")
 
+#
 
-''' Subscribing using otp section '''
-
-# view handling subscriber registration
+# Subscriber Registration
 
 def subscribe_view(request):
     if request.method == 'POST':
@@ -153,6 +155,8 @@ def subscribe_view(request):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
+#
+
 def verify_otp_view(request):
     if request.method == 'POST':
         otp = request.POST.get('otp_code')
@@ -183,11 +187,7 @@ def verify_otp_view(request):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-def handle_successful_otp_verification(email):
-    Subscriber.objects.create(subscriber_email=email)
-    send_subscription_email(email)
-
-# view handling unsubscribing
+# Subscriber Unsubscribing
 
 def unsubscribe_view(request):
     if request.method == "GET":
@@ -206,10 +206,9 @@ def unsubscribe_view(request):
         # If it's not a GET request, render the unsubscribe email page
         return render(request, "portal_user_app/emails/unsubscribe.html")
     
+#
 
-''' User Login/Registration Section '''
-
-# User login
+# User Login
 
 def user_login_view(request):
     if request.method == 'POST':
@@ -229,7 +228,7 @@ def user_login_view(request):
     # Handle GET or other methods
     return JsonResponse({'error': 'false'})
         
-# User registration
+# User Register
 
 def user_register_view(request):
     if request.method == 'POST':
@@ -269,6 +268,8 @@ def user_register_view(request):
 
     return render(request, "portal_user_app/index.html")
 
+#
+
 def user_register_verify_otp_view(request):
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -294,33 +295,7 @@ def user_register_verify_otp_view(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-def verify_otp(request, otp):
-    session_otp = request.session.get('otp')
-    session_otp_created_at = request.session.get('otp_created_at')
-
-    if not otp or not session_otp or not session_otp_created_at:
-        return False
-
-    otp_created_at = datetime.fromisoformat(session_otp_created_at)
-    now = make_aware(datetime.now())
-
-    if otp == session_otp and otp_created_at + timedelta(minutes=5) > now:
-        user_id = request.session.get('user_id')
-        if user_id:
-            try:
-                user = User.objects.get(id=int(user_id))
-                user.is_active = True
-                user.save()
-
-                # Clear the session data after successful activation
-                request.session.pop('otp', None)
-                request.session.pop('otp_created_at', None)
-                request.session.pop('user_id', None)
-
-                return True
-            except User.DoesNotExist:
-                return False
-    return False
+#
 
 def user_forgot_pwd_view(request):
     if request.method == 'POST':
@@ -343,8 +318,10 @@ def user_forgot_pwd_view(request):
 
     return render(request, "portal_user_app/users/user_forgot_pwd.html")
 
+#
+
 @login_required
-def user_pwd_reset(request):
+def user_pwd_reset_view(request):
     if request.method == 'POST':
         current_password = request.POST.get('current_password')
         new_password = request.POST.get('new_password')
@@ -365,8 +342,10 @@ def user_pwd_reset(request):
 
     return JsonResponse({'error': 'Invalid request method.'})
 
+# User AC Deletion
+
 @login_required
-def user_del_ac(request):
+def user_del_ac_view(request):
     user = request.user
     user.is_active = False
     user.save()
@@ -381,12 +360,16 @@ def user_logout_view(request):
     
     return redirect('portal_user_app:user_index')
 
+#
+
 # User Dashboard
 
 @login_required(login_url='portal_user_app:user_index')
 def user_dashboard_view(request):
     username = request.user
     return render(request, "portal_user_app/users/user_dashboard.html", {'username' : username})
+
+#
 
 # 404 Page
 
