@@ -6,12 +6,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.template.loader import render_to_string
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from django.utils.html import strip_tags
 from django.urls import reverse
 from urllib.parse import urlencode
+from django.shortcuts import render, redirect
 
 # ================================
 #          Local App Imports
@@ -19,6 +16,7 @@ from urllib.parse import urlencode
 
 from .models import Admin, Job
 from portal_user_app.models import Subscriber
+from .tasks import send_job_email
 
 # ================================
 #           Admin Section
@@ -100,38 +98,18 @@ def jobs_add_view(request):
             # Fetch all subscribers
             subscribers = Subscriber.objects.all()
             for subscriber in subscribers:
-                subject = f'Freshers Park: {job_heading} Hiring'
-
                 # Generate the unsubscribe URL
                 unsubscribe_url = request.build_absolute_uri(
                     reverse('portal_user_app:user_unsubscribe') + '?' + urlencode({'subscriber_email': subscriber.subscriber_email})
                 )
 
-                # Render the HTML content with the job details and unsubscribe URL
-                html_content = render_to_string('portal_user_app/emails/post_updates.html', {
-                    'job': job,
-                    'unsubscribe_url': unsubscribe_url,
-                    'site_url': request.build_absolute_uri('/'),
-                })
-
-                # Strip the HTML tags for plain text content
-                text_content = strip_tags(html_content)
-
-                # Create the email
-                email = EmailMultiAlternatives(
-                    subject,
-                    text_content,
-                    from_email=settings.EMAIL_HOST_USER,
-                    to=[subscriber.subscriber_email]
+                # Call the Celery task
+                send_job_email.delay(
+                    subscriber_email=subscriber.subscriber_email,
+                    job_id=job.id,
+                    unsubscribe_url=unsubscribe_url,
+                    site_url=request.build_absolute_uri('/')
                 )
-                email.attach_alternative(html_content, "text/html")
-
-                try:
-                    # Send the email
-                    email.send(fail_silently=False)
-                except Exception as e:
-                    # Log or handle the exception
-                    print(f"Error sending email to {subscriber.subscriber_email}: {e}")
 
             return redirect('portal_admin_app:admin_job')
 
