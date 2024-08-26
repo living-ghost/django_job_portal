@@ -15,7 +15,7 @@ services:
       - db
       - rabbitmq
     environment:
-      DATABASE_URL: postgres://postgres:Alptlb@1@db:5432/job_portal
+      DATABASE_URL: postgres://postgres:Alptlb@1@db:5433/job_portal
 
   db:
     image: postgres:13
