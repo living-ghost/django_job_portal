@@ -127,12 +127,12 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django_prometheus.db.backends.postgresql',  # Database engine
-        'NAME': os.getenv('DB_NAME'),  # Database name
-        'USER': os.getenv('DB_USER'),  # Database user
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Database password
-        'HOST': os.getenv('DB_HOST', 'localhost'),  # Database host
-        'PORT': os.getenv('DB_PORT', '5432'),  # Database port
+        'ENGINE': 'django_prometheus.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'mydatabase'),
+        'USER': os.getenv('DB_USER', 'user'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'password'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
