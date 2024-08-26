@@ -17,7 +17,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Define the path to the .env-dev file
-env_path = Path('dev.env')
+env_path = Path('d.env')
 
 # Load environment variables from the .env-dev file
 load_dotenv(dotenv_path=env_path)

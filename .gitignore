@@ -1,6 +1,6 @@
 migrations
 __pycache__
 media
-.envdev
+d.env
 staticfiles
 prometheus
