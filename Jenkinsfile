@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'job_portal'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials-id'
+        DOCKER_IMAGE = 'living9host/job_portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
     }
 
@@ -26,12 +27,15 @@ pipeline {
             }
         }
 
-        stage('Push to Docker Registry') {
+        stage('Push Docker Image') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials-id') {
-                            docker.image("${BUILD_TAG}").push()
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_CREDENTIALS_ID) {
+                        try {
+                            dockerImage.push()
+                            echo 'Image pushed successfully'
+                        } catch (Exception e) {
+                            echo "Failed to push image: ${e.getMessage()}"
                         }
                     }
                 }
