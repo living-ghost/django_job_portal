@@ -23,8 +23,7 @@ services:
       POSTGRES_DB: job_portal
       POSTGRES_PASSWORD: Alptlb@1
       POSTGRES_USER: postgres
-      port:
-        - "5433:5433"
+
     volumes:
       - pgdata:/var/lib/postgresql/data
 
