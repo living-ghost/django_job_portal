@@ -6,18 +6,9 @@ pipeline {
         DOCKER_IMAGE = 'living9host/job_portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
-        // Load environment variables from Jenkins credentials
-        SECRET_KEY = credentials('django-secret-key-id')
-        DB_PASSWORD = credentials('django-db-password-id')
-        EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
-
         // Other environment variables
         DEBUG = 'True'
         ALLOWED_HOSTS = '127.0.0.1'
-        DB_NAME = 'dev_job_portal'
-        DB_USER = 'dev'
-        DB_HOST = 'db'
-        DB_PORT = '5432'
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
@@ -31,7 +22,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'fdc92cdd-ab3a-497c-8976-218341fc7caa', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        git branch: 'restapi',
+                        git branch: 'test',
                             url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/living-ghost/Job_Portal.git"
                     }
                 }
@@ -41,7 +32,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${SECRET_KEY} --build-arg DB_PASSWORD=${DB_PASSWORD} --build-arg EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD} .")
+                    withCredentials([string(credentialsId: 'django-secret-key-id', variable: 'SECRET_KEY')]),
+                        docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${SECRET_KEY} .")
+                    }
                 }
             }
         }
