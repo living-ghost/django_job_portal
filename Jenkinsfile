@@ -1,17 +1,19 @@
 pipeline {
     agent any
-    
+
     environment {
-        DOCKER_IMAGE = 'Job Portal'
+        DOCKER_IMAGE = 'Job_Portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
     }
 
-    stage('Clone Repository') {
-        steps {
-            script {
-                withCredentials([usernamePassword(credentialsId: 'your-credentials-id', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    git branch: 'restapi', 
-                        url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/living-ghost/Job_Portal.git"
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'jenkins-github-integration', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        git branch: 'restapi',
+                            url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/living-ghost/Job_Portal.git"
+                    }
                 }
             }
         }
@@ -19,17 +21,17 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(BUILD_TAG)
+                    docker.build("${BUILD_TAG}")
                 }
             }
         }
-        
+
         stage('Push to Docker Registry') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    script {
-                        docker.withRegistry('https://hub.docker.com/repository/docker/living9host', 'dockerhub-credentials-id') {
-                            docker.image(BUILD_TAG).push()
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials-id') {
+                            docker.image("${BUILD_TAG}").push()
                         }
                     }
                 }
@@ -38,32 +40,32 @@ pipeline {
 
         stage('Deploy Containers') {
             steps {
-                script {
-                    sh """
-                    docker-compose up -d
-                    """
-                }
+                sh 'docker-compose up -d'
             }
         }
 
         stage('Run Django Migrations') {
             steps {
-                script {
-                    sh """
-                    docker-compose exec django python manage.py migrate
-                    """
-                }
+                sh 'docker-compose exec django python manage.py migrate'
             }
         }
 
         stage('Collect Static Files') {
             steps {
-                script {
-                    sh """
-                    docker-compose exec django python manage.py collectstatic --noinput
-                    """
-                }
+                sh 'docker-compose exec django python manage.py collectstatic --noinput'
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Pipeline executed successfully.'
+        }
+        failure {
+            echo 'Pipeline execution failed.'
         }
     }
 }
