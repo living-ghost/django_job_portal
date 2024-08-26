@@ -1,14 +1,14 @@
-version: '3.8'  # Update to a more recent version
+version: '3.8'  # Updated version
 
 services:
   django:
     build:
-      context: ./  # Using relative path
+      context: ./  # Correctly set to the current directory
       dockerfile: Dockerfile
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app
+      - .:/app  # Ensure this path exists and is correct
     ports:
       - "8000:8000"
     depends_on:
@@ -34,7 +34,7 @@ services:
 
   celery:
     build:
-      context: ./  # Using relative path
+      context: ./  # Correctly set to the current directory
       dockerfile: Dockerfile
     container_name: celery_worker
     command: celery -A your_project_name worker --loglevel=info
