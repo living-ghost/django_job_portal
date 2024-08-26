@@ -63,10 +63,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            // Optionally clean up other resources or perform additional steps
-        }
-    }
 }
