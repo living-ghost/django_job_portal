@@ -24,9 +24,9 @@ services:
   db:
     image: postgres:16
     environment:
-      DB_NAME: dev_job_portal
-      DB_PASSWORD: dev
-      DB_USER: dev
+      POSTGRES_DB: mydatabase
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
     volumes:
       - pgdata:/var/lib/postgresql/data
 
