@@ -18,7 +18,7 @@ pipeline {
         DB_USER = 'dev'
         DB_HOST = 'db'
         DB_PORT = '5432'
-        
+
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
@@ -41,7 +41,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${SECRET_KEY} --build-arg DB_PASSWORD=${DB_PASSWORD} --build-arg EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}")
+                    docker build -t "living9host/job_portal:48" --build-arg SECRET_KEY=**** --build-arg DB_PASSWORD=**** --build-arg EMAIL_HOST_PASSWORD=**** .
                 }
             }
         }
