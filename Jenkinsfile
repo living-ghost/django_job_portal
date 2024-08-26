@@ -45,7 +45,9 @@ pipeline {
 
         stage('Deploy Containers') {
             steps {
+                echo "docker compose going to start"
                 sh 'docker-compose up -d'
+                echo "docker compose failed"
             }
         }
 
