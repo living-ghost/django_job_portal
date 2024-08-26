@@ -16,8 +16,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from a .env file
-load_dotenv()
+# Define the path to the .env-dev file
+env_path = Path('.env-dev')
+
+# Load environment variables from the .env-dev file
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'
 BASE_DIR = Path(__file__).resolve().parent.parent
