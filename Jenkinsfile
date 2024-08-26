@@ -6,10 +6,13 @@ pipeline {
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
     }
 
-    stages {
-        stage('Clone Repository') {
-            steps {
-                git branch: 'restapi', url: 'https://github.com/living-ghost/Job_Portal.git'
+    stage('Clone Repository') {
+        steps {
+            script {
+                withCredentials([usernamePassword(credentialsId: 'your-credentials-id', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    git branch: 'restapi', 
+                        url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/living-ghost/Job_Portal.git"
+                }
             }
         }
 
@@ -23,7 +26,7 @@ pipeline {
         
         stage('Push to Docker Registry') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     script {
                         docker.withRegistry('https://hub.docker.com/repository/docker/living9host', 'dockerhub-credentials-id') {
                             docker.image(BUILD_TAG).push()
