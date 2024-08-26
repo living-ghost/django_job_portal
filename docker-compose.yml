@@ -1,28 +1,28 @@
-version: '3.8'  # Updated version
+version: '3.8'
 
 services:
   django:
     build:
-      context: ./  # Correctly set to the current directory
+      context: ./
       dockerfile: Dockerfile
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app  # Ensure this path exists and is correct
+      - .:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
       - rabbitmq
     environment:
-      DATABASE_URL: postgres://username:password:5432/mydatabase
+      DATABASE_URL: postgres://user:password@db:5432/mydatabase
 
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: job_portal
-      POSTGRES_PASSWORD: Alptlb@1
-      POSTGRES_USER: postgres
+      POSTGRES_DB: mydatabase
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
     volumes:
       - pgdata:/var/lib/postgresql/data
 
