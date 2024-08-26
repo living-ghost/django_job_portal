@@ -32,7 +32,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'django-secret-key-id', variable: 'SECRET_KEY')]),
+                    withCredentials([string(credentialsId: 'django-secret-key-id', variable: 'SECRET_KEY')]) {
                         docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${SECRET_KEY} .")
                     }
                 }
