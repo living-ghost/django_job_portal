@@ -48,11 +48,11 @@ pipeline {
                 script {
                     try {
                         echo "docker compose going to start"
-                        sh 'docker-compose up -d --build'
+                        bat 'docker-compose up -d --build'
                         echo "docker compose started"
                         
                         // Capture logs for debugging
-                        sh 'docker-compose logs'
+                        bat 'docker-compose logs'
                     } catch (Exception e) {
                         echo "docker compose failed: ${e.getMessage()}"
                         error("Stopping pipeline due to Docker Compose failure.")
@@ -63,13 +63,13 @@ pipeline {
 
         stage('Run Django Migrations') {
             steps {
-                sh 'docker-compose exec django python manage.py migrate'
+                bat 'docker-compose exec django python manage.py migrate'
             }
         }
 
         stage('Collect Static Files') {
             steps {
-                sh 'docker-compose exec django python manage.py collectstatic --noinput'
+                bat 'docker-compose exec django python manage.py collectstatic --noinput'
             }
         }
     }

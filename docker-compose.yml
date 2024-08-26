@@ -15,14 +15,14 @@ services:
       - db
       - rabbitmq
     environment:
-      DATABASE_URL: postgres://user:password@db:5432/mydatabase
+      DATABASE_URL: postgres://postgres:Alptlb@1@db:5432/job_portal
 
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
+      POSTGRES_DB: job_portal
+      POSTGRES_PASSWORD: Alptlb@1
+      POSTGRES_USER: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -37,7 +37,7 @@ services:
       context: ./  # Correctly set to the current directory
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A your_project_name worker --loglevel=info
+    command: celery -A job_portal worker --pool=solo -l info
     depends_on:
       - rabbitmq
     volumes:
@@ -46,7 +46,7 @@ services:
   flower:
     image: mher/flower
     container_name: celery_flower
-    command: celery -A your_project_name flower --port=5555
+    command: celery -A job_portal flower --port=5555
     depends_on:
       - rabbitmq
     ports:
