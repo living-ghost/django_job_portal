@@ -48,7 +48,7 @@ pipeline {
                 script {
                     try {
                         echo "docker compose going to start"
-                        sh 'docker-compose up -d'
+                        sh 'docker-compose up -d --build'
                         echo "docker compose started"
                         
                         // Capture logs for debugging
