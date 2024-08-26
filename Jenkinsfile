@@ -45,9 +45,19 @@ pipeline {
 
         stage('Deploy Containers') {
             steps {
-                echo "docker compose going to start"
-                sh 'docker-compose up -d'
-                echo "docker compose failed"
+                script {
+                    try {
+                        echo "docker compose going to start"
+                        sh 'docker-compose up -d'
+                        echo "docker compose started"
+                        
+                        // Capture logs for debugging
+                        sh 'docker-compose logs'
+                    } catch (Exception e) {
+                        echo "docker compose failed: ${e.getMessage()}"
+                        error("Stopping pipeline due to Docker Compose failure.")
+                    }
+                }
             }
         }
 
