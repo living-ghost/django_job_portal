@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-repository-url.git'
+                git branch: 'restapi', url: 'https://github.com/living-ghost/Job_Portal.git'
             }
         }
 
