@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        docker.withRegistry('https://hub.docker.com/repositories/living9host', 'dockerhub-credentials-id') {
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials-id') {
                             docker.image("${BUILD_TAG}").push()
                         }
                     }
