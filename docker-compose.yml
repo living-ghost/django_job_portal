@@ -1,8 +1,10 @@
-version: '3'
+version: '3.8'  # Update to a more recent version
 
 services:
   django:
-    build: .
+    build:
+      context: ./  # Using relative path
+      dockerfile: Dockerfile
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
@@ -13,14 +15,14 @@ services:
       - db
       - rabbitmq
     environment:
-      - DATABASE_URL=postgres://user:password@db:5432/mydatabase
+      DATABASE_URL: postgres://user:password@db:5432/mydatabase
 
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
       POSTGRES_DB: mydatabase
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -31,7 +33,9 @@ services:
       - "15672:15672"
 
   celery:
-    build: .
+    build:
+      context: ./  # Using relative path
+      dockerfile: Dockerfile
     container_name: celery_worker
     command: celery -A your_project_name worker --loglevel=info
     depends_on:
@@ -42,11 +46,11 @@ services:
   flower:
     image: mher/flower
     container_name: celery_flower
-    ports:
-      - "5555:5555"
     command: celery -A your_project_name flower --port=5555
     depends_on:
       - rabbitmq
+    ports:
+      - "5555:5555"
 
   prometheus:
     image: prom/prometheus
