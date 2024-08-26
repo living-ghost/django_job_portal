@@ -30,6 +30,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
+                    def dockerImage = docker.image("${BUILD_TAG}")
                     docker.withRegistry('https://registry.hub.docker.com', DOCKER_CREDENTIALS_ID) {
                         try {
                             dockerImage.push()
