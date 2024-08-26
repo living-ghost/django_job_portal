@@ -1,0 +1,5 @@
+scrape_configs:
+  - job_name: "job_portal"
+    metrics_path: "/metrics"  # No trailing slash, unless explicitly configured with one in Django
+    static_configs:
+      - targets: ["127.0.0.1:8000"]  # Ensure this matches your Django app's address and port
