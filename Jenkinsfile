@@ -81,6 +81,12 @@ pipeline {
             }
         }
 
+        stage('Run Django Make Migrations') {
+            steps {
+                bat 'docker-compose exec django python manage.py makemigrations'
+            }
+        }
+
         stage('Run Django Migrations') {
             steps {
                 bat 'docker-compose exec django python manage.py migrate'
