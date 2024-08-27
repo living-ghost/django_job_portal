@@ -15,18 +15,19 @@ services:
       - db
       - rabbitmq
     environment:
-      DB_NAME: mydatabase
-      DB_USER: user
-      DB_PASSWORD: password
+      SECRET_KEY: ${SECRET_KEY}          # Make sure this is defined in your environment or `.env` file
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db
-      DB_PORT: '5432'
+      DB_PORT: ${DB_PORT}
 
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: user
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -38,7 +39,7 @@ services:
 
   celery:
     build:
-      context: ./  # Correctly set to the current directory
+      context: ./
       dockerfile: Dockerfile
     container_name: celery_worker
     command: celery -A job_portal worker --pool=solo -l info
@@ -46,6 +47,8 @@ services:
       - rabbitmq
     volumes:
       - .:/app
+    environment:
+      CELERY_BROKER_URL: pyamqp://guest:guest@rabbitmq//  # Update this if you have different settings
 
   flower:
     image: mher/flower
@@ -55,6 +58,8 @@ services:
       - rabbitmq
     ports:
       - "5555:5555"
+    environment:
+      FLOWER_BROKER_URL: pyamqp://guest:guest@rabbitmq//  # Update this if you have different settings
 
   prometheus:
     image: prom/prometheus

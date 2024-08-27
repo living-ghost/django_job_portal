@@ -28,11 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
+# Security key for the Django project
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-# Check if SECRET_KEY is loaded correctly (for debugging purposes only)
-if not SECRET_KEY:
-    raise ValueError("No SECRET_KEY set for Django application.")
 
 # Debug mode - should be False in production
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
