@@ -83,7 +83,12 @@ pipeline {
 
         stage('Run Django Make Migrations') {
             steps {
-                bat 'docker-compose exec django python manage.py makemigrations'
+                bat '''
+                    docker-compose exec django python manage.py makemigrations portal_admin_app
+                    docker-compose exec django python manage.py makemigrations portal_user_app
+                    docker-compose exec django python manage.py makemigrations portal_resume_app
+                    docker-compose exec django python manage.py makemigrations portal_converter_app
+                '''
             }
         }
 
