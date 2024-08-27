@@ -21,6 +21,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db
       DB_PORT: ${DB_PORT}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
 
   db:
     image: postgres:16
