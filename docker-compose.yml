@@ -90,7 +90,7 @@ services:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - "3002:3002"
+      - "3002:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
 
