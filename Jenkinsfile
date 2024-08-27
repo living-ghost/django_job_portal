@@ -12,11 +12,15 @@ pipeline {
         ALLOWED_HOSTS = 'localhost'
 
         SECRET_KEY = credentials('django-secret-key-id')
-        DB_NAME = 'mydatabase'
-        DB_USER = 'user'
-        DB_PASSWORD = 'password'
+
+        DB_NAME = 'job_portal_dev'
+        DB_USER = credentials('django-db-username-id')
+        DB_PASSWORD = credentials('django-db-password-id')
         DB_HOST = 'db'
         DB_PORT = '5432'
+
+        PGADMIN_DEFAULT_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
+        PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
