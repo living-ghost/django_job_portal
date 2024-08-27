@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Debug mode - should be False in production
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DEBUG')
 
 # Allowed hosts for the Django project
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')

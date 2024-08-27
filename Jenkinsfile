@@ -9,7 +9,7 @@ pipeline {
         // Environment variables
 
         DEBUG = 'True'
-        ALLOWED_HOSTS = '127.0.0.1'
+        ALLOWED_HOSTS = 'localhost'
 
         SECRET_KEY = credentials('django-secret-key-id')
         DB_NAME = 'mydatabase'
