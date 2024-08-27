@@ -12,9 +12,9 @@ pipeline {
         ALLOWED_HOSTS = '127.0.0.1'
 
         SECRET_KEY = credentials('django-secret-key-id')
-        DB_NAME = credentials('db-name-id')
-        DB_USER = credentials('db-user-id')
-        DB_PASSWORD = credentials('db-password-id')
+        DB_NAME = 'mydatabase'
+        DB_USER = 'user'
+        DB_PASSWORD = 'password'
         DB_HOST = 'db'
         DB_PORT = '5432'
         
