@@ -127,7 +127,7 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django_prometheus.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql',  # Use the correct backend
         'NAME': os.getenv('DB_NAME', 'mydatabase'),
         'USER': os.getenv('DB_USER', 'user'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'password'),

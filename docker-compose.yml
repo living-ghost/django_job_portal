@@ -53,7 +53,7 @@ services:
   flower:
     image: mher/flower
     container_name: celery_flower
-    command: celery -A job_portal flower --port=5555
+    command: celery -A job_portal flower
     depends_on:
       - rabbitmq
     ports:

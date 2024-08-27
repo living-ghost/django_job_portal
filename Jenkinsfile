@@ -6,9 +6,17 @@ pipeline {
         DOCKER_IMAGE = 'living9host/job_portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
-        // Other environment variables
+        // Environment variables
+
         DEBUG = 'True'
         ALLOWED_HOSTS = '127.0.0.1'
+
+        SECRET_KEY = credentials('django-secret-key-id')
+        DB_NAME = credentials('db-name-id')
+        DB_USER = credentials('db-user-id')
+        DB_PASSWORD = credentials('db-password-id')
+        DB_HOST = 'db'
+        DB_PORT = '5432'
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
