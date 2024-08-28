@@ -21,13 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY . /app/
 
-# Ensure celeryuser owns the entire /app directory
-RUN adduser --disabled-password --gecos '' celeryuser && \
-    chown -R celeryuser:celeryuser /app
-
-# Switch to non-root user
-USER celeryuser
-
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 

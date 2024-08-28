@@ -57,7 +57,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A job_portal worker --loglevel=info --hostname=celery@%h
+    command: celery -A job_portal worker --loglevel=info
     depends_on:
       - rabbitmq
     volumes:
