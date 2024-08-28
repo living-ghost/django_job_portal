@@ -14,11 +14,10 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Add Erlang repository and install Erlang
-RUN curl -fsSL https://packages.erlang-solutions.com/gpg/erlang_solutions.asc | tee /etc/apt/trusted.gpg.d/erlang.asc \
-    && echo "deb [signed-by=/etc/apt/trusted.gpg.d/erlang.asc] https://packages.erlang-solutions.com/debian $(lsb_release -cs) contrib" | tee /etc/apt/sources.list.d/erlang-solutions.list \
-    && apt-get update \
-    && apt-get install -y erlang
+# Install Erlang from the official Debian repository
+RUN apt-get update && apt-get install -y \
+    erlang \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
