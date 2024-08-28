@@ -74,11 +74,11 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
-                        sh 'docker-compose up -d --build'
+                        bat 'docker-compose up -d --build'
                         echo "Docker Compose started"
 
                         // Capture logs for debugging
-                        sh 'docker-compose logs'
+                        bat 'docker-compose logs'
                     } catch (Exception e) {
                         echo "Docker Compose failed: ${e.getMessage()}"
                         error("Stopping pipeline due to Docker Compose failure.")
@@ -89,7 +89,7 @@ pipeline {
 
         stage('Run Django Make Migrations') {
             steps {
-                sh '''
+                bat '''
                     docker-compose exec django python manage.py makemigrations portal_admin_app
                     docker-compose exec django python manage.py makemigrations portal_user_app
                     docker-compose exec django python manage.py makemigrations portal_resume_app
@@ -100,13 +100,13 @@ pipeline {
 
         stage('Run Django Migrations') {
             steps {
-                sh 'docker-compose exec django python manage.py migrate'
+                bat 'docker-compose exec django python manage.py migrate'
             }
         }
 
         stage('Collect Static Files') {
             steps {
-                sh 'docker-compose exec django python manage.py collectstatic --noinput'
+                bat 'docker-compose exec django python manage.py collectstatic --noinput'
             }
         }
     }
