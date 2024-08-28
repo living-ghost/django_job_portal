@@ -23,7 +23,7 @@ pipeline {
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
 
         CELERY_BROKER_URL = 'pyamqp://guest@127.0.0.1//'
-        CELERY_ACCEPT_CONTENT = ['application/json']
+        CELERY_ACCEPT_CONTENT = "['application/json']"
         CELERY_RESULT_SERIALIZER = 'json'
         CELERY_TASK_SERIALIZER = 'json'
         CELERY_TIMEZONE = 'Asia/Kolkata'
