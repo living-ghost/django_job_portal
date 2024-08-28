@@ -6,6 +6,8 @@ pipeline {
         DOCKER_IMAGE = 'living9host/job_portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
+        SKIP_MIGRATIONS = 'true' // Set this to 'true' to skip migrations
+
         // Environment variables
 
         DEBUG = 'True'
@@ -90,6 +92,9 @@ pipeline {
         }
 
         stage('Run Django Make Migrations') {
+            when {
+                expression { return env.SKIP != 'true' }
+            }
             steps {
                 bat '''
                     docker-compose exec django python manage.py makemigrations portal_admin_app
@@ -101,6 +106,9 @@ pipeline {
         }
 
         stage('Run Django Migrations') {
+            when {
+                expression { return env.SKIP != 'true' }
+            }
             steps {
                 bat 'docker-compose exec django python manage.py migrate'
             }
