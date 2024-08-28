@@ -7,11 +7,8 @@ pipeline {
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
         // Environment variables
-
         DEBUG = 'True'
-
         SECRET_KEY = credentials('django-secret-key-id')
-
         DB_NAME = 'job_portal_dev'
         DB_USER = credentials('django-db-username-id')
         DB_PASSWORD = credentials('django-db-password-id')
@@ -25,10 +22,10 @@ pipeline {
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
 
-        CELERY_BROKER_URL = 'pyamqp//guest@127.0.0.1//'
+        CELERY_BROKER_URL = 'pyamqp://guest@127.0.0.1//'
         CELERY_ACCEPT_CONTENT = 'application/json'
         CELERY_RESULT_SERIALIZER = 'json'
-        CELERY_TASK_SERIALIZE = 'json'
+        CELERY_TASK_SERIALIZER = 'json'
         CELERY_TIMEZONE = 'Asia/Kolkata'
         CELERY_RESULT_BACKEND = 'rpc://'
 
@@ -51,9 +48,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'django-secret-key-id', variable: 'SECRET_KEY')]) {
-                        docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${SECRET_KEY} .")
-                    }
+                    docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg DB_NAME=${env.DB_NAME} --build-arg DB_USER=${env.DB_USER} --build-arg DB_PASSWORD=${env.DB_PASSWORD} --build-arg DB_HOST=${env.DB_HOST} --build-arg DB_PORT=${env.DB_PORT} --build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL} --build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT} --build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER} --build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER} --build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE} --build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND} .")
                 }
             }
         }
