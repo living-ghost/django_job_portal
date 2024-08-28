@@ -15,7 +15,7 @@ services:
       - db
       - rabbitmq
     environment:
-      SECRET_KEY: ${SECRET_KEY}          # Make sure this is defined in your environment or `.env` file
+      SECRET_KEY: ${SECRET_KEY}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
@@ -63,7 +63,12 @@ services:
     volumes:
       - .:/app
     environment:
-      CELERY_BROKER_URL: pyamqp://guest:guest@rabbitmq//  # Update this if you have different settings
+      CELERY_BROKER_URL: 'pyamqp://guest@localhost//'
+      CELERY_ACCEPT_CONTENT: ['application/json']
+      CELERY_RESULT_SERIALIZER: 'json'
+      CELERY_TASK_SERIALIZER: 'json'
+      CELERY_TIMEZONE: 'Asia/Kolkata'
+      CELERY_RESULT_BACKEND: 'rpc://'
 
   flower:
     build:

@@ -73,7 +73,10 @@ pipeline {
                 script {
                     try {
                         echo "docker compose going to start"
-                        bat 'docker-compose up -d --build'
+                        bat 'docker-compose stop celery'
+                        bat 'docker-compose rm -f celery'
+                        bat 'docker-compose up -d celery'
+                        // bat 'docker-compose up -d --build'
                         echo "docker compose started"
 
                         // Capture logs for debugging
