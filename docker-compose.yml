@@ -62,8 +62,6 @@ services:
       - rabbitmq
     volumes:
       - .:/app
-    environment:
-      CELERY_BROKER_URL: pyamqp://guest@rabbitmq//
 
   flower:
     build:
@@ -75,8 +73,6 @@ services:
       - rabbitmq
     ports:
       - "5555:5555"
-    environment:
-      FLOWER_BROKER_URL: pyamqp://guest@rabbitmq//
 
   prometheus:
     image: prom/prometheus
