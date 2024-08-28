@@ -4,7 +4,7 @@ FROM python:3.12-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies for pycairo, Erlang, and RabbitMQ
+# Install system dependencies for pycairo and Erlang
 RUN apt-get update && apt-get install -y \
     libcairo2 \
     libcairo2-dev \
@@ -12,24 +12,13 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     curl \
     gnupg \
-    apt-transport-https \
-    lsb-release \
     && rm -rf /var/lib/apt/lists/*
 
 # Add Erlang repository and install Erlang
-RUN curl -fsSL https://packages.erlang-solutions.com/gpg/erlang_solutions.asc | apt-key add - \
-    && echo "deb https://packages.erlang-solutions.com/debian $(lsb_release -cs) contrib" | tee /etc/apt/sources.list.d/erlang-solutions.list \
+RUN curl -fsSL https://packages.erlang-solutions.com/gpg/erlang_solutions.asc | tee /etc/apt/trusted.gpg.d/erlang.asc \
+    && echo "deb [signed-by=/etc/apt/trusted.gpg.d/erlang.asc] https://packages.erlang-solutions.com/debian $(lsb_release -cs) contrib" | tee /etc/apt/sources.list.d/erlang-solutions.list \
     && apt-get update \
     && apt-get install -y erlang
-
-# Add RabbitMQ repository and install RabbitMQ
-RUN curl -fsSL https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu/gpg.key | apt-key add - \
-    && echo "deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu focal main" | tee /etc/apt/sources.list.d/rabbitmq.list \
-    && apt-get update \
-    && apt-get install -y rabbitmq-server
-
-# Enable RabbitMQ Management Plugin
-RUN rabbitmq-plugins enable --offline rabbitmq_management
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
@@ -50,10 +39,8 @@ RUN adduser --disabled-password --gecos '' celeryuser && \
 # Switch to non-root user
 USER celeryuser
 
-# Make port 8000 and RabbitMQ ports available to the world outside this container
+# Make port 8000 available to the world outside this container
 EXPOSE 8000
-EXPOSE 5672
-EXPOSE 15672
 
 # Define environment variables from build arguments
 ARG SECRET_KEY
@@ -94,5 +81,5 @@ ENV CELERY_TASK_SERIALIZER=${CELERY_TASK_SERIALIZER}
 ENV CELERY_TIMEZONE=${CELERY_TIMEZONE}
 ENV CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND}
 
-# Run RabbitMQ server and then the application
-CMD ["sh", "-c", "rabbitmq-server & python manage.py runserver 0.0.0.0:8000"]
+# Run the application
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
