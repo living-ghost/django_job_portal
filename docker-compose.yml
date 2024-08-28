@@ -57,18 +57,13 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A job_portal worker --loglevel=info
+    command: celery -A job_portal worker --loglevel=info --uid=celeryuser
     depends_on:
       - rabbitmq
     volumes:
       - .:/app
     environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
-      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
-      CELERY_TASK_SERIALIZE: ${CELERY_TASK_SERIALIZE}
-      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+      CELERY_BROKER_URL: pyamqp://guest@rabbitmq//
 
   flower:
     build:
@@ -80,6 +75,8 @@ services:
       - rabbitmq
     ports:
       - "5555:5555"
+    environment:
+      FLOWER_BROKER_URL: pyamqp://guest@rabbitmq//
 
   prometheus:
     image: prom/prometheus

@@ -18,6 +18,10 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# In your Dockerfile, after installing all dependencies
+RUN adduser --disabled-password --gecos '' celeryuser
+USER celeryuser
+
 # Copy the current directory contents into the container at /app
 COPY . /app/
 
