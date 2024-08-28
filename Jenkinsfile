@@ -6,8 +6,6 @@ pipeline {
         DOCKER_IMAGE = 'living9host/job_portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
-        SKIP_MIGRATIONS = 'true' // Set this to 'true' to skip migrations
-
         // Environment variables
 
         DEBUG = 'True'
@@ -75,10 +73,7 @@ pipeline {
                 script {
                     try {
                         echo "docker compose going to start"
-                        bat 'docker-compose stop celery'
-                        bat 'docker-compose rm -f celery'
-                        bat 'docker-compose up -d celery'
-                        // bat 'docker-compose up -d --build'
+                        bat 'docker-compose up -d --build'
                         echo "docker compose started"
 
                         // Capture logs for debugging
@@ -92,9 +87,6 @@ pipeline {
         }
 
         stage('Run Django Make Migrations') {
-            when {
-                expression { return env.SKIP != 'true' }
-            }
             steps {
                 bat '''
                     docker-compose exec django python manage.py makemigrations portal_admin_app
@@ -106,9 +98,6 @@ pipeline {
         }
 
         stage('Run Django Migrations') {
-            when {
-                expression { return env.SKIP != 'true' }
-            }
             steps {
                 bat 'docker-compose exec django python manage.py migrate'
             }
