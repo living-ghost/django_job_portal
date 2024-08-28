@@ -63,12 +63,12 @@ services:
     volumes:
       - .:/app
     environment:
-      - CELERY_BROKER_URL: pyamqp://guest@localhost//
-      - CELERY_ACCEPT_CONTENT: ['application/json']
-      - CELERY_RESULT_SERIALIZER: json
-      - CELERY_TASK_SERIALIZE: json
-      - CELERY_TIMEZONE: Asia/Kolkata
-      - CELERY_RESULT_BACKEND: rpc://
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
+      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
+      CELERY_TASK_SERIALIZE: ${CELERY_TASK_SERIALIZE}
+      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
 
   flower:
     build:
