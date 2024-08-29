@@ -59,18 +59,11 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A job_portal.celery worker --loglevel=info --concurrency=4 --pool=solo
+    command: celery -A job_portal.celery worker --loglevel=info --concurrency=4
     depends_on:
       - rabbitmq
     environment:
-      - SECRET_KEY: ${SECRET_KEY}
       - DJANGO_SETTINGS_MODULE=job_portal.settings
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-      - CELERY_ACCEPT_CONTENT=application/json
-      - CELERY_RESULT_SERIALIZER=json
-      - CELERY_TASK_SERIALIZER=json
-      - CELERY_TIMEZONE=Asia/Kolkata
-      - CELERY_RESULT_BACKEND=rpc://
     volumes:
       - .:/app
 
@@ -85,12 +78,7 @@ services:
     ports:
       - "5555:5555"
     environment:
-      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
-      - CELERY_ACCEPT_CONTENT=application/json
-      - CELERY_RESULT_SERIALIZER=json
-      - CELERY_TASK_SERIALIZER=json
-      - CELERY_TIMEZONE=Asia/Kolkata
-      - CELERY_RESULT_BACKEND=rpc://
+      - DJANGO_SETTINGS_MODULE=job_portal.settings
     volumes:
       - .:/app
 
