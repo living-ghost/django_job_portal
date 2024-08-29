@@ -4,29 +4,11 @@ FROM python:3.12-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies for pycairo and Erlang
-RUN apt-get update && apt-get install -y \
-    libcairo2 \
-    libcairo2-dev \
-    pkg-config \
-    python3-dev \
-    curl \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Erlang from the official Debian repository
-RUN apt-get update && apt-get install -y \
-    erlang \
-    && rm -rf /var/lib/apt/lists/*
-
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install dependencies
-RUN pip install --no-cache-dir celery kombu
 
 # Copy the current directory contents into the container at /app
 COPY . /app/
