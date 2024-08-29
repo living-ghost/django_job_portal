@@ -54,6 +54,43 @@ services:
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
 
+  celery:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    command: celery -A job_portal.celery worker --pool=solo -l info
+    depends_on:
+      - rabbitmq
+    environment:
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
+      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
+      CELERY_TASK_SERIALIZER: ${CELERY_TASK_SERIALIZER}
+      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+    volumes:
+      - .:/app
+
+  flower:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: celery_flower
+    command: celery -A job_portal flower
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5555:5555"
+    environment:
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
+      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
+      CELERY_TASK_SERIALIZER: ${CELERY_TASK_SERIALIZER}
+      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+    volumes:
+      - .:/app
 
   prometheus:
     image: prom/prometheus
