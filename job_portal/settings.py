@@ -188,11 +188,3 @@ PDFKIT_CONFIG = {
 IMGKIT_CONFIG = {
     'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'),
 }
-
-CELERY_BROKER_URL = 'pyamqp://guest@rabbitmq//'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Kolkata'
-
-CELERY_RESULT_BACKEND = 'rpc://'
