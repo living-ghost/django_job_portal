@@ -16,6 +16,13 @@ pipeline {
         DB_HOST = 'db'
         DB_PORT = '5432'
 
+        CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
+        CELERY_ACCEPT_CONTENT = ['application/json']
+        CELERY_RESULT_SERIALIZER = 'json'
+        CELERY_TASK_SERIALIZER = 'json'
+        CELERY_TIMEZONE = 'Asia/Kolkata'
+        CELERY_RESULT_BACKEND = 'rpc://'
+
         PGADMIN_DEFAULT_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
         
