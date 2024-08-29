@@ -59,16 +59,17 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A job_portal.celery worker --pool=solo -l info
+    command: celery -A job_portal.celery worker --loglevel=info --concurrency=4 --pool=solo
     depends_on:
       - rabbitmq
     environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
-      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
-      CELERY_TASK_SERIALIZER: ${CELERY_TASK_SERIALIZER}
-      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+      - DJANGO_SETTINGS_MODULE=job_portal.settings
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_ACCEPT_CONTENT=application/json
+      - CELERY_RESULT_SERIALIZER=json
+      - CELERY_TASK_SERIALIZER=json
+      - CELERY_TIMEZONE=Asia/Kolkata
+      - CELERY_RESULT_BACKEND=rpc://
     volumes:
       - .:/app
 
@@ -77,18 +78,18 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_flower
-    command: celery -A job_portal flower
+    command: celery -A job_portal.celery flower
     depends_on:
       - rabbitmq
     ports:
       - "5555:5555"
     environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
-      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
-      CELERY_TASK_SERIALIZER: ${CELERY_TASK_SERIALIZER}
-      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672//
+      - CELERY_ACCEPT_CONTENT=application/json
+      - CELERY_RESULT_SERIALIZER=json
+      - CELERY_TASK_SERIALIZER=json
+      - CELERY_TIMEZONE=Asia/Kolkata
+      - CELERY_RESULT_BACKEND=rpc://
     volumes:
       - .:/app
 
