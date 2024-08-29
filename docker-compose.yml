@@ -63,12 +63,12 @@ services:
     depends_on:
       - rabbitmq
     environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
-      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
-      CELERY_TASK_SERIALIZER: ${CELERY_TASK_SERIALIZER}
-      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+      CELERY_BROKER_URL: 'pyamqp://guest@rabbitmq//'
+      CELERY_ACCEPT_CONTENT: 'application/json'
+      CELERY_RESULT_SERIALIZER: 'json'
+      CELERY_TASK_SERIALIZER: 'json'
+      CELERY_TIMEZONE: 'Asia/Kolkata'
+      CELERY_RESULT_BACKEND: 'rpc://'
     volumes:
       - .:/app
 
@@ -83,12 +83,12 @@ services:
     ports:
       - "5555:5555"
     environment:
-      CELERY_BROKER_URL: ${CELERY_BROKER_URL}
-      CELERY_ACCEPT_CONTENT: ${CELERY_ACCEPT_CONTENT}
-      CELERY_RESULT_SERIALIZER: ${CELERY_RESULT_SERIALIZER}
-      CELERY_TASK_SERIALIZER: ${CELERY_TASK_SERIALIZER}
-      CELERY_TIMEZONE: ${CELERY_TIMEZONE}
-      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+      CELERY_BROKER_URL: 'pyamqp://guest@rabbitmq//'
+      CELERY_ACCEPT_CONTENT: 'application/json'
+      CELERY_RESULT_SERIALIZER: 'json'
+      CELERY_TASK_SERIALIZER: 'json'
+      CELERY_TIMEZONE: 'Asia/Kolkata'
+      CELERY_RESULT_BACKEND: 'rpc://'
     volumes:
       - .:/app
 
