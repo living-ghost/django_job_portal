@@ -8,6 +8,7 @@ pipeline {
 
         // Environment variables
         DEBUG = 'True'
+        ALLOWED_HOSTS = 'localhost'
         SECRET_KEY = credentials('django-secret-key-id')
         DB_NAME = 'job_portal_dev'
         DB_USER = credentials('django-db-username-id')
