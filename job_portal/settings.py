@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # Security key for the Django project
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-p8ug3w++$+=m)5c3yv_(m931130_s+jsp3f+v!ok7_^c@*c@wb'
 
 # Debug mode - should be False in production
 DEBUG = os.getenv('DEBUG')
@@ -189,9 +189,10 @@ IMGKIT_CONFIG = {
     'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'),
 }
 
-CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
-CELERY_RESULT_BACKEND = 'rpc://'
+
+# CELERY_RESULT_BACKEND = 'rpc://'

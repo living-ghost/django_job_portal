@@ -22,13 +22,6 @@ pipeline {
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
 
-        CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
-        CELERY_ACCEPT_CONTENT = '["application/json"]'
-        CELERY_RESULT_SERIALIZER = 'json'
-        CELERY_TASK_SERIALIZER = 'json'
-        CELERY_TIMEZONE = 'Asia/Kolkata'
-        CELERY_RESULT_BACKEND = 'rpc://'
-
         WKHTMLTOPDF_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
         WKHTMLTOIMAGE_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe'
     }
