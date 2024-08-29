@@ -17,7 +17,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Define the path to the .env-dev file
-env_path = Path('d.env')
+env_path = Path('.env')
 
 # Load environment variables from the .env-dev file
 load_dotenv(dotenv_path=env_path)
@@ -29,15 +29,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # Security key for the Django project
-SECRET_KEY = 'django-insecure-p8ug3w++$+=m)5c3yv_(m931130_s+jsp3f+v!ok7_^c@*c@wb'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Debug mode - should be False in production
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Allowed hosts for the Django project
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,12 +127,12 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # Use the correct backend
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'ENGINE': 'django_prometheus.db.backends.postgresql',  # Database engine
+        'NAME': os.getenv('DB_NAME'),  # Database name
+        'USER': os.getenv('DB_USER'),  # Database user
+        'PASSWORD': os.getenv('DB_PASSWORD'),  # Database password
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # Database host
+        'PORT': os.getenv('DB_PORT', '5432'),  # Database port
     }
 }
 
@@ -189,10 +190,10 @@ IMGKIT_CONFIG = {
     'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'),
 }
 
-CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
+CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
-# CELERY_RESULT_BACKEND = 'rpc://'
+CELERY_RESULT_BACKEND = 'rpc://'
