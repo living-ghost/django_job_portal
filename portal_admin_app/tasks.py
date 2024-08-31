@@ -1,5 +1,6 @@
 from celery import shared_task
 from django.core.mail import EmailMessage
+from django.conf import settings
 import logging
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
         Unsubscribe: {unsubscribe_url}
         Visit our site: {site_url}
         """
-        from_email = "akhiiltkaniiparampiil@gmail.com"
+        from_email = settings.DEFAULT_FROM_EMAIL
         email = EmailMessage(subject, message, from_email, [subscriber_email])
         email.send()
         logger.info("Email sent successfully")
