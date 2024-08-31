@@ -2,28 +2,31 @@ from celery import shared_task
 from django.core.mail import EmailMessage
 from django.conf import settings
 import logging
-from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
 @shared_task
-def send_job_email(sub_email, job_id, unsubscribe_url, site_url):
-    logger.info(f"Sending email to {sub_email}")
+def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
+    logger.info(f"Sending email to {subscriber_email}")
     try:
-        subject = 'New Job Posted'
-        message = (
-            f'Job Name : {job_id}'
-        )
-        from_email = settings.DEFAULT_FROM_EMAIL
-        print(sub_email)
+        subject = "New Job Posting"
+        message = f"""
+        Hi there,
 
-        send_mail(
-            subject,
+        A new job posting has been added. 
+
+        Job ID: {job_id}
+        Unsubscribe: {unsubscribe_url}
+        Visit our site: {site_url}
+        """
+        from_email = settings.DEFAULT_FROM_EMAIL
+        email = EmailMessage(
+            subject, 
             message,
             from_email,
-            ['sub_email'],
-            fail_silently=False
+            [from_email],
         )
+        email.send()
         logger.info("Email sent successfully")
     except Exception as e:
         logger.error(f"Error sending email: {e}")

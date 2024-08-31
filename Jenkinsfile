@@ -19,8 +19,8 @@ pipeline {
         PGADMIN_DEFAULT_EMAIL = credentials('django-host-email-id')
         PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
         
-        EMAIL_HOST_USER = credentials('django-host-email-id')
-        DEFAULT_FROM_EMAIL = credentials('django-host-email-id')
+        EMAIL_HOST_USER = akhiiltkaniiparampiil@gmail.com
+        DEFAULT_FROM_EMAIL = akhiiltkaniiparampiil@gmail.com
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
 
         WKHTMLTOPDF_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
