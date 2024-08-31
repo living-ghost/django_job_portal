@@ -21,7 +21,7 @@ def send_job_email(sub_email, job_id, unsubscribe_url, site_url):
             subject,
             message,
             from_email,
-            [sub_email],
+            ['akhiiltkaniiparampiil@gmail.com'],
             fail_silently=False
         )
         logger.info("Email sent successfully")
