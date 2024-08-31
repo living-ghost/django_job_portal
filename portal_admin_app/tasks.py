@@ -16,6 +16,7 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
         )
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [subscriber_email]
+        print(recipient_list)
 
         send_mail(
             subject,
