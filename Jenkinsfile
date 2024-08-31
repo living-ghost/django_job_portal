@@ -28,18 +28,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Build Docker') {
-            steps {
-                script {
-                    echo "SECRET_KEY: ${env.SECRET_KEY}"
-                    echo "DB_USER: ${env.DB_USER}"
-                    echo "DB_PASSWORD: ${env.DB_PASSWORD}"
-                    docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg DB_NAME=${env.DB_NAME} --build-arg DB_USER=${env.DB_USER} --build-arg DB_PASSWORD=${env.DB_PASSWORD} --build-arg DB_HOST=${env.DB_HOST} --build-arg DB_PORT=${env.DB_PORT} --build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL} --build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT} --build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER} --build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER} --build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE} --build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND} .")
-                }
-            }
-        }
-
         stage('Clone Repository') {
             steps {
                 script {
