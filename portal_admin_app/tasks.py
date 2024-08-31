@@ -22,7 +22,7 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
             subject,
             message,
             from_email,
-            [recipient_list],
+            [from_email],
             fail_silently=False
         )
         logger.info("Email sent successfully")
