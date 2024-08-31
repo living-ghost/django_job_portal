@@ -21,7 +21,6 @@ def send_job_email(sub_email, job_id, unsubscribe_url, site_url):
             subject,
             message,
             from_email,
-            print(sub_email),
             sub_email,
             fail_silently=False
         )
