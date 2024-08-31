@@ -29,7 +29,7 @@ pipeline {
 
     stages {
 
-        stage('Build Docker Image') {
+        stage('Build Docker') {
             steps {
                 script {
                     echo "SECRET_KEY: ${env.SECRET_KEY}"
