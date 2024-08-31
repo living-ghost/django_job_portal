@@ -21,7 +21,7 @@ pipeline {
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
-        EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
+        EMAIL_HOST_PASSWORD = credentials('django-email-password-id').replace(' ', '\\ ')
 
         WKHTMLTOPDF_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
         WKHTMLTOIMAGE_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe'
