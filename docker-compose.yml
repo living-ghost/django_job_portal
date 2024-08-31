@@ -26,6 +26,9 @@ services:
       EMAIL_HOST_USER: ${EMAIL_HOST_USER}
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
       DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+      CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
+    networks:
+      - my_network
 
   db:
     image: postgres:16
@@ -35,6 +38,8 @@ services:
       POSTGRES_USER: ${DB_USER}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -53,6 +58,8 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq
+    networks:
+      - my_network
 
   celery:
     build:
@@ -63,7 +70,7 @@ services:
     depends_on:
       - rabbitmq
     environment:
-      CELERY_BROKER_URL: 'pyamqp://guest:guest@rabbitmq:5672//'
+      CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
       CELERY_ACCEPT_CONTENT: 'application/json'
       CELERY_RESULT_SERIALIZER: 'json'
       CELERY_TASK_SERIALIZER: 'json'
@@ -71,6 +78,8 @@ services:
       CELERY_RESULT_BACKEND: 'rpc://'
     volumes:
       - .:/app
+    networks:
+      - my_network
 
   flower:
     build:
@@ -83,7 +92,7 @@ services:
     ports:
       - "5555:5555"
     environment:
-      CELERY_BROKER_URL: 'pyamqp://guest:guest@rabbitmq:5672//'
+      CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
       CELERY_ACCEPT_CONTENT: 'application/json'
       CELERY_RESULT_SERIALIZER: 'json'
       CELERY_TASK_SERIALIZER: 'json'
@@ -91,6 +100,8 @@ services:
       CELERY_RESULT_BACKEND: 'rpc://'
     volumes:
       - .:/app
+    networks:
+      - my_network
 
   prometheus:
     image: prom/prometheus
@@ -99,6 +110,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - my_network
 
   grafana:
     image: grafana/grafana
@@ -107,8 +120,14 @@ services:
       - "3002:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
+    networks:
+      - my_network
 
 volumes:
   pgdata:
   rabbitmqdata:
   grafana-storage:
+
+networks:
+  my_network:
+    driver: bridge
