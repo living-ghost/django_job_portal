@@ -7,22 +7,21 @@ from django.core.mail import send_mail
 logger = logging.getLogger(__name__)
 
 @shared_task
-def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
-    logger.info(f"Sending email to {subscriber_email}")
+def send_job_email(sub_email, job_id, unsubscribe_url, site_url):
+    logger.info(f"Sending email to {sub_email}")
     try:
         subject = 'New Job Posted'
         message = (
             f'Job Name : {job_id}'
         )
         from_email = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [subscriber_email]
-        print(recipient_list)
+        print(sub_email)
 
         send_mail(
             subject,
             message,
             from_email,
-            [from_email],
+            [sub_email],
             fail_silently=False
         )
         logger.info("Email sent successfully")
