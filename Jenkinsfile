@@ -48,6 +48,21 @@ pipeline {
             }
         }
 
+        stage('Switch to Default Docker Builder') {
+            steps {
+                script {
+                    try {
+                        echo "Switching to default Docker builder..."
+                        bat 'docker buildx use default'
+                        echo "Switched to default Docker builder"
+                    } catch (Exception e) {
+                        echo "Failed to switch Docker builder: ${e.getMessage()}"
+                        error("Stopping pipeline due to builder switch failure.")
+                    }
+                }
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 script {
