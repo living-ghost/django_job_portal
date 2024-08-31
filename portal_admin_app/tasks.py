@@ -29,4 +29,4 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
         email.send()
         logger.info("Email sent successfully")
     except Exception as e:
-        logger.error(f"Error sending email: {e}")
+        logger.error(f"Error sending email: {e} , {subscriber_email}")
