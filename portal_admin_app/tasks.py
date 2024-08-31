@@ -20,7 +20,13 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
         Visit our site: {site_url}
         """
         from_email = settings.DEFAULT_FROM_EMAIL
-        email = EmailMessage(subject, message, from_email, [subscriber_email])
+        email = EmailMessage(
+            subject, 
+            message,
+            from_email,
+            print("before ", subscriber_email)
+            [subscriber_email]
+        )
         email.send()
         logger.info("Email sent successfully")
     except Exception as e:
