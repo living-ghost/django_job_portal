@@ -35,7 +35,11 @@ pipeline {
                         echo "Stopping and removing existing containers..."
                         bat 'docker-compose down --volumes --remove-orphans'
                         echo "Removing old Docker images..."
-                        bat "docker rmi \$(docker images -f 'dangling=true' -q) || echo 'No dangling images to remove'"
+                        // Correcting the command for Windows
+                        bat '''
+                            for /f "tokens=*" %%i in ('docker images -f "dangling=true" -q') do docker rmi %%i
+                            IF %ERRORLEVEL% NEQ 0 (echo 'No dangling images to remove')
+                        '''
                     } catch (Exception e) {
                         echo "Cleanup failed: ${e.getMessage()}"
                         error("Stopping pipeline due to cleanup failure.")
