@@ -48,21 +48,6 @@ pipeline {
             }
         }
 
-        stage('Switch to Default Docker Builder') {
-            steps {
-                script {
-                    try {
-                        echo "Switching to default Docker builder..."
-                        bat 'docker buildx use default'
-                        echo "Switched to default Docker builder"
-                    } catch (Exception e) {
-                        echo "Failed to switch Docker builder: ${e.getMessage()}"
-                        error("Stopping pipeline due to builder switch failure.")
-                    }
-                }
-            }
-        }
-
         stage('Clone Repository') {
             steps {
                 script {
@@ -77,7 +62,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg DB_NAME=${env.DB_NAME} --build-arg DB_USER=${env.DB_USER} --build-arg DB_PASSWORD=${env.DB_PASSWORD} --build-arg DB_HOST=${env.DB_HOST} --build-arg DB_PORT=${env.DB_PORT} --build-arg PGADMIN_DEFAULT_EMAIL=${env.PGADMIN_DEFAULT_EMAIL} --build-arg PGADMIN_DEFAULT_PASSWORD=${env.PGADMIN_DEFAULT_PASSWORD} --build-arg EMAIL_HOST_USER=${env.EMAIL_HOST_USER} --build-arg DEFAULT_FROM_EMAIL=${env.DEFAULT_FROM_EMAIL} --build-arg EMAIL_HOST_PASSWORD=${env.EMAIL_HOST_PASSWORD} --build-arg ALLOWED_HOSTS=${env.ALLOWED_HOSTS} .")
+                    docker.buildx.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg DB_NAME=${env.DB_NAME} --build-arg DB_USER=${env.DB_USER} --build-arg DB_PASSWORD=${env.DB_PASSWORD} --build-arg DB_HOST=${env.DB_HOST} --build-arg DB_PORT=${env.DB_PORT} --build-arg PGADMIN_DEFAULT_EMAIL=${env.PGADMIN_DEFAULT_EMAIL} --build-arg PGADMIN_DEFAULT_PASSWORD=${env.PGADMIN_DEFAULT_PASSWORD} --build-arg EMAIL_HOST_USER=${env.EMAIL_HOST_USER} --build-arg DEFAULT_FROM_EMAIL=${env.DEFAULT_FROM_EMAIL} --build-arg EMAIL_HOST_PASSWORD=${env.EMAIL_HOST_PASSWORD} --build-arg ALLOWED_HOSTS=${env.ALLOWED_HOSTS} .")
                 }
             }
         }
