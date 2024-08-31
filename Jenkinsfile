@@ -28,6 +28,22 @@ pipeline {
     }
 
     stages {
+        stage('Clean Up Old Data') {
+            steps {
+                script {
+                    try {
+                        echo "Stopping and removing existing containers..."
+                        bat 'docker-compose down --volumes --remove-orphans'
+                        echo "Removing old Docker images..."
+                        bat "docker rmi \$(docker images -f 'dangling=true' -q) || echo 'No dangling images to remove'"
+                    } catch (Exception e) {
+                        echo "Cleanup failed: ${e.getMessage()}"
+                        error("Stopping pipeline due to cleanup failure.")
+                    }
+                }
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 script {
