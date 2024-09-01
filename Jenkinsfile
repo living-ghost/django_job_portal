@@ -16,7 +16,7 @@ pipeline {
         DB_HOST = 'db'
         DB_PORT = '5432'
 
-        PGADMIN_DEFAULT_EMAIL = credentials('django-host-email-id')
+        PGADMIN_DEFAULT_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
