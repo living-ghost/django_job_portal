@@ -7,12 +7,13 @@ pipeline {
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
         // Environment variables
-        DEBUG = 'True'
+        DEBUG = True
         ALLOWED_HOSTS = 'localhost'
         SECRET_KEY = credentials('django-secret-key-id')
+
         DB_NAME = 'job_portal_dev'
-        DB_USER = credentials('django-db-username-id')
-        DB_PASSWORD = credentials('django-db-password-id')
+        DB_USER = 'akhiiltkaniiparampiil'
+        DB_PASSWORD = 'db_pwd_666_777_888'
         DB_HOST = 'db'
         DB_PORT = '5432'
 
