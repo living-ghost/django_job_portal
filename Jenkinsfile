@@ -7,7 +7,7 @@ pipeline {
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
         // Environment variables
-        DEBUG = True
+        DEBUG = 'True'
         ALLOWED_HOSTS = 'localhost'
         SECRET_KEY = credentials('django-secret-key-id')
 
