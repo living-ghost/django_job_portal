@@ -121,9 +121,9 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',  # Database engine
-        'NAME': os.getenv('DB_NAME'),  # Database name
-        'USER': os.getenv('DB_USER'),  # Database user
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Database password
+        'NAME': os.getenv('DB_NAME', 'job_portal_dev'),  # Database name
+        'USER': os.getenv('DB_USER', 'user'),  # Database user
+        'PASSWORD': os.getenv('DB_PASSWORD', 'password'),  # Database password
         'HOST': os.getenv('DB_HOST', 'db'),  # Database host
         'PORT': os.getenv('DB_PORT', '5432'),  # Database port
     }
