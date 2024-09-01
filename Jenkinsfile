@@ -11,7 +11,7 @@ pipeline {
         ALLOWED_HOSTS = 'localhost'
         SECRET_KEY = credentials('django-secret-key-id')
         DB_NAME = 'job_portal_dev'
-        DB_USER = credentials('django-db-username-id')
+        DB_USER = 'postgres'
         DB_PASSWORD = credentials('django-db-password-id')
         DB_HOST = 'db'
         DB_PORT = '5432'
