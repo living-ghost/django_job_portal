@@ -9,10 +9,10 @@ pipeline {
         // Environment variables
         DEBUG = 'True'
         ALLOWED_HOSTS = 'localhost'
-        SECRET_KEY = credentials(django-secret-key-id)
+        SECRET_KEY = credentials('django-secret-key-id')
         DB_NAME = 'job_portal_dev'
-        DB_USER = 'postgres'
-        DB_PASSWORD = credentials(django-db-password-id)
+        DB_USER = 'akhiiltkaniiparampiil'
+        DB_PASSWORD = credentials('django-db-password-id')
         DB_HOST = 'db'
         DB_PORT = '5432'
 
