@@ -45,11 +45,13 @@ services:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${EMAIL_HOST_USER}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_DEFAULT_PASSWORD: ${EMAIL_HOST_PASSWORD}
     ports:
       - "8089:80"
     depends_on:
       - db
+    networks:
+      - my_network
 
   rabbitmq:
     image: rabbitmq:3-management
