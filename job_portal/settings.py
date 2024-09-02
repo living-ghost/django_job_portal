@@ -15,7 +15,6 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from . password import password
 
 load_dotenv()
 
@@ -133,15 +132,25 @@ DATABASES = {
     }
 }
 
-# Email backend configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
-EMAIL_HOST_PASSWORD = password.reconstructed_password
-print(EMAIL_HOST_PASSWORD)
-DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
+# Email backend configuration stored in a dictionary
+EMAILS = {
+    'EMAIL_BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+    'EMAIL_HOST': 'smtp.gmail.com',
+    'EMAIL_PORT': 587,
+    'EMAIL_USE_TLS': True,
+    'EMAIL_HOST_USER': 'akhiiltkaniiparampiil@gmail.com',
+    'EMAIL_HOST_PASSWORD': os.getenv('EMAIL_HOST_PASSWORD'),
+    'DEFAULT_FROM_EMAIL': 'akhiiltkaniiparampiil@gmail.com'
+}
+
+# Example usage
+EMAIL_BACKEND = EMAILS['EMAIL_BACKEND']
+EMAIL_HOST = EMAILS['EMAIL_HOST']
+EMAIL_PORT = EMAILS['EMAIL_PORT']
+EMAIL_USE_TLS = EMAILS['EMAIL_USE_TLS']
+EMAIL_HOST_USER = EMAILS['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = EMAILS['EMAIL_HOST_PASSWORD']
+DEFAULT_FROM_EMAIL = EMAILS['DEFAULT_FROM_EMAIL']
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
