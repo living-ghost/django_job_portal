@@ -133,15 +133,17 @@ DATABASES = {
 }
 
 # Email backend configuration
-EMAIL_PWD_DEV = "".join(os.getenv('EMAIL_PWD'))
-print(EMAIL_PWD_DEV)
+EMAIl_PWD_DEV = os.getenv('EMAIL_PWD')
+# Accumulate characters into a new string
+reconstructed_password = "".join([i for i in EMAIl_PWD_DEV])
+print(reconstructed_password)
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
-EMAIL_HOST_PASSWORD = EMAIL_PWD_DEV
+EMAIL_HOST_PASSWORD = reconstructed_password
 print(EMAIL_HOST_PASSWORD)
 DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
