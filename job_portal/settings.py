@@ -16,14 +16,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Define the path to the .env-dev file
-env_path = Path('.env')
-
-# Load environment variables from the .env-dev file
-load_dotenv(dotenv_path=env_path)
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from the dev.env file
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'dev.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -127,12 +124,12 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django_prometheus.db.backends.postgresql',  # Database engine
-        'NAME': os.getenv('DB_NAME'),  # Database name
-        'USER': os.getenv('DB_USER'),  # Database user
-        'PASSWORD': os.getenv('DB_PASSWORD'),  # Database password
-        'HOST': os.getenv('DB_HOST', 'localhost'),  # Database host
-        'PORT': os.getenv('DB_PORT', '5432'),  # Database port
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -141,9 +138,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Email host user
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Email host password
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')  # Default from email address
+EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -189,11 +186,3 @@ PDFKIT_CONFIG = {
 IMGKIT_CONFIG = {
     'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'),
 }
-
-CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Kolkata'
-
-CELERY_RESULT_BACKEND = 'rpc://'
