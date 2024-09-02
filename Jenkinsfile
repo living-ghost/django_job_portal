@@ -7,25 +7,25 @@ pipeline {
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
 
         // Environment variables
-        DEBUG = 'True'
+        DEBUG = "True"
         ALLOWED_HOSTS = 'localhost'
-        SECRET_KEY = 'django-insecure-p8ug3w++$+=m)5c3yv_(m931130_s+jsp3f+v!ok7_^c@*c@wb'
+        SECRET_KEY = credentials('django-secret-key-id')
         
         DB_NAME = 'job_portal_dev'
         DB_USER = 'portal_dev'
-        DB_PASSWORD = 'portal_dev_pwd'
+        DB_PASSWORD = credentials('django-db-password-id')
         DB_HOST = 'db'
         DB_PORT = '5432'
 
         PGADMIN_DEFAULT_EMAIL = credentials('django-host-email-id')
         PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
         
-        EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
-        DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
+        EMAIL_HOST_USER = credentials('django-host-email-id')
+        DEFAULT_FROM_EMAIL = credentials('django-host-email-id')
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
 
-        WKHTMLTOPDF_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
-        WKHTMLTOIMAGE_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe'
+        WKHTMLTOPDF_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
+        WKHTMLTOIMAGE_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe"
     }
 
     stages {
