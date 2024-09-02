@@ -22,7 +22,7 @@ pipeline {
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
-        EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
+        EMAIL_PWD = credentials('django-email-password-id')
 
         WKHTMLTOPDF_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
         WKHTMLTOIMAGE_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe"
@@ -71,7 +71,7 @@ pipeline {
                         echo "Starting Docker Compose..."
                         // Use 'withEnv' to set environment variables
                         withEnv([
-                            "EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}"
+                            "EMAIL_PWD=${EMAIL_PWD}"
                         ]) {
                                 bat 'docker-compose up -d --build'
                         }
