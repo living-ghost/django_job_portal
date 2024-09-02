@@ -16,10 +16,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from the dev.env file
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'dev.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -132,25 +133,14 @@ DATABASES = {
     }
 }
 
-# Email backend configuration stored in a dictionary
-EMAILS = {
-    'EMAIL_BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
-    'EMAIL_HOST': 'smtp.gmail.com',
-    'EMAIL_PORT': 587,
-    'EMAIL_USE_TLS': True,
-    'EMAIL_HOST_USER': 'akhiiltkaniiparampiil@gmail.com',
-    'EMAIL_HOST_PASSWORD': os.getenv('EMAIL_HOST_PASSWORD'),
-    'DEFAULT_FROM_EMAIL': 'akhiiltkaniiparampiil@gmail.com'
-}
-
-# Example usage
-EMAIL_BACKEND = EMAILS['EMAIL_BACKEND']
-EMAIL_HOST = EMAILS['EMAIL_HOST']
-EMAIL_PORT = EMAILS['EMAIL_PORT']
-EMAIL_USE_TLS = EMAILS['EMAIL_USE_TLS']
-EMAIL_HOST_USER = EMAILS['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = EMAILS['EMAIL_HOST_PASSWORD']
-DEFAULT_FROM_EMAIL = EMAILS['DEFAULT_FROM_EMAIL']
+# Email backend configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PWD')
+DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
