@@ -23,8 +23,8 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
         email = EmailMessage(
             subject, 
             message,
-            'akhiiltkaniiparampiil@gmail.com',
-            ['akhiiltkaniiparampiil@gmail.com'],
+            from_email,
+            [from_email],
         )
         email.send()
         logger.info("Email sent successfully")
