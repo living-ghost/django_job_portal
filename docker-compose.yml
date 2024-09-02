@@ -23,7 +23,6 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      EMAIL_PWD: ${EMAIL_PWD}
       CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
     networks:
       - my_network
