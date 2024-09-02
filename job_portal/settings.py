@@ -142,7 +142,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
-EMAIL_HOST_PASSWORD = EMAIL_PWD_DEV
+EMAIL_HOST_PASSWORD = 'nair vsxs umsw hxur'
 print(EMAIL_HOST_PASSWORD)
 DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
