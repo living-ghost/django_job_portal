@@ -69,7 +69,6 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
-                        set EMAIL_HOST_PASSWORD="${EMAIL_HOST_PASSWORD}"
                         bat 'docker-compose up -d --build'
                         echo "Docker Compose started"
 
