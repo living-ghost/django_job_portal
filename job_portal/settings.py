@@ -141,10 +141,6 @@ EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
-print('EMAIL_HOST_USER:', os.getenv('EMAIL_HOST_USER'))
-print('EMAIL_HOST_PASSWORD:', os.getenv('EMAIL_HOST_PASSWORD'))
-print('DEFAULT_FROM_EMAIL:', os.getenv('DEFAULT_FROM_EMAIL'))
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
