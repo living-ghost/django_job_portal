@@ -9,11 +9,11 @@ pipeline {
         // Environment variables
         DEBUG = 'True'
         ALLOWED_HOSTS = 'localhost'
-        SECRET_KEY = credentials('django-secret-key-id')
+        SECRET_KEY = 'django-insecure-p8ug3w++$+=m)5c3yv_(m931130_s+jsp3f+v!ok7_^c@*c@wb'
         
         DB_NAME = 'job_portal_dev'
-        DB_USER = credentials('django-db-username-id')
-        DB_PASSWORD = credentials('django-db-password-id')
+        DB_USER = 'portal_dev'
+        DB_PASSWORD = 'portal_dev_pwd'
         DB_HOST = 'db'
         DB_PORT = '5432'
 
@@ -22,7 +22,7 @@ pipeline {
         
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
-        EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
+        EMAIL_HOST_PASSWORD = 'credentials('django-email-password-id')'
 
         WKHTMLTOPDF_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe'
         WKHTMLTOIMAGE_PATH = 'C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe'
