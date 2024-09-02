@@ -24,7 +24,7 @@ def send_job_email(subscriber_email, job_id, unsubscribe_url, site_url):
             subject, 
             message,
             from_email,
-            [subscriber_email],
+            [from_email],
         )
         email.send()
         logger.info("Email sent successfully")
