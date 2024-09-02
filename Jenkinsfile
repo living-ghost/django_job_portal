@@ -69,8 +69,12 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
-                        set EMAIL_HOST_PASSWORD="${EMAIL_HOST_PASSWORD}"
-                        bat 'docker-compose up -d --build'
+                        // Use 'withEnv' to set environment variables
+                        withEnv([
+                            "EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}"
+                        ]) {
+                                bat 'docker-compose up -d --build'
+                        }
                         echo "Docker Compose started"
 
                         // Capture logs for debugging
