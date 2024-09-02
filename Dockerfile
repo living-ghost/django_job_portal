@@ -56,22 +56,5 @@ ENV DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
 ENV WKHTMLTOPDF_PATH=${WKHTMLTOPDF_PATH}
 ENV WKHTMLTOIMAGE_PATH=${WKHTMLTOIMAGE_PATH}
 
-# Echo the values to verify them
-RUN echo "SECRET_KEY=${SECRET_KEY}" && \
-    echo "ALLOWED_HOSTS=${ALLOWED_HOSTS}" && \
-    echo "DEBUG=${DEBUG}" && \
-    echo "DB_NAME=${DB_NAME}" && \
-    echo "DB_USER=${DB_USER}" && \
-    echo "DB_PASSWORD=${DB_PASSWORD}" && \
-    echo "DB_HOST=${DB_HOST}" && \
-    echo "DB_PORT=${DB_PORT}" && \
-    echo "PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}" && \
-    echo "PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}" && \
-    echo "EMAIL_HOST_USER=${EMAIL_HOST_USER}" && \
-    echo "EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}" && \
-    echo "DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}" && \
-    echo "WKHTMLTOPDF_PATH=${WKHTMLTOPDF_PATH}" && \
-    echo "WKHTMLTOIMAGE_PATH=${WKHTMLTOIMAGE_PATH}"
-
 # Run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
