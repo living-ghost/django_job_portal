@@ -15,6 +15,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from . password import password
 
 load_dotenv()
 
@@ -133,17 +134,12 @@ DATABASES = {
 }
 
 # Email backend configuration
-EMAIl_PWD_DEV = os.getenv('EMAIL_PWD')
-# Accumulate characters into a new string
-reconstructed_password = "".join([i for i in EMAIl_PWD_DEV])
-print(reconstructed_password)
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
-EMAIL_HOST_PASSWORD = reconstructed_password
+EMAIL_HOST_PASSWORD = password.reconstructed_password
 print(EMAIL_HOST_PASSWORD)
 DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
