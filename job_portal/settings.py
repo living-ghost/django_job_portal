@@ -135,12 +135,12 @@ DATABASES = {
 
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
+EMAIL_HOST_USER = '2007801031c6f7'
+EMAIL_HOST_PASSWORD = '3ba93fa869f97f'
+DEFAULT_FROM_EMAIL = '2007801031c6f7'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
