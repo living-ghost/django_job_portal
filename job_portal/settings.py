@@ -31,8 +31,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # Debug mode - should be False in production
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# Allowed hosts for the Django project
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+# Fetch the ALLOWED_HOSTS environment variable, default to an empty string if not set
+allowed_hosts_env = os.getenv('ALLOWED_HOSTS', '')
+
+# Split the string into a list by commas
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 
 # Application definition
 

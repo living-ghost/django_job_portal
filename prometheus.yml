@@ -1,5 +1,9 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
 scrape_configs:
-  - job_name: "job_portal"
-    metrics_path: "/metrics"  # No trailing slash, unless explicitly configured with one in Django
+  - job_name: 'django'
+    metrics_path: '/metrics'
     static_configs:
-      - targets: ["127.0.0.1:8000"]  # Ensure this matches your Django app's address and port
+      - targets: ['django:8000']
