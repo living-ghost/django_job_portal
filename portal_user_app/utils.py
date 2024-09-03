@@ -31,7 +31,7 @@ def send_otp_email(email, otp):
     send_mail(
         'Your OTP Code',
         f'Your OTP code is {otp}.',
-        'akhiiltkaniiparampiil@gmail.com',
+        '2007801031c6f7',
         [email],
         fail_silently=False,
     )
@@ -44,7 +44,7 @@ def send_account_created_email(email):
         email (str): The recipient's email address.
     """
     subject = 'Freshers Park'
-    from_email = 'akhiiltkaniiparampiil@gmail.com'
+    from_email = '2007801031c6f7'
     to_email = [email]
 
     # Render the HTML content from the template
@@ -61,7 +61,7 @@ def send_subscription_email(email):
         email (str): The recipient's email address.
     """
     subject = 'Freshers Park'
-    from_email = 'akhiiltkaniiparampiil@gmail.com'
+    from_email = '2007801031c6f7'
     to_email = [email]
 
     # Render the HTML content from the template
