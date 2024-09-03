@@ -4,9 +4,6 @@ FROM python:3.12-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Clear any previous build cache (optional)
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
 
