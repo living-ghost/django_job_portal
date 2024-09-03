@@ -69,6 +69,8 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
+                        bat 'docker-compose down'
+                        bat 'docker-compose prune'
                         bat 'docker-compose up -d --build'
                         echo "Docker Compose started"
 
