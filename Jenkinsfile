@@ -55,36 +55,36 @@ pipeline {
             }
         }
 
-        stage('Pubat Docker Images') {
+        stage('Push Docker Images') {
             steps {
                 script {
-                    def registry = 'https://registry.hub.docker.com'
+                    def registry = 'https://index.docker.io/v1/'
                     docker.withRegistry(registry, DOCKER_CREDENTIALS_ID) {
-                        // Pubat Django image
+                        // Push Django image
                         def djangoImage = docker.image("${DJANGO_IMAGE}")
                         try {
                             djangoImage.push()
                             echo 'Django image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to pubat Django image: ${e.getMessage()}"
+                            echo "Failed to push Django image: ${e.getMessage()}"
                         }
 
-                        // Pubat Celery image
+                        // Push Celery image
                         def celeryImage = docker.image("${CELERY_IMAGE}")
                         try {
                             celeryImage.push()
                             echo 'Celery image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to pubat Celery image: ${e.getMessage()}"
+                            echo "Failed to push Celery image: ${e.getMessage()}"
                         }
 
-                        // Pubat Flower image
+                        // Push Flower image
                         def flowerImage = docker.image("${FLOWER_IMAGE}")
                         try {
                             flowerImage.push()
                             echo 'Flower image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to pubat Flower image: ${e.getMessage()}"
+                            echo "Failed to push Flower image: ${e.getMessage()}"
                         }
                     }
                 }
