@@ -50,9 +50,5 @@ ENV PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
 ENV WKHTMLTOPDF_PATH=${WKHTMLTOPDF_PATH}
 ENV WKHTMLTOIMAGE_PATH=${WKHTMLTOIMAGE_PATH}
 
-# Copy the wait-for-it script (if you use it)
-COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
-RUN chmod +x /usr/local/bin/wait-for-it.sh
-
 # Run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
