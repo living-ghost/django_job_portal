@@ -66,7 +66,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_worker
-    command: celery -A job_portal.celery worker --pool=solo -l info
+    command: /usr/local/bin/wait-for-it.sh rabbitmq -- celery -A job_portal.celery worker --pool=solo -l info
     depends_on:
       - rabbitmq
     environment:
@@ -87,7 +87,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: celery_flower
-    command: celery -A job_portal flower
+    command: /usr/local/bin/wait-for-it.sh rabbitmq -- celery -A job_portal flower
     depends_on:
       - rabbitmq
     ports:
