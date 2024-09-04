@@ -5,7 +5,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: living9host/django:${BUILD_NUMBER}
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
@@ -24,14 +23,13 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      EMAIL_HOST_PASSWORD : ${EMAIL_HOST_PASSWORD}
       CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
     networks:
       - my_network
 
   db:
     image: postgres:16
-    container_name: postgres_db
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -43,7 +41,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -56,7 +53,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -69,7 +65,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: living9host/celery:${BUILD_NUMBER}
     container_name: celery_worker
     command: celery -A job_portal.celery worker --pool=solo -l info
     depends_on:
@@ -91,7 +86,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: living9host/flower:${BUILD_NUMBER}
     container_name: celery_flower
     command: celery -A job_portal flower
     depends_on:
