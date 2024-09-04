@@ -55,36 +55,36 @@ pipeline {
             }
         }
 
-        stage('Push Docker Images') {
+        stage('Pubat Docker Images') {
             steps {
                 script {
                     def registry = 'https://registry.hub.docker.com'
                     docker.withRegistry(registry, DOCKER_CREDENTIALS_ID) {
-                        // Push Django image
+                        // Pubat Django image
                         def djangoImage = docker.image("${DJANGO_IMAGE}")
                         try {
                             djangoImage.push()
                             echo 'Django image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to push Django image: ${e.getMessage()}"
+                            echo "Failed to pubat Django image: ${e.getMessage()}"
                         }
 
-                        // Push Celery image
+                        // Pubat Celery image
                         def celeryImage = docker.image("${CELERY_IMAGE}")
                         try {
                             celeryImage.push()
                             echo 'Celery image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to push Celery image: ${e.getMessage()}"
+                            echo "Failed to pubat Celery image: ${e.getMessage()}"
                         }
 
-                        // Push Flower image
+                        // Pubat Flower image
                         def flowerImage = docker.image("${FLOWER_IMAGE}")
                         try {
                             flowerImage.push()
                             echo 'Flower image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to push Flower image: ${e.getMessage()}"
+                            echo "Failed to pubat Flower image: ${e.getMessage()}"
                         }
                     }
                 }
@@ -96,12 +96,12 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
-                        sh 'docker-compose pull'
-                        sh 'docker-compose up -d --build'
+                        bat 'docker-compose pull'
+                        bat 'docker-compose up -d --build'
                         echo "Docker Compose started"
 
                         // Capture logs for debugging
-                        sh 'docker-compose logs'
+                        bat 'docker-compose logs'
                     } catch (Exception e) {
                         echo "Docker Compose failed: ${e.getMessage()}"
                         error("Stopping pipeline due to Docker Compose failure.")
@@ -112,7 +112,7 @@ pipeline {
 
         stage('Run Django Make Migrations') {
             steps {
-                sh '''
+                bat '''
                     docker-compose exec django python manage.py makemigrations portal_admin_app
                     docker-compose exec django python manage.py makemigrations portal_user_app
                     docker-compose exec django python manage.py makemigrations portal_resume_app
@@ -123,13 +123,13 @@ pipeline {
 
         stage('Run Django Migrations') {
             steps {
-                sh 'docker-compose exec django python manage.py migrate'
+                bat 'docker-compose exec django python manage.py migrate'
             }
         }
 
         stage('Collect Static Files') {
             steps {
-                sh 'docker-compose exec django python manage.py collectstatic --noinput'
+                bat 'docker-compose exec django python manage.py collectstatic --noinput'
             }
         }
     }
