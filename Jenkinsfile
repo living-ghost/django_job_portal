@@ -3,14 +3,18 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials-id'
-        DOCKER_IMAGE = 'living9host/job_portal'
-        BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
+        DOCKER_IMAGE_PREFIX = 'living9host'
+        BUILD_TAG = "${env.BUILD_NUMBER}"
+
+        // Docker images
+        DJANGO_IMAGE = "${DOCKER_IMAGE_PREFIX}/django:${BUILD_TAG}"
+        CELERY_IMAGE = "${DOCKER_IMAGE_PREFIX}/celery:${BUILD_TAG}"
+        FLOWER_IMAGE = "${DOCKER_IMAGE_PREFIX}/flower:${BUILD_TAG}"
 
         // Environment variables
         DEBUG = "True"
         ALLOWED_HOSTS = 'localhost'
         SECRET_KEY = credentials('django-secret-key-id')
-        
         DB_NAME = 'job_portal_dev'
         DB_USER = 'portal_dev'
         DB_PASSWORD = credentials('django-db-password-id')
@@ -19,7 +23,7 @@ pipeline {
 
         PGADMIN_DEFAULT_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
-        
+
         EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
@@ -40,24 +44,47 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Images') {
             steps {
                 script {
-                    docker.build("${BUILD_TAG}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg DB_NAME=${env.DB_NAME} --build-arg DB_USER=${env.DB_USER} --build-arg DB_PASSWORD=${env.DB_PASSWORD} --build-arg DB_HOST=${env.DB_HOST} --build-arg DB_PORT=${env.DB_PORT} --build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL} --build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT} --build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER} --build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER} --build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE} --build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND} --build-arg PGADMIN_DEFAULT_EMAIL=${env.PGADMIN_DEFAULT_EMAIL} --build-arg PGADMIN_DEFAULT_PASSWORD=${env.PGADMIN_DEFAULT_PASSWORD} --build-arg ALLOWED_HOSTS=${env.ALLOWED_HOSTS} .")
+                    // Build Docker images for each service
+                    docker.build("${DJANGO_IMAGE}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg DB_NAME=${env.DB_NAME} --build-arg DB_USER=${env.DB_USER} --build-arg DB_PASSWORD=${env.DB_PASSWORD} --build-arg DB_HOST=${env.DB_HOST} --build-arg DB_PORT=${env.DB_PORT} --build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL} --build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT} --build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER} --build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER} --build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE} --build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND} --build-arg PGADMIN_DEFAULT_EMAIL=${env.PGADMIN_DEFAULT_EMAIL} --build-arg PGADMIN_DEFAULT_PASSWORD=${env.PGADMIN_DEFAULT_PASSWORD} --build-arg ALLOWED_HOSTS=${env.ALLOWED_HOSTS} .")
+                    docker.build("${CELERY_IMAGE}", "--build-arg SECRET_KEY=${env.SECRET_KEY} --build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL} --build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT} --build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER} --build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER} --build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE} --build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND} .")
+                    docker.build("${FLOWER_IMAGE}", "--build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL} --build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT} --build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER} --build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER} --build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE} --build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND} .")
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Images') {
             steps {
                 script {
-                    def dockerImage = docker.image("${BUILD_TAG}")
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_CREDENTIALS_ID) {
+                    def registry = 'https://registry.hub.docker.com'
+                    docker.withRegistry(registry, DOCKER_CREDENTIALS_ID) {
+                        // Push Django image
+                        def djangoImage = docker.image("${DJANGO_IMAGE}")
                         try {
-                            dockerImage.push()
-                            echo 'Image pushed successfully'
+                            djangoImage.push()
+                            echo 'Django image pushed successfully'
                         } catch (Exception e) {
-                            echo "Failed to push image: ${e.getMessage()}"
+                            echo "Failed to push Django image: ${e.getMessage()}"
+                        }
+
+                        // Push Celery image
+                        def celeryImage = docker.image("${CELERY_IMAGE}")
+                        try {
+                            celeryImage.push()
+                            echo 'Celery image pushed successfully'
+                        } catch (Exception e) {
+                            echo "Failed to push Celery image: ${e.getMessage()}"
+                        }
+
+                        // Push Flower image
+                        def flowerImage = docker.image("${FLOWER_IMAGE}")
+                        try {
+                            flowerImage.push()
+                            echo 'Flower image pushed successfully'
+                        } catch (Exception e) {
+                            echo "Failed to push Flower image: ${e.getMessage()}"
                         }
                     }
                 }
@@ -69,11 +96,12 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
-                        bat 'docker-compose up -d --build'
+                        sh 'docker-compose pull'
+                        sh 'docker-compose up -d --build'
                         echo "Docker Compose started"
 
                         // Capture logs for debugging
-                        bat 'docker-compose logs'
+                        sh 'docker-compose logs'
                     } catch (Exception e) {
                         echo "Docker Compose failed: ${e.getMessage()}"
                         error("Stopping pipeline due to Docker Compose failure.")
@@ -84,7 +112,7 @@ pipeline {
 
         stage('Run Django Make Migrations') {
             steps {
-                bat '''
+                sh '''
                     docker-compose exec django python manage.py makemigrations portal_admin_app
                     docker-compose exec django python manage.py makemigrations portal_user_app
                     docker-compose exec django python manage.py makemigrations portal_resume_app
@@ -95,13 +123,13 @@ pipeline {
 
         stage('Run Django Migrations') {
             steps {
-                bat 'docker-compose exec django python manage.py migrate'
+                sh 'docker-compose exec django python manage.py migrate'
             }
         }
 
         stage('Collect Static Files') {
             steps {
-                bat 'docker-compose exec django python manage.py collectstatic --noinput'
+                sh 'docker-compose exec django python manage.py collectstatic --noinput'
             }
         }
     }
