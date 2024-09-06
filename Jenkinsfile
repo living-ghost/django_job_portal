@@ -45,6 +45,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image with tag: ${BUILD_TAG}"
+                    
                     def buildArgs = [
                         "--build-arg SECRET_KEY=${env.SECRET_KEY}",
                         "--build-arg DB_NAME=${env.DB_NAME}",
@@ -52,17 +53,20 @@ pipeline {
                         "--build-arg DB_PASSWORD=${env.DB_PASSWORD}",
                         "--build-arg DB_HOST=${env.DB_HOST}",
                         "--build-arg DB_PORT=${env.DB_PORT}",
-                        "--build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL ?: 'null'}",
-                        "--build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT ?: 'null'}",
-                        "--build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER ?: 'null'}",
-                        "--build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER ?: 'null'}",
-                        "--build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE ?: 'null'}",
-                        "--build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND ?: 'null'}",
+                        "--build-arg CELERY_BROKER_URL=${env.CELERY_BROKER_URL}",
+                        "--build-arg CELERY_ACCEPT_CONTENT=${env.CELERY_ACCEPT_CONTENT}",
+                        "--build-arg CELERY_RESULT_SERIALIZER=${env.CELERY_RESULT_SERIALIZER}",
+                        "--build-arg CELERY_TASK_SERIALIZER=${env.CELERY_TASK_SERIALIZER}",
+                        "--build-arg CELERY_TIMEZONE=${env.CELERY_TIMEZONE}",
+                        "--build-arg CELERY_RESULT_BACKEND=${env.CELERY_RESULT_BACKEND}",
                         "--build-arg PGADMIN_DEFAULT_EMAIL=${env.PGADMIN_DEFAULT_EMAIL}",
                         "--build-arg PGADMIN_DEFAULT_PASSWORD=${env.PGADMIN_DEFAULT_PASSWORD}",
                         "--build-arg ALLOWED_HOSTS=${env.ALLOWED_HOSTS}"
                     ].join(' ')
-                    docker.build("${BUILD_TAG}", buildArgs)
+                    
+                    echo "Building Docker image with arguments: ${buildArgs}"
+                    
+                    docker.build("${BUILD_TAG}", "${buildArgs} .")
                 }
             }
         }
