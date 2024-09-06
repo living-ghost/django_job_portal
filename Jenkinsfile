@@ -91,10 +91,10 @@ pipeline {
         stage('Run Django Make Migrations') {
             steps {
                 sh '''
-                    docker-compose exec django python manage.py makemigrations portal_admin_app
-                    docker-compose exec django python manage.py makemigrations portal_user_app
-                    docker-compose exec django python manage.py makemigrations portal_resume_app
-                    docker-compose exec django python manage.py makemigrations portal_converter_app
+                    docker-compose exec -T django python manage.py makemigrations portal_admin_app
+                    docker-compose exec -T django python manage.py makemigrations portal_user_app
+                    docker-compose exec -T django python manage.py makemigrations portal_resume_app
+                    docker-compose exec -T django python manage.py makemigrations portal_converter_app
                 '''
             }
         }
