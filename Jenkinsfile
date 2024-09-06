@@ -24,8 +24,9 @@ pipeline {
         DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
         EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
 
-        WKHTMLTOPDF_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
-        WKHTMLTOIMAGE_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe"
+        // Update paths for Linux/Unix environment if required
+        WKHTMLTOPDF_PATH = "/usr/local/bin/wkhtmltopdf"
+        WKHTMLTOIMAGE_PATH = "/usr/local/bin/wkhtmltoimage"
     }
 
     stages {
@@ -69,11 +70,11 @@ pipeline {
                 script {
                     try {
                         echo "Starting Docker Compose..."
-                        bat 'docker-compose up -d --build'
+                        sh 'docker-compose up -d --build'
                         echo "Docker Compose started"
 
                         // Capture logs for debugging
-                        bat 'docker-compose logs'
+                        sh 'docker-compose logs'
                     } catch (Exception e) {
                         echo "Docker Compose failed: ${e.getMessage()}"
                         error("Stopping pipeline due to Docker Compose failure.")
@@ -84,7 +85,7 @@ pipeline {
 
         stage('Run Django Make Migrations') {
             steps {
-                bat '''
+                sh '''
                     docker-compose exec django python manage.py makemigrations portal_admin_app
                     docker-compose exec django python manage.py makemigrations portal_user_app
                     docker-compose exec django python manage.py makemigrations portal_resume_app
@@ -95,13 +96,13 @@ pipeline {
 
         stage('Run Django Migrations') {
             steps {
-                bat 'docker-compose exec django python manage.py migrate'
+                sh 'docker-compose exec django python manage.py migrate'
             }
         }
 
         stage('Collect Static Files') {
             steps {
-                bat 'docker-compose exec django python manage.py collectstatic --noinput'
+                sh 'docker-compose exec django python manage.py collectstatic --noinput'
             }
         }
     }
