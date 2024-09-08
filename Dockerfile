@@ -14,41 +14,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Ensure celeryuser owns the entire /app directory
-RUN adduser --disabled-password --gecos '' celeryuser && \
-    chown -R celeryuser:celeryuser /app
+RUN adduser --disabled-password --gecos '' django-user && \
+    chown -R django-user:django-user /app
 
 # Switch to non-root user
-USER celeryuser
+USER django-user
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
-
-# Define environment variables from build arguments
-ARG SECRET_KEY
-ARG ALLOWED_HOSTS
-ARG DEBUG
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_HOST
-ARG DB_PORT
-ARG PGADMIN_DEFAULT_EMAIL
-ARG PGADMIN_DEFAULT_PASSWORD
-ARG WKHTMLTOPDF_PATH
-ARG WKHTMLTOIMAGE_PATH
-
-ENV SECRET_KEY=${SECRET_KEY}
-ENV ALLOWED_HOSTS=${ALLOWED_HOSTS}
-ENV DEBUG=${DEBUG}
-ENV DB_NAME=${DB_NAME}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV DB_HOST=${DB_HOST}
-ENV DB_PORT=${DB_PORT}
-ENV PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-ENV PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-ENV WKHTMLTOPDF_PATH=${WKHTMLTOPDF_PATH}
-ENV WKHTMLTOIMAGE_PATH=${WKHTMLTOIMAGE_PATH}
 
 # Run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
