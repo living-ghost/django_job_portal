@@ -11,11 +11,17 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
+# Ensure to include .git if needed for versioning
 COPY . /app/
 
-# Ensure celeryuser owns the entire /app directory
-RUN adduser --disabled-password --gecos '' django-user && \
-    chown -R django-user:django-user /app
+# Create a user and group
+RUN adduser --disabled-password --gecos '' django-user
+
+# Ensure django-user owns the entire /app directory
+RUN chown -R django-user:django-user /app
+
+# Set permissions to allow full access for the owner
+RUN chmod -R 755 /app
 
 # Switch to non-root user
 USER django-user
