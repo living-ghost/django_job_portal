@@ -14,18 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Ensure to include .git if needed for versioning
 COPY . /app/
 
-# Create a user and group
-RUN adduser --disabled-password --gecos '' django-user
-
-# Ensure django-user owns the entire /app directory
-RUN chown -R django-user:django-user /app
-
-# Set permissions to allow full access for the owner
-RUN chmod -R 755 /app
-
-# Switch to non-root user
-USER django-user
-
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
