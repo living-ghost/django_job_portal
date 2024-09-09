@@ -5,22 +5,6 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'jenkins-docker-integration'
         DOCKER_IMAGE = 'living9host/job_portal'
         BUILD_TAG = "${DOCKER_IMAGE}:${BUILD_NUMBER}"
-
-        // Environment variables
-        DEBUG = "True"
-        ALLOWED_HOSTS = 'localhost'
-        SECRET_KEY = credentials('django-secret-key-id')
-        
-        DB_NAME = 'job_portal_dev'
-        DB_USER = 'portal_dev'
-        DB_PASSWORD = credentials('django-db-password-id')
-        DB_HOST = 'db'
-        DB_PORT = '5432'
-
-        PGADMIN_DEFAULT_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
-        PGADMIN_DEFAULT_PASSWORD = credentials('django-db-password-id')
-        
-        EMAIL_HOST_PASSWORD = credentials('django-email-password-id')
     }
 
     stages {

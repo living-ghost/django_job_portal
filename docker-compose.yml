@@ -1,14 +1,10 @@
-version: '3.8'
-
 services:
   django:
     build:
       context: ./
       dockerfile: Dockerfile
-    env_file:
-      - dev.env
     container_name: django_app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -32,8 +28,6 @@ services:
 
   db:
     image: postgres:16
-    env_file:
-      - dev.env
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -45,8 +39,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    env_file:
-      - dev.env
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -71,8 +63,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    env_file:
-      - dev.env
     container_name: celery_worker
     command: celery -A job_portal.celery worker --pool=solo -l info
     depends_on:
@@ -95,8 +85,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    env_file:
-      - dev.env
     container_name: celery_flower
     command: celery -A job_portal flower
     depends_on:
