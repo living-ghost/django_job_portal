@@ -26,6 +26,18 @@ services:
     networks:
       - my_network
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+    networks:
+      - my_network
+
   db:
     image: postgres:16
     environment:
