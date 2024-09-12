@@ -182,10 +182,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Path to wkhtmltopdf executable
 PDFKIT_CONFIG = {
-    'wkhtmltopdf': os.getenv('WKHTMLTOPDF_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'),
+    'wkhtmltopdf': os.getenv('WKHTMLTOPDF_PATH'),
 }
 
 # Path to wkhtmltoimage executable
 IMGKIT_CONFIG = {
-    'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'),
+    'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH'),
 }
