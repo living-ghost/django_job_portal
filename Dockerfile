@@ -10,6 +10,15 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install wkhtmltopdf, wkhtmltoimage, and their dependencies
+RUN apt-get update && apt-get install -y \
+    wkhtmltopdf \
+    wkhtmltoimage \
+    xfonts-75dpi \
+    xfonts-base \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy the current directory contents into the container at /app
 # Ensure to include .git if needed for versioning
 COPY . /app/
