@@ -164,7 +164,7 @@ USE_TZ = True
 # Static files configuration
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = '/static/'  # URL for accessing static files
-STATIC_ROOT = BASE_DIR / 'app/staticfiles'  # Directory where static files will be collected
+STATIC_ROOT = BASE_DIR / 'app/static'  # Directory where static files will be collected
 STATICFILES_DIRS = [
     BASE_DIR / 'portal_user_app' / 'static',  # Static files for the user app
     BASE_DIR / 'portal_admin_app' / 'static',  # Static files for the admin app
