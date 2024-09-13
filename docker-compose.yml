@@ -4,7 +4,7 @@ services:
       context: ./
       dockerfile: Dockerfile
     container_name: django_app
-    command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && waitress-serve --port=8000 job_portal.wsgi:application"
+    command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application"
     volumes:
       - .:/app
     ports:
