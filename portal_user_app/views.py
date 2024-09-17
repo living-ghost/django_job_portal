@@ -50,17 +50,17 @@ def index_view(request):
     Render the home page with featured jobs sorted by the latest date first.
     """
     featureds = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
-    current_date = timezone.now().date()  # Get current date
+    current_datetime = timezone.now()  # Get current datetime
 
     for feature in featureds:
-        days_ago = (current_date - feature.job_created_at.date()).days
-        
-        if days_ago == 0:
+        time_diff = current_datetime - feature.job_created_at
+
+        if time_diff < timedelta(days=1):
             feature.days_ago_display = "Posted today"
-        elif days_ago == 1:
+        elif time_diff < timedelta(days=2):
             feature.days_ago_display = "1 day ago"
         else:
-            feature.days_ago_display = f"{days_ago} days ago"
+            feature.days_ago_display = f"{time_diff.days} days ago"
 
     return render(request, "portal_user_app/index.html", {'featureds': featureds})
 
@@ -73,17 +73,17 @@ def fresher_jobs_view(request):
     Render the fresher job page with jobs sorted by the latest date, with pagination.
     """
     jobs = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
-    current_date = timezone.now().date()
+    current_datetime = timezone.now()  # Get current datetime
 
     for job in jobs:
-        days_ago = (current_date - job.job_created_at.date()).days
+        time_diff = current_datetime - job.job_created_at
 
-        if days_ago == 0:
+        if time_diff < timedelta(days=1):
             job.days_ago_display = "Posted today"
-        elif days_ago == 1:
+        elif time_diff < timedelta(days=2):
             job.days_ago_display = "1 day ago"
         else:
-            job.days_ago_display = f"{days_ago} days ago"
+            job.days_ago_display = f"{time_diff.days} days ago"
 
     # Pagination
     paginator = Paginator(jobs, 14)  # Show 14 jobs per page
@@ -107,17 +107,17 @@ def exp_jobs_view(request):
     Render the experienced job page with jobs sorted by the latest date, with pagination.
     """
     jobs = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
-    current_date = timezone.now().date()
+    current_datetime = timezone.now()  # Get current datetime
 
     for job in jobs:
-        days_ago = (current_date - job.job_created_at.date()).days
+        time_diff = current_datetime - job.job_created_at
 
-        if days_ago == 0:
+        if time_diff < timedelta(days=1):
             job.days_ago_display = "Posted today"
-        elif days_ago == 1:
+        elif time_diff < timedelta(days=2):
             job.days_ago_display = "1 day ago"
         else:
-            job.days_ago_display = f"{days_ago} days ago"
+            job.days_ago_display = f"{time_diff.days} days ago"
 
     # Pagination
     paginator = Paginator(jobs, 14)  # Show 14 jobs per page
