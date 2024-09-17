@@ -4,14 +4,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var RegisterModal = new bootstrap.Modal(document.getElementById('RegisterModal'));
     var OtpModal = new bootstrap.Modal(document.getElementById('OtpModal'));
     var ForgotPWDModal = new bootstrap.Modal(document.getElementById('ForgotPWDModal'));
+    var ContactUsModal = new bootstrap.Modal(document.getElementById('ContactUsModal'));
 
     // Button elements
     var LoginBtn1 = document.getElementById('LoginBtn1');
     var LoginBtn2 = document.getElementById('LoginBtn2');
     var LoginBtn3 = document.getElementById('LoginBtn3');
-    var LoginBtn4 = document.getElementById('LoginBtn4');
-    var LoginBtn5 = document.getElementById('LoginBtn5');
-    var LoginBtn6 = document.getElementById('LoginBtn6');
+    var ContactUsModal1 = document.getElementById('ContactUsModal1');
+    var ContactUsModal2 = document.getElementById('ContactUsModal2');
+    var ContactUsModal3 = document.getElementById('ContactUsModal3');
     var RegisterBtn = document.getElementById('RegisterBtn');
     var ForgotPWDBtn = document.getElementById('ForgotPWDBtn');
     
@@ -25,14 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
     LoginBtn3.addEventListener('click', function () {
         LoginModal.show();
     });
-    LoginBtn4.addEventListener('click', function () {
-        LoginModal.show();
+    ContactUsModal1.addEventListener('click', function () {
+        ContactUsModal.show();
     });
-    LoginBtn5.addEventListener('click', function () {
-        LoginModal.show();
+    ContactUsModal2.addEventListener('click', function () {
+        ContactUsModal.show();
     });
-    LoginBtn6.addEventListener('click', function () {
-        LoginModal.show();
+    ContactUsModal3.addEventListener('click', function () {
+        ContactUsModal.show();
     });
     ForgotPWDBtn.addEventListener('click', function () {
         ForgotPWDModal.show();

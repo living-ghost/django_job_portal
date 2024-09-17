@@ -16,19 +16,21 @@ from django.utils.timezone import make_aware
 from django.utils import timezone
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 # ================================
 #          Django App Imports
 # ================================
 
-from .models import Subscriber, User
+from .models import Subscriber, User, ContactUs
 from portal_admin_app.models import Job
 from .utils import (
     generate_otp, 
     send_account_created_email, 
     send_otp_email,
     generate_password, 
-    send_reset_email
+    send_reset_email,
+    send_contactus_email_to_admin
 )
 from .verify import verify_otp, handle_successful_otp_verification
 
@@ -136,11 +138,22 @@ def exp_jobs_view(request):
 
 def search_jobs_view(request):
     """
-    Handle job search requests based on the query parameter.
+    Handle job search requests for both fresher and experienced jobs.
+    Use the 'type' parameter to distinguish between fresher and experienced job searches.
     """
     query = request.GET.get('query', '')
-    results = Job.objects.filter(Q(job_heading__icontains=query))
-    return render(request, "portal_user_app/fresher_jobs.html", {'jobs': results})
+    job_type = request.GET.get('type', 'fresher')  # Default to 'fresher' if no type is provided
+    
+    if job_type == 'experienced':
+        # Search experienced jobs
+        results = Job.objects.filter(Q(job_heading__icontains=query) & Q(job_type='experienced'))
+        template = 'portal_user_app/exp_jobs.html'
+    else:
+        # Search fresher jobs
+        results = Job.objects.filter(Q(job_heading__icontains=query) & Q(job_type='fresher'))
+        template = 'portal_user_app/fresher_jobs.html'
+    
+    return render(request, template, {'jobs': results})
 
 # ================================
 #          About Page View
@@ -151,6 +164,34 @@ def about_view(request):
     Render the about page.
     """
     return render(request, "portal_user_app/about.html")
+
+# ================================
+#          Contact Us View
+# ================================
+
+def contact_us_view(request):
+    """
+    Contact us form to collect data from user and trigger email to Admin.
+    """
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        project_tech = request.POST.get('project_tech')
+        description = request.POST.get('description')
+
+        send_contactus_email_to_admin(name, email, project_tech, description)
+
+        messages.success(request, "We received your request, will revert shortly")
+
+        contact_us = ContactUs(
+            name=name,
+            email=email,
+            project_tech=project_tech,
+            description=description
+        )
+        contact_us.save()
+
+        return redirect('portal_user_app:user_index')
 
 # ================================
 #          Subscriber Registration

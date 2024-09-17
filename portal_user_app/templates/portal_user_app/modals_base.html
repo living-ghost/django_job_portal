@@ -139,3 +139,37 @@
         </div>
     </div>
 </div>
+
+<!-- Contact Us Modal -->
+<div class="modal fade" id="ContactUsModal" tabindex="-1" aria-labelledby="ContactUsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ContactUsModalLabel">Contact Us</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="ContactUsForm" method="post" action="{% url 'portal_user_app:user_contact' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="inputName">Name:</label>
+                        <input type="text" id="inputName" name="name" class="form-control" placeholder="Your Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEmail">Email:</label>
+                        <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Your Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputTech">Project Tech:</label>
+                        <input type="text" id="inputTech" name="project_tech" class="form-control" placeholder="Preferred Technology" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputDescription">Description:</label>
+                        <textarea id="inputDescription" name="description" class="form-control" placeholder="Project Description" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block" id="ContactUsBtn">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

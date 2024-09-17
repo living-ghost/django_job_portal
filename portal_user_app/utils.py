@@ -101,3 +101,26 @@ def send_reset_email(email, temp_pwd):
         recipient_list,
         fail_silently=False
     )
+
+
+def send_contactus_email_to_admin(name, email, project_tech, description ):
+    """
+    Send contact us data from user to Admin.
+    """
+    subject = 'User Project Request'
+    message = (
+        f'Requester Name {name}.'
+        f'Requester email {email}.'
+        f'Requester Project Tech {project_tech}.'
+        f'Requester Project Description {description}.'
+    )
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = ['akhiiltkaniiparampiil@gmail.com']
+
+    send_mail(
+        subject,
+        message,
+        from_email,
+        recipient_list,
+        fail_silently=False
+    )

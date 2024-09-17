@@ -28,6 +28,12 @@ urlpatterns = [
     path('search/', views.search_jobs_view, name='user_search'),  # Job search
 
     # ================================
+    #          Contact Us
+    # ================================
+
+    path('contact/', views.contact_us_view, name='user_contact'),  # User Contact Us
+
+    # ================================
     #          User Actions
     # ================================
 

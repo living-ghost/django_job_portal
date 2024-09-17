@@ -98,3 +98,12 @@ class Subscriber(models.Model):
         Return the string representation of the subscriber.
         """
         return self.subscriber_email
+    
+class ContactUs(models.Model):
+    """
+    Model to manage contact us form.
+    """
+    name = models.CharField()
+    email = models.EmailField()
+    project_tech = models.CharField()
+    description = models.CharField()
