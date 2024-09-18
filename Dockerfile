@@ -13,8 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install wkhtmltopdf, wkhtmltoimage, and their dependencies
 RUN apt-get update && apt install wkhtmltopdf -y
 
-RUN apt-get update && apt install wkhtmltoimage -y
-
 # Copy the current directory contents into the container at /app
 # Ensure to include .git if needed for versioning
 COPY . /app/
