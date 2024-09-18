@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo \
     libx11-6 \
     libssl-dev && \
-    wget https://github.com/living-ghost/Job_Portal/releases/tag/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/tag/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     apt-get install -f -y && \
     rm wkhtmltox_0.12.6.1-2.jammy_amd64.deb
