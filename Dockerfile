@@ -10,8 +10,24 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install wkhtmltopdf, wkhtmltoimage, and their dependencies
-RUN apt-get update && apt install wkhtmltopdf -y
+# Install wkhtmltopdf 0.12.6 and its dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    xz-utils \
+    fontconfig \
+    libxrender1 \
+    libxext6 \
+    libfreetype6 \
+    libjpeg62-turbo \
+    libx11-6 \
+    libssl-dev && \
+    wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.jammy_amd64.deb && \
+    dpkg -i wkhtmltox_0.12.6-1.jammy_amd64.deb && \
+    apt-get install -f -y && \
+    rm wkhtmltox_0.12.6-1.jammy_amd64.deb
+
+# Clean up the apt cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy the current directory contents into the container at /app
 # Ensure to include .git if needed for versioning
