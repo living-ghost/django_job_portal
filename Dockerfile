@@ -14,7 +14,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install -y \
-    wget && \
+    wget \
+    xz-utils \
+    fontconfig \
+    libxrender1 \
+    libxext6 \
+    libfreetype6 \
+    libjpeg62-turbo \
+    libjpeg-turbo8 \
+    libpng16-16 \
+    libx11-6 \
+    libxcb1 \
+    xfonts-75dpi \
+    xfonts-base && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 
