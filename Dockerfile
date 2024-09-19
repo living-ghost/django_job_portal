@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6 \
     libjpeg62-turbo \
     libx11-6 \
-    libssl1.1 \
+    libssl3 \
     xfonts-75dpi \
     xfonts-base && \
     wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
