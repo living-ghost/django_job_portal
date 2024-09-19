@@ -16,14 +16,6 @@ RUN dpkg --add-architecture i386 && \
     apt-get update && \
     apt-get install -y \
     wget \
-    fontconfig \
-    libxrender1 \
-    libxext6 \
-    libfreetype6 \
-    libjpeg-turbo8 \
-    libx11-6 \
-    xfonts-75dpi \
-    xfonts-base \
     wine \
     wine32 \
     wine64 \
