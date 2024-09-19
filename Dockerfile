@@ -21,8 +21,8 @@ RUN dpkg --add-architecture i386 && \
     libxext6 \
     libfreetype6 \
     libjpeg62-turbo \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \\
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb \
     libpng16-16 \
     libx11-6 \
     libxcb1 \
