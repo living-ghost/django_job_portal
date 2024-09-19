@@ -21,15 +21,14 @@ RUN dpkg --add-architecture i386 && \
     libxext6 \
     libfreetype6 \
     libjpeg62-turbo \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb \
     libpng16-16 \
     libx11-6 \
     libxcb1 \
     xfonts-75dpi \
     xfonts-base && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
