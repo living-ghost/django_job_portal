@@ -10,25 +10,9 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install wkhtmltopdf 0.12.6 and its dependencies
-RUN dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get install -y \
-    wget \
-    xz-utils \
-    fontconfig \
-    libxrender1 \
-    libxext6 \
-    libfreetype6 \
-    libjpeg62-turbo \
-    libpng16-16 \
-    libx11-6 \
-    libxcb1 \
-    xfonts-75dpi \
-    xfonts-base && \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+# Install wkhtmltopdf from the previous build stage
+COPY --from=wkhtmltopdf /usr/local/bin /usr/local/bin
+COPY --from=wkhtmltopdf /usr/local/lib /usr/local/lib
 
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
