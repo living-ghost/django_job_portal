@@ -16,7 +16,7 @@ RUN apt-get update && \
     libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 xfonts-75dpi xfonts-base
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
-RUN wget https://github.com/living-ghost/Job_Portal/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
+RUN wget --no-check-certificate -q https://github.com/living-ghost/Job_Portal/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
     
 # Clean up the apt cache
