@@ -19,10 +19,11 @@ RUN apt-get update && apt-get install -y \
     libxext6 \
     libfreetype6 \
     libjpeg62-turbo \
-    libjpeg-turbo8 \
     libx11-6 \
     xfonts-75dpi \
     xfonts-base && \
+    https://ubuntu.pkgs.org/20.04/ubuntu-main-amd64/libssl1.1_1.1.1f-1ubuntu2_amd64.deb.html && \
+    https://ubuntu.pkgs.org/22.04/ubuntu-main-amd64/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb.html && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     apt-get install -f -y && \
