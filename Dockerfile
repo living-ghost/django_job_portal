@@ -11,21 +11,9 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install wkhtmltopdf 0.12.6 and its dependencies
-# Install dependencies for Wine and Wine itself
-RUN dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get install -y \
-    wget \
-    wine \
-    wine32 \
-    wine64 \
-    xvfb \
-    && rm -rf /var/lib/apt/lists/*
-
-# Download wkhtmltopdf .exe file and install it using Wine
-RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox-0.12.6-1.msvc2015-win64.exe -O /app/wkhtmltox.exe && \
-    wine /app/wkhtmltox.exe
-
+RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
+    dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
