@@ -7,7 +7,6 @@ services:
     command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application"
     volumes:
       - .:/app
-      - wkhtmltopdf_bin:/usr/local/bin
     ports:
       - "8000:8000"
     depends_on:
@@ -121,18 +120,6 @@ services:
     networks:
       - my_network
 
-  wkhtmltopdf:
-    build:
-      context: .
-      dockerfile: Dockerfile.wkhtmltopdf
-    container_name: wkhtmltopdf_container
-    environment:
-      - WKHTMLTOPDF_VERSION=0.12.6
-    volumes:
-      - wkhtmltopdf_bin:/usr/local/bin
-    networks:
-      - my_network
-
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -157,7 +144,6 @@ volumes:
   pgdata:
   rabbitmqdata:
   grafana-storage:
-  wkhtmltopdf_bin:
 
 networks:
   my_network:
