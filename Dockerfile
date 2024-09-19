@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
     libfreetype6 \
     libjpeg62-turbo \
     libx11-6 \
-    libssl1.1 \
     xfonts-75dpi \
     xfonts-base && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
