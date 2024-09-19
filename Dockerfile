@@ -11,9 +11,13 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install wkhtmltopdf 0.12.6 and its dependencies
-RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y \
+    wget && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-    
+
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
