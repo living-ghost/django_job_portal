@@ -21,9 +21,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo \
     libx11-6 \
     libssl-dev && \
-    wget https://github.com/living-ghost/releases/releases/tag/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    apt-get install -f -y && \
+    apt install -y wget && \
+    apt install -y https://github.com/living-ghost/releases/releases/tag/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb \
     rm wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 
 # Clean up the apt cache
