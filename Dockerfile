@@ -22,12 +22,14 @@ RUN apt-get update && apt-get install -y \
     libx11-6 \
     xfonts-75dpi \
     xfonts-base && \
-    https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
-    https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
+    dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
     dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
     apt-get install -f -y && \
-    rm wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+    rm libssl1.1_1.1.1f-1ubuntu2_amd64.deb libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb wkhtmltox_0.12.6.1-2.jammy_amd64.deb
 
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
