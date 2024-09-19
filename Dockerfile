@@ -27,9 +27,9 @@ RUN dpkg --add-architecture i386 && \
     xfonts-75dpi \
     xfonts-base && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-
+    wget https://github.com/living-ghost/Job_Portal/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb wkhtmltox_0.12.6-1.bionic_amd64.deb
+    
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 

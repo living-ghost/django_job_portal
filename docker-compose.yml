@@ -12,7 +12,6 @@ services:
     depends_on:
       - db
       - rabbitmq
-      - wkhtmltopdf
     environment:
       SECRET_KEY: ${SECRET_KEY}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
