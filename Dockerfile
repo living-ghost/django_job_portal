@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     libxext6 \
     libfreetype6 \
     libjpeg62-turbo \
+    libjpeg-turbo8 \
     libx11-6 \
     xfonts-75dpi \
     xfonts-base && \
