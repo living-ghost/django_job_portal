@@ -12,6 +12,7 @@ services:
     depends_on:
       - db
       - rabbitmq
+      - wkhtmltopdf
     environment:
       SECRET_KEY: ${SECRET_KEY}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
@@ -114,6 +115,18 @@ services:
       CELERY_TASK_SERIALIZER: 'json'
       CELERY_TIMEZONE: 'Asia/Kolkata'
       CELERY_RESULT_BACKEND: 'rpc://'
+    volumes:
+      - .:/app
+    networks:
+      - my_network
+
+  wkhtmltopdf:
+    build:
+      context: .
+      dockerfile: Dockerfile.wkhtmltopdf
+    container_name: wkhtmltopdf_container
+    environment:
+      - WKHTMLTOPDF_VERSION=0.12.6
     volumes:
       - .:/app
     networks:
