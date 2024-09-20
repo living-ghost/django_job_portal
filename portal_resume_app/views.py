@@ -161,13 +161,14 @@ def resume_download_view(request, resume_id):
             'margin-right': '0mm',
             'margin-bottom': '0mm',
             'margin-left': '0mm',
-            'zoom': '1.05',
+            'zoom': '1.0',
             'print-media-type': '',
             'orientation': 'Portrait',
             'enable-local-file-access': '',
             'dpi': 300,
             'image-dpi': 300,
             'image-quality': 100,
+            'no-pdf-compression': '',
         }
 
         # Convert HTML to PDF with the specified options
