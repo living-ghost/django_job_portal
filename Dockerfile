@@ -13,7 +13,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Update and install necessary packages for wkhtmltopdf
 RUN apt-get update && \
     apt-get install -y wget xz-utils fontconfig libxrender1 libxext6 \
-    libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 xfonts-75dpi xfonts-base
+    libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 xfonts-75dpi xfonts-base && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository multiverse && \
+    apt-get update && \
+    apt-get install -y ttf-mscorefonts-installer && \
+    fc-cache -fv
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
