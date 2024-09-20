@@ -17,8 +17,10 @@ RUN apt-get update && \
     libjpeg-turbo8 libssl1.1
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
-RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
-    dpkg -i wkhtmltox_0.12.6-1.bionic_amd64.deb
+RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb wkhtmltox_0.12.6-1.bionic_amd64.deb
     
 # Clean up the apt cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
