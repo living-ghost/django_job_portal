@@ -157,18 +157,17 @@ def resume_download_view(request, resume_id):
         # Options to set paper size and other settings
         options = {
             'page-size': 'A4',
-            'margin-top': '0mm',
-            'margin-right': '0mm',
-            'margin-bottom': '0mm',
-            'margin-left': '0mm',
+            'margin-top': '5mm',
+            'margin-right': '5mm',
+            'margin-bottom': '5mm',
+            'margin-left': '5mm',
             'zoom': '1.0',
             'print-media-type': '',
             'orientation': 'Portrait',
             'enable-local-file-access': '',
-            'dpi': 300,
-            'image-dpi': 300,
+            'dpi': 150,
+            'image-dpi': 150,
             'image-quality': 100,
-            'no-pdf-compression': '',
         }
 
         # Convert HTML to PDF with the specified options
@@ -193,10 +192,10 @@ def save_resume_image(user, resume, html_content):
     imgkit_config = imgkit.config(wkhtmltoimage=settings.IMGKIT_CONFIG['wkhtmltoimage'])
     img_options = {
         'format': 'png',
-        'quality': '100',
+        'quality': '90',
         'crop-w': '2480',  # Width in pixels (A4 size at 300 DPI)
         'crop-h': '3508',  # Height in pixels (A4 size at 300 DPI)
-        'zoom': '1.50',
+        'zoom': '1.0',
     }
 
     try:
