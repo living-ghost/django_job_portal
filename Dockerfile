@@ -13,7 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Update and install necessary packages for wkhtmltopdf
 RUN apt-get update && \
     apt-get install -y wget xz-utils fontconfig libxrender1 libxext6 \
-    libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 xfonts-75dpi xfonts-base
+    libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 xfonts-75dpi xfonts-base \
+    libjpeg-turbo8 libssl1.1
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
