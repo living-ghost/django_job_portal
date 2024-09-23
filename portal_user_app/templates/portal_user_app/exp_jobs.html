@@ -12,7 +12,9 @@
                         {% if job.job_type == 'experienced' and not job.job_deleted %}
                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                 <div class="job-details">
-                                    <span class="badge bg-danger ms-2">Experienced</span>
+                                    <span class="badge bg-danger ms-2" style="color: white; padding: 5px 7px; font-size: 11px; border-radius: 0px; background: linear-gradient(45deg, #ff416c, #ff4b2b);">
+                                        Experienced
+                                    </span>
                                     <h5 class="mb-1">{{ job.job_heading }}</h5>
                                     <p class="mb-1">Eligibility: {{ job.job_eligibility }}</p>
                                     <p class="mb-1">{{ job.job_description }}</p>

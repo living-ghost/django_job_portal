@@ -1,24 +1,41 @@
-# settings.py
+"""
+Django settings for job_portal project.
+
+This file contains the configurations for the Django project, including
+installed apps, middleware, database settings, and more.
+
+Environment variables are used to secure sensitive information like secret
+keys and database credentials. The dotenv library is used to load these
+variables from a .env file.
+
+For more information on this file, see:
+https://docs.djangoproject.com/en/5.0/topics/settings/
+"""
 
 import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project like this: BASE_DIR / 'subdir'
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from the dev.env file
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security key for the Django project
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug mode - should be False in production
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+# Fetch the ALLOWED_HOSTS environment variable, default to an empty string if not set
+allowed_hosts_env = os.getenv('ALLOWED_HOSTS', '')
+
+# Split the string into a list by commas
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
 
 # Application definition
 
@@ -31,48 +48,62 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    # MY APP's
+    # Custom Apps
     'portal_user_app',
     'portal_admin_app',
     'portal_resume_app',
     'portal_converter_app',
 
-    # DRF
+    # Django REST Framework (DRF)
     'rest_framework',
-]   
 
-# Set the SITE_ID variable
+    # Prometheus
+    'django_prometheus',
+
+    # Celery
+    'celery',
+]
+
+# Site ID for the Sites framework
 SITE_ID = 1
 
-HTTP_SCHEME = 'http'  # Protocol scheme for HTTP requests
+# Protocol scheme for HTTP requests
+HTTP_SCHEME = 'http'
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware', # Prometheus middleware for monitoring
+
     'django.middleware.security.SecurityMiddleware',  # Provides security enhancements
     'django.contrib.sessions.middleware.SessionMiddleware',  # Manages user sessions
     'django.middleware.common.CommonMiddleware',  # Adds various common middleware functionalities
-    # 'django.middleware.csrf.CsrfViewMiddleware',  # Adds CSRF protection
+    'django.middleware.csrf.CsrfViewMiddleware',  # Adds CSRF protection (commented out for specific cases)
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Handles authentication
     'django.contrib.messages.middleware.MessageMiddleware',  # Manages message flashing
     'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Protects against clickjacking
     'django.middleware.gzip.GZipMiddleware',  # Compresses content for improved performance
+
     'job_portal.middleware.NoCacheMiddleware',  # Custom middleware to disable caching
-    'job_portal.middleware.SkipAdminLoginMiddleware',
-    'job_portal.middleware.SkipUserLoginMiddleware',
-    'job_portal.middleware.SkipResumeLoginMiddleware',
-    'job_portal.middleware.SkipConverterLoginMiddleware',
+    'job_portal.middleware.SkipAdminLoginMiddleware',  # Custom middleware for admin login bypass
+    'job_portal.middleware.SkipUserLoginMiddleware',  # Custom middleware for user login bypass
+    'job_portal.middleware.SkipResumeLoginMiddleware',  # Custom middleware for resume login bypass
+    'job_portal.middleware.SkipConverterLoginMiddleware',  # Custom middleware for converter login bypass
+
+    'django_prometheus.middleware.PrometheusAfterMiddleware', # Prometheus middleware for monitoring
 ]
 
-LOGIN_URL = 'portal_admin_app:admin_login'  # URL to redirect users for login
-LOGIN_URL = 'portal_user_app:user_index'  # URL to redirect users for login
+# URL to redirect users for login
+LOGIN_URL = 'portal_user_app:user_index'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Default backend for authentication
-    'portal_admin_app.backends.AdminBackend',  # Custom backend for additional authentication
-    'portal_user_app.backends.UserBackend',
+    'portal_admin_app.backends.AdminBackend',  # Custom backend for admin authentication
+    'portal_user_app.backends.UserBackend',  # Custom backend for user authentication
 ]
 
-ROOT_URLCONF = 'job_portal.urls'  # Root URL configuration module
+# Root URL configuration module
+ROOT_URLCONF = 'job_portal.urls'
 
+# Templates configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',  # Template backend for rendering
@@ -89,92 +120,72 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'job_portal.wsgi.application'  # WSGI application entry point
+# WSGI application entry point
+WSGI_APPLICATION = 'job_portal.wsgi.application'
 
-# Database
+# Database configuration
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
-# Email Backend
+# Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_USER = 'akhiiltkaniiparampiil@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = 'akhiiltkaniiparampiil@gmail.com'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# Internationalization settings
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# Static files configuration
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-# URL for accessing static files
-STATIC_URL = '/static/'
-
-# Directory where static files will be collected
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Additional directories where static files are located
+STATIC_URL = '/static/'  # URL for accessing static files
+STATIC_ROOT = BASE_DIR / 'app/static'  # Directory where static files will be collected
 STATICFILES_DIRS = [
-    BASE_DIR / 'portal_user_app' / 'static',  # Directory where your static files are located
-    BASE_DIR / 'portal_admin_app' / 'static',
-    BASE_DIR / 'portal_resume_app' / 'static',
-    BASE_DIR / 'portal_converter_app' / 'static',
+    BASE_DIR / 'portal_user_app' / 'static',  # Static files for the user app
+    BASE_DIR / 'portal_admin_app' / 'static',  # Static files for the admin app
+    BASE_DIR / 'portal_resume_app' / 'static',  # Static files for the resume app
+    BASE_DIR / 'portal_converter_app' / 'static',  # Static files for the converter app
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Media files configuration
+MEDIA_URL = '/media/'  # URL for accessing media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'app/media')  # Directory where media files are stored
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 # Path to wkhtmltopdf executable
 PDFKIT_CONFIG = {
-    'wkhtmltopdf': os.getenv('WKHTMLTOPDF_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'),
+    'wkhtmltopdf': os.getenv('WKHTMLTOPDF_PATH'),
 }
 
 # Path to wkhtmltoimage executable
 IMGKIT_CONFIG = {
-    'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'),
+    'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH'),
 }

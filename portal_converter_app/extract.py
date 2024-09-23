@@ -1,15 +1,30 @@
+# ================================
+#        Text Extraction Utils
+# ================================
+
 from django.http import HttpResponse
 from django.shortcuts import render
 from docx import Document
 import fitz  # PyMuPDF for PDF text extraction
 
+# Font size thresholds for different heading levels
 font_size_thresholds = {
-    "heading1": 16,
-    "heading2": 14
+    "heading1": 16,  # Font size threshold for Heading 1
+    "heading2": 14   # Font size threshold for Heading 2
 }
 
-tolerance = 2  # Adjust this tolerance level based on your observations
+tolerance = 2  # Tolerance level for font size matching
+
 def extract_text_from_pdf(file):
+    """
+    Extract text from a PDF file and format it based on font size.
+    
+    Args:
+        file: A file-like object representing the PDF.
+
+    Returns:
+        A string containing the extracted and formatted text.
+    """
     text = ""
     try:
         # Open the PDF file from the provided file stream
@@ -29,6 +44,7 @@ def extract_text_from_pdf(file):
                                 font_size = span["size"]
                                 text_content = span["text"].strip()
                                 
+                                # Format text based on font size
                                 if font_size >= (font_size_thresholds["heading1"] - tolerance):
                                     text += f"# {text_content}\n"
                                 elif font_size >= (font_size_thresholds["heading2"] - tolerance):
@@ -44,9 +60,16 @@ def extract_text_from_pdf(file):
     
     return text.strip()  # Return the extracted text, stripped of leading/trailing whitespace
 
-#
-
 def extract_text_from_docx(file):
+    """
+    Extract text from a DOCX file and format it based on style and font size.
+    
+    Args:
+        file: A file-like object representing the DOCX file.
+
+    Returns:
+        A string containing the extracted and formatted text.
+    """
     text = ""
     try:
         doc = Document(file)  # Load the DOCX file

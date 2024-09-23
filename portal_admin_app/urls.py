@@ -1,10 +1,26 @@
+# ================================
+#       Django URL Imports
+# ================================
+
 from django.urls import path, include
 from . import views
 
+# ================================
+#         URL Patterns
+# ================================
+
 urlpatterns = [
+    # -------------------------------
+    #         Admin Authentication
+    # -------------------------------
+
     path('login/', views.admin_login_view, name='admin_login'),
     path('index/', views.admin_index_view, name='admin_index'),
     path('logout/', views.admin_logout_view, name='admin_logout'),
+
+    # -------------------------------
+    #            Job Management
+    # -------------------------------
 
     path('job/', views.jobs_view, name='admin_job'),
     path('job/add/', views.jobs_add_view, name='admin_add_job'),
@@ -16,6 +32,10 @@ urlpatterns = [
 
     path('job/delete/<int:job_id>/', views.jobs_delete_view, name='admin_delete_job'),
     path('job/edit/<int:job_id>/', views.jobs_edit_view, name='admin_edit_job'),
+
+    # -------------------------------
+    #           User Management
+    # -------------------------------
 
     path('user/', views.users_view, name='admin_user'),
     path('user/list/', views.users_list_view, name='admin_list_user'),

@@ -1,3 +1,7 @@
+# ================================
+#        Django Imports
+# ================================
+
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.files.base import ContentFile
@@ -6,13 +10,19 @@ from docx import Document
 from PIL import Image, ImageDraw, ImageFont
 from .models import ConvertedFile
 from django.contrib.auth.decorators import login_required
-from . convert import convert_to_pdf_from_text, convert_to_docx_from_text
-from . extract import extract_text_from_docx, extract_text_from_pdf
+from .convert import convert_to_pdf_from_text, convert_to_docx_from_text
+from .extract import extract_text_from_docx, extract_text_from_pdf
 import fitz  # PyMuPDF for PDF text extraction
 
+# ================================
+#     Converter Index View
+# ================================
 
 @login_required
 def converter_index_view(request):
+    """
+    Handles file upload and conversion based on user-selected format.
+    """
     if request.method == 'POST':
         file = request.FILES.get('file')
         format = request.POST.get('format')
@@ -35,9 +45,14 @@ def converter_index_view(request):
         
     return render(request, "portal_converter_app/converter_index.html")
 
-# Downloading Converted file
+# ================================
+#     Save Converted File
+# ================================
 
 def save_converted_file(user, original_file, converted_file_content, file_type):
+    """
+    Saves the converted file to the database.
+    """
     converted_file = ConvertedFile(
         user=user,
         original_file=original_file,
@@ -47,14 +62,17 @@ def save_converted_file(user, original_file, converted_file_content, file_type):
     converted_file.save()
     return converted_file
 
-#
-
-# File Converter Section PDF/DOCX
+# ================================
+#     File Converter (PDF/DOCX)
+# ================================
 
 def convert_to_file(user, file, format):
+    """
+    Converts the file to the specified format (PDF/DOCX) and returns the HTTP response.
+    """
     try:
         if format == 'pdf':
-            # If converting to PDF, extract text from DOCX or convert a text file directly
+            # Convert to PDF from DOCX or text file
             if file.name.lower().endswith('.docx'):
                 file.seek(0)
                 file_content = extract_text_from_docx(file)
@@ -67,7 +85,7 @@ def convert_to_file(user, file, format):
             file_type = 'pdf'
 
         elif format == 'docx':
-            # If converting to DOCX, extract text from PDF or convert a text file directly
+            # Convert to DOCX from PDF or text file
             if file.name.lower().endswith('.pdf'):
                 file.seek(0)
                 file_content = extract_text_from_pdf(file)
@@ -91,7 +109,9 @@ def convert_to_file(user, file, format):
     except Exception as e:
         return HttpResponse(f"An error occurred: {e}", status=500)
 
-# Image Converter Section JPG/PNG
+# ================================
+#     File Converter (JPG/PNG)
+# ================================
 
 # A4 dimensions in inches and pixels for 300 DPI
 A4_WIDTH_INCHES = 8.27
@@ -106,7 +126,7 @@ PADDING_BOTTOM = 150
 PADDING_LEFT = 150
 PADDING_RIGHT = 150
 
-# Define padding in pixels
+# Define padding in pixels for images
 IMG_PADDING_TOP = 50
 IMG_PADDING_BOTTOM = 50
 IMG_PADDING_LEFT = 50
@@ -116,9 +136,10 @@ IMG_PADDING_RIGHT = 50
 PARAGRAPH_SPACING = 50
 HEADING_SPACING = 100  # Extra space after headings
 
-#
-
 def convert_to_image(user, file, format):
+    """
+    Converts the file to an image (JPG/PNG) and returns the HTTP response.
+    """
     try:
         buffer = BytesIO()
         
@@ -126,7 +147,7 @@ def convert_to_image(user, file, format):
         if format == 'JPG':
             format = 'JPEG'
         
-        # Define font styles (you may need to provide the path to a TTF file)
+        # Define font styles (provide path to a TTF file if needed)
         try:
             heading_font = ImageFont.truetype("arialbd.ttf", 100)
             subheading_font = ImageFont.truetype("arialbd.ttf", 70)
@@ -141,7 +162,9 @@ def convert_to_image(user, file, format):
         content_height = A4_HEIGHT_PIXELS - PADDING_TOP - PADDING_BOTTOM
 
         def draw_text(draw, text, position, font, max_width):
-            # Split text into lines that fit within the width
+            """
+            Draws text on the image, splitting into lines that fit within the width.
+            """
             lines = []
             words = text.split(' ')
             line = words[0]
@@ -163,8 +186,6 @@ def convert_to_image(user, file, format):
                 if y > A4_HEIGHT_PIXELS - PADDING_BOTTOM:
                     break
             return y
-
-#
 
         if file.name.lower().endswith('.pdf'):
             # Convert PDF to image using PyMuPDF

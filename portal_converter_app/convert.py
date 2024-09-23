@@ -6,6 +6,15 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 
 def convert_to_pdf_from_text(text):
+    """
+    Convert text to a PDF with styled headings and body text.
+    
+    Args:
+        text: A string containing the text to be converted.
+        
+    Returns:
+        Byte content of the generated PDF.
+    """
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4)
     story = []
@@ -50,58 +59,48 @@ def convert_to_pdf_from_text(text):
     buffer.seek(0)
     return buffer.getvalue()
 
-#
-
 def convert_to_docx_from_text(text):
+    """
+    Convert text to a DOCX file with styled headings and body text.
+    
+    Args:
+        text: A string containing the text to be converted.
+        
+    Returns:
+        Byte content of the generated DOCX file.
+    """
     buffer = BytesIO()
     doc = Document()
     
-    # Define custom styles for headings and body text
-    styles = doc.styles
+    # Define and apply styles
+    heading_style = doc.styles['Heading1']
+    heading_style.font.name = 'Arial'
+    heading_style.font.size = Pt(14)
+    heading_style.font.bold = True
+    heading_style.paragraph_format.space_after = Pt(12)
     
-    # Heading style
-    if 'HeadingStyle' not in styles:
-        heading_style = styles.add_style('HeadingStyle', 1)
-        heading_font = heading_style.font
-        heading_font.name = 'Arial'
-        heading_font.size = Pt(14)
-        heading_font.bold = True
-        # Add space after heading
-        heading_paragraph_format = heading_style.paragraph_format
-        heading_paragraph_format.space_after = Pt(12)  # Adjust space after heading to 12 pt
+    subheading_style = doc.styles['Heading2']
+    subheading_style.font.name = 'Arial'
+    subheading_style.font.size = Pt(12)
+    subheading_style.font.bold = True
+    subheading_style.paragraph_format.space_after = Pt(12)
     
-    # Subheading style
-    if 'SubheadingStyle' not in styles:
-        subheading_style = styles.add_style('SubheadingStyle', 1)
-        subheading_font = subheading_style.font
-        subheading_font.name = 'Arial'
-        subheading_font.size = Pt(12)
-        subheading_font.bold = True
-        # Add space after subheading
-        subheading_paragraph_format = subheading_style.paragraph_format
-        subheading_paragraph_format.space_after = Pt(12)  # Adjust space after subheading to 8 pt
-    
-    # Body text style
-    if 'BodyStyle' not in styles:
-        body_style = styles.add_style('BodyStyle', 1)
-        body_font = body_style.font
-        body_font.name = 'Arial'
-        body_font.size = Pt(10)
-        # Set line spacing for body text
-        body_paragraph_format = body_style.paragraph_format
-        body_paragraph_format.line_spacing = Pt(10)  # Adjust line spacing to 10 pt
-        body_paragraph_format.space_after = Pt(4)    # Optional: Adjust space after paragraph
+    body_style = doc.styles['Normal']
+    body_style.font.name = 'Arial'
+    body_style.font.size = Pt(10)
+    body_style.paragraph_format.line_spacing = Pt(10)
+    body_style.paragraph_format.space_after = Pt(4)
     
     # Process the text and apply styles
     paragraphs = text.split('\n')
     for para in paragraphs:
         para = para.strip()
         if para.startswith('# '):  # Heading
-            doc.add_paragraph(para[2:], style='HeadingStyle')
+            doc.add_paragraph(para[2:], style='Heading1')
         elif para.startswith('## '):  # Subheading
-            doc.add_paragraph(para[3:], style='SubheadingStyle')
+            doc.add_paragraph(para[3:], style='Heading2')
         else:  # Body text
-            doc.add_paragraph(para, style='BodyStyle')
+            doc.add_paragraph(para, style='Normal')
     
     # Save the document to the BytesIO buffer
     doc.save(buffer)

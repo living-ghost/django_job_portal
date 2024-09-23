@@ -1,7 +1,13 @@
-# Standard Library Imports
+# ================================
+#          Standard Library Imports
+# ================================
+
 from datetime import datetime, timedelta
 
-# Third-Party Imports
+# ================================
+#          Third-Party Imports
+# ================================
+
 from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -10,57 +16,77 @@ from django.utils.timezone import make_aware
 from django.utils import timezone
 from django.db.models import Q
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
-# Django App Imports
-from .models import Subscriber, User
+# ================================
+#          Django App Imports
+# ================================
+
+from .models import Subscriber, User, ContactUs
 from portal_admin_app.models import Job
 from .utils import (
     generate_otp, 
     send_account_created_email, 
     send_otp_email,
     generate_password, 
-    send_reset_email
+    send_reset_email,
+    send_contactus_email_to_admin
 )
 from .verify import verify_otp, handle_successful_otp_verification
 
-#
+# ================================
+#          Doclib Imports
+# ================================
 
-# Home Page
+# Add your doclib imports here if needed
+# from doclib import SomeDocLibModule
+
+# ================================
+#          Home Page View
+# ================================
 
 def index_view(request):
-    featureds = Job.objects.all().order_by('-job_created_at')  # Sort by latest date first
-    current_date = timezone.now().date()
+    """
+    Render the home page with featured jobs sorted by the latest date first.
+    """
+    featureds = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
+    current_datetime = timezone.now()  # Get current datetime
 
     for feature in featureds:
-        days_ago = (current_date - feature.job_created_at.date()).days
-        
-        if days_ago == 0:
+        time_diff = current_datetime - feature.job_created_at
+
+        if time_diff < timedelta(days=1):
             feature.days_ago_display = "Posted today"
-        elif days_ago == 1:
+        elif time_diff < timedelta(days=2):
             feature.days_ago_display = "1 day ago"
         else:
-            feature.days_ago_display = f"{days_ago} days ago"
+            feature.days_ago_display = f"{time_diff.days} days ago"
 
     return render(request, "portal_user_app/index.html", {'featureds': featureds})
 
-# Fresher Job Page
+# ================================
+#          Fresher Job Page View
+# ================================
 
 def fresher_jobs_view(request):
-    jobs = Job.objects.all().order_by('-job_created_at')  # Sort by latest date first
-    current_date = timezone.now().date()
+    """
+    Render the fresher job page with jobs sorted by the latest date, with pagination.
+    """
+    jobs = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
+    current_datetime = timezone.now()  # Get current datetime
 
     for job in jobs:
-        days_ago = (current_date - job.job_created_at.date()).days
+        time_diff = current_datetime - job.job_created_at
 
-        if days_ago == 0:
+        if time_diff < timedelta(days=1):
             job.days_ago_display = "Posted today"
-        elif days_ago == 1:
+        elif time_diff < timedelta(days=2):
             job.days_ago_display = "1 day ago"
         else:
-            job.days_ago_display = f"{days_ago} days ago"
+            job.days_ago_display = f"{time_diff.days} days ago"
 
     # Pagination
-    paginator = Paginator(jobs, 14)  # Show 10 jobs per page
+    paginator = Paginator(jobs, 14)  # Show 14 jobs per page
     page = request.GET.get('page')
 
     try:
@@ -72,24 +98,29 @@ def fresher_jobs_view(request):
 
     return render(request, "portal_user_app/fresher_jobs.html", {'jobs': paginated_jobs})
 
-# Experienced Job Page
+# ================================
+#          Experienced Job Page View
+# ================================
 
 def exp_jobs_view(request):
-    jobs = Job.objects.all().order_by('-job_created_at')  # Sort by latest date first
-    current_date = timezone.now().date()
+    """
+    Render the experienced job page with jobs sorted by the latest date, with pagination.
+    """
+    jobs = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
+    current_datetime = timezone.now()  # Get current datetime
 
     for job in jobs:
-        days_ago = (current_date - job.job_created_at.date()).days
+        time_diff = current_datetime - job.job_created_at
 
-        if days_ago == 0:
+        if time_diff < timedelta(days=1):
             job.days_ago_display = "Posted today"
-        elif days_ago == 1:
+        elif time_diff < timedelta(days=2):
             job.days_ago_display = "1 day ago"
         else:
-            job.days_ago_display = f"{days_ago} days ago"
+            job.days_ago_display = f"{time_diff.days} days ago"
 
     # Pagination
-    paginator = Paginator(jobs, 14)  # Show 10 jobs per page
+    paginator = Paginator(jobs, 14)  # Show 14 jobs per page
     page = request.GET.get('page')
 
     try:
@@ -100,24 +131,76 @@ def exp_jobs_view(request):
         paginated_jobs = paginator.page(paginator.num_pages)
 
     return render(request, "portal_user_app/exp_jobs.html", {'jobs': paginated_jobs})
-    
-# Fresher Job Search
+
+# ================================
+#          Fresher Job Search
+# ================================
 
 def search_jobs_view(request):
+    """
+    Handle job search requests for both fresher and experienced jobs.
+    Use the 'type' parameter to distinguish between fresher and experienced job searches.
+    """
     query = request.GET.get('query', '')
-    results = Job.objects.filter(Q(job_heading__icontains=query))
-    return render(request, "portal_user_app/fresher_jobs.html", {'jobs': results})
+    job_type = request.GET.get('type', 'fresher')  # Default to 'fresher' if no type is provided
+    
+    if job_type == 'experienced':
+        # Search experienced jobs
+        results = Job.objects.filter(Q(job_heading__icontains=query) & Q(job_type='experienced'))
+        template = 'portal_user_app/exp_jobs.html'
+    else:
+        # Search fresher jobs
+        results = Job.objects.filter(Q(job_heading__icontains=query) & Q(job_type='fresher'))
+        template = 'portal_user_app/fresher_jobs.html'
+    
+    return render(request, template, {'jobs': results})
 
-# About Page
+# ================================
+#          About Page View
+# ================================
 
 def about_view(request):
+    """
+    Render the about page.
+    """
     return render(request, "portal_user_app/about.html")
 
-#
+# ================================
+#          Contact Us View
+# ================================
 
-# Subscriber Registration
+def contact_us_view(request):
+    """
+    Contact us form to collect data from user and trigger email to Admin.
+    """
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        project_tech = request.POST.get('project_tech')
+        description = request.POST.get('description')
+
+        send_contactus_email_to_admin(name, email, project_tech, description)
+
+        messages.success(request, "We received your request, will revert shortly")
+
+        contact_us = ContactUs(
+            name=name,
+            email=email,
+            project_tech=project_tech,
+            description=description
+        )
+        contact_us.save()
+
+        return redirect('portal_user_app:user_index')
+
+# ================================
+#          Subscriber Registration
+# ================================
 
 def subscribe_view(request):
+    """
+    Handle subscription requests including OTP verification and resending.
+    """
     if request.method == 'POST':
         email = request.POST.get('subscriber_email')
         otp = request.POST.get('otp_code')
@@ -155,9 +238,14 @@ def subscribe_view(request):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-#
+# ================================
+#          Verify OTP View
+# ================================
 
 def verify_otp_view(request):
+    """
+    Verify the OTP submitted by the user.
+    """
     if request.method == 'POST':
         otp = request.POST.get('otp_code')
         email = request.POST.get('subscriber_email')
@@ -187,13 +275,17 @@ def verify_otp_view(request):
 
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-# Subscriber Unsubscribing
+# ================================
+#          Subscriber Unsubscribing
+# ================================
 
 def unsubscribe_view(request):
+    """
+    Handle unsubscribe requests by deleting the subscriber.
+    """
     if request.method == "GET":
         subscriber_email = request.GET.get('subscriber_email')
         if subscriber_email:
-            # Decode the URL-encoded subscriber_email
             try:
                 subscriber = Subscriber.objects.get(subscriber_email=subscriber_email)
                 subscriber.delete()
@@ -203,14 +295,16 @@ def unsubscribe_view(request):
         else:
             return HttpResponse("Invalid unsubscribe link.")
     else:
-        # If it's not a GET request, render the unsubscribe email page
         return render(request, "portal_user_app/emails/unsubscribe.html")
-    
-#
 
-# User Login
+# ================================
+#          User Login
+# ================================
 
 def user_login_view(request):
+    """
+    Handle user login requests.
+    """
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -225,12 +319,16 @@ def user_login_view(request):
         
         return JsonResponse({'error': 'Invalid username or password.'})
     
-    # Handle GET or other methods
     return JsonResponse({'error': 'false'})
-        
-# User Register
+
+# ================================
+#          User Register
+# ================================
 
 def user_register_view(request):
+    """
+    Handle user registration including sending OTP for verification.
+    """
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -268,9 +366,14 @@ def user_register_view(request):
 
     return render(request, "portal_user_app/index.html")
 
-#
+# ================================
+#          User Register Verify OTP
+# ================================
 
 def user_register_verify_otp_view(request):
+    """
+    Handle OTP verification for user registration.
+    """
     if request.method == 'POST':
         action = request.POST.get('action')
         otp = request.POST.get('otp')
@@ -295,9 +398,14 @@ def user_register_verify_otp_view(request):
 
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-#
+# ================================
+#          User Forgot Password
+# ================================
 
 def user_forgot_pwd_view(request):
+    """
+    Handle forgot password requests by sending a reset password email.
+    """
     if request.method == 'POST':
         user_email_or_username = request.POST.get('email')
         user = None
@@ -318,10 +426,15 @@ def user_forgot_pwd_view(request):
 
     return render(request, "portal_user_app/users/user_forgot_pwd.html")
 
-#
+# ================================
+#          User Password Reset
+# ================================
 
 @login_required
 def user_pwd_reset_view(request):
+    """
+    Handle password reset for logged-in users.
+    """
     if request.method == 'POST':
         current_password = request.POST.get('current_password')
         new_password = request.POST.get('new_password')
@@ -334,7 +447,7 @@ def user_pwd_reset_view(request):
                 user.set_password(new_password)
                 user.save()
                 update_session_auth_hash(request, user)  # Keep user logged in
-                return JsonResponse({'message': 'Password successfully updated!', 'redirect': '/user/dashboard/'})  # Adjust redirect URL as needed
+                return JsonResponse({'message': 'Password successfully updated!', 'redirect': '/user/dashboard/'})
             else:
                 return JsonResponse({'error': 'New passwords do not match.'})
         else:
@@ -342,37 +455,53 @@ def user_pwd_reset_view(request):
 
     return JsonResponse({'error': 'Invalid request method.'})
 
-# User AC Deletion
+# ================================
+#          User Account Deletion
+# ================================
 
 @login_required
 def user_del_ac_view(request):
+    """
+    Handle user account deletion.
+    """
     user = request.user
     user.is_active = False
     user.save()
 
     return JsonResponse({'success': True, 'message': 'Account deleted successfully!'})
 
-# User Logout
+# ================================
+#          User Logout
+# ================================
 
 @login_required
 def user_logout_view(request):
+    """
+    Log out the user and redirect to the home page.
+    """
     logout(request)
     
     return redirect('portal_user_app:user_index')
 
-#
-
-# User Dashboard
+# ================================
+#          User Dashboard
+# ================================
 
 @login_required(login_url='portal_user_app:user_index')
 def user_dashboard_view(request):
+    """
+    Render the user dashboard page.
+    """
     username = request.user
-    return render(request, "portal_user_app/users/user_dashboard.html", {'username' : username})
+    return render(request, "portal_user_app/users/user_dashboard.html", {'username': username})
 
-#
-
-# 404 Page
+# ================================
+#          404 Page
+# ================================
 
 @login_required
 def user_404_view(request):
+    """
+    Render the 404 error page for users.
+    """
     return render(request, "portal_user_app/users/404.html")

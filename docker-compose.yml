@@ -1,0 +1,149 @@
+services:
+  django:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: django_app
+    command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DEBUG: ${DEBUG}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      EMAIL_HOST_PASSWORD : ${EMAIL_HOST_PASSWORD}
+      CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
+    networks:
+      - my_network
+
+  nginx:
+    build:
+      context: ./nginx  # Directory where the Nginx Dockerfile is located
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d  # Nginx config
+      - ./static:/usr/share/nginx/html/static  # Serve static files
+      - ./media:/usr/share/nginx/html/media  # Serve media files
+    depends_on:
+      - django
+    networks:
+      - my_network
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "8089:80"
+    depends_on:
+      - db
+    networks:
+      - my_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    networks:
+      - my_network
+
+  celery:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: celery_worker
+    command: celery -A job_portal.celery worker --pool=solo -l info
+    depends_on:
+      - rabbitmq
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      EMAIL_HOST_PASSWORD : ${EMAIL_HOST_PASSWORD}
+      CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
+      CELERY_ACCEPT_CONTENT: 'application/json'
+      CELERY_RESULT_SERIALIZER: 'json'
+      CELERY_TASK_SERIALIZER: 'json'
+      CELERY_TIMEZONE: 'Asia/Kolkata'
+      CELERY_RESULT_BACKEND: 'rpc://'
+    volumes:
+      - .:/app
+    networks:
+      - my_network
+
+  flower:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: celery_flower
+    command: celery -A job_portal flower
+    depends_on:
+      - rabbitmq
+    ports:
+      - "5555:5555"
+    environment:
+      EMAIL_HOST_PASSWORD : ${EMAIL_HOST_PASSWORD}
+      CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
+      CELERY_ACCEPT_CONTENT: 'application/json'
+      CELERY_RESULT_SERIALIZER: 'json'
+      CELERY_TASK_SERIALIZER: 'json'
+      CELERY_TIMEZONE: 'Asia/Kolkata'
+      CELERY_RESULT_BACKEND: 'rpc://'
+    volumes:
+      - .:/app
+    networks:
+      - my_network
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - my_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3002:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - my_network
+
+volumes:
+  pgdata:
+  rabbitmqdata:
+  grafana-storage:
+
+networks:
+  my_network:
+    driver: bridge

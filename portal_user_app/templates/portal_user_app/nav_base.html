@@ -21,11 +21,11 @@
                 <!-- Dropdown Menu -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle no-icon" href="#" id="jobListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Job List
+                        Job Queue
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="jobListDropdown">
-                        <li><a class="dropdown-item" href="{% url 'portal_user_app:fresher_jobs' %}">Freshers</a></li>
-                        <li><a class="dropdown-item" href="{% url 'portal_user_app:experienced_jobs' %}">Professionals</a></li>
+                        <li><a class="dropdown-item" href="{% url 'portal_user_app:fresher_jobs' %}">Fresher</a></li>
+                        <li><a class="dropdown-item" href="{% url 'portal_user_app:experienced_jobs' %}">Experienced</a></li>
                     </ul>
                 </li>
                 <!-- Dropdown Menu -->
@@ -45,9 +45,9 @@
                         Paid Services
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="jobListDropdown">
-                        <li><a class="dropdown-item" id="LoginBtn4">Python Project</a></li>
-                        <li><a class="dropdown-item" id="LoginBtn5">Django Project</a></li>
-                        <li><a class="dropdown-item" id="LoginBtn6">Flask Project</a></li>
+                        <li><a class="dropdown-item" id="ContactUsModal1">Python Project</a></li>
+                        <li><a class="dropdown-item" id="ContactUsModal2">Django Project</a></li>
+                        <li><a class="dropdown-item" id="ContactUsModal3">Flask Project</a></li>
                     </ul>
                 </li>
                 <li class="nav-item" data-bs-toggle="modal" data-bs-target="#subscriptionModal">
@@ -59,7 +59,14 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-end p-1 custom-dropdown" aria-labelledby="navbarDropdown">
                         <form class="d-flex" action="{% url 'portal_user_app:user_search' %}" method="GET" id="searchForm">
-                            <input class="form-control me-2" type="search" placeholder="Python, Java" aria-label="Search" name="query" id="searchQuery">
+                            <input class="form-control me-2" type="search" placeholder="Google, Python" aria-label="Search" name="query" id="searchQuery">
+                            &nbsp;&nbsp;
+                            <!-- Dropdown to select job type (Fresher or Experienced) -->
+                            <select class="form-control me-2" name="type" id="jobTypeSelect">
+                                <option value="fresher">Fresher</option>
+                                <option value="experienced">Experienced</option>
+                            </select>
+                    
                             <button class="btn btn-outline-light" type="submit">
                                 <i class="fas fa-search btn-outline-dark"></i>
                             </button>
