@@ -76,7 +76,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',  # Provides security enhancements
     'django.contrib.sessions.middleware.SessionMiddleware',  # Manages user sessions
     'django.middleware.common.CommonMiddleware',  # Adds various common middleware functionalities
-    'django.middleware.csrf.CsrfViewMiddleware',  # Adds CSRF protection (commented out for specific cases)
+    # 'django.middleware.csrf.CsrfViewMiddleware',  # Adds CSRF protection (commented out for specific cases)
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Handles authentication
     'django.contrib.messages.middleware.MessageMiddleware',  # Manages message flashing
     'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Protects against clickjacking
