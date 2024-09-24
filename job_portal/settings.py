@@ -189,3 +189,8 @@ PDFKIT_CONFIG = {
 IMGKIT_CONFIG = {
     'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH'),
 }
+
+# Razor Pay integration
+
+RAZOR_KEY_ID = os.getenv('RAZOR_KEY_ID_ENV')
+RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET_ENV')
