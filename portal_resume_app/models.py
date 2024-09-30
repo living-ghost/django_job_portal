@@ -99,14 +99,12 @@ class Language(models.Model):
     Attributes:
         user (ForeignKey): The user to whom this language information belongs.
         language (CharField): The name of the language.
-        proficiency (CharField): The proficiency level in the language.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='languages')
     language = models.CharField(max_length=255)
-    proficiency = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.language} - {self.proficiency}"
+        return f"{self.language}"
 
 # ================================
 #        Project Model
@@ -139,14 +137,12 @@ class Skill(models.Model):
     Attributes:
         user (ForeignKey): The user to whom this skill information belongs.
         skill (CharField): The name of the skill.
-        proficiency (CharField): The proficiency level in the skill.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='skills')
     skill = models.CharField(max_length=255)
-    proficiency = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.skill} - {self.proficiency}"
+        return f"{self.skill}"
 
 # ================================
 #        Certificate Model

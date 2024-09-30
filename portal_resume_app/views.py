@@ -64,9 +64,8 @@ def resume_index_view(request):
             # Language Information Update
             elif 'language1' in request.POST:
                 language = request.POST.get('language1')
-                proficiency = request.POST.get('proficiency1')
                 user = get_object_or_404(User, id=request.user.id)
-                Language.objects.create(user=user, language=language, proficiency=proficiency)
+                Language.objects.create(user=user, language=language)
                 response_data['message'] = 'Language Information updated successfully!'
             
             # Project Information Update
@@ -89,9 +88,8 @@ def resume_index_view(request):
             # Skill Information Update
             elif 'skill1' in request.POST:
                 skill = request.POST.get('skill1')
-                proficiency = request.POST.get('proficiency_skill1')
                 user = get_object_or_404(User, id=request.user.id)
-                Skill.objects.create(user=user, skill=skill, proficiency=proficiency)
+                Skill.objects.create(user=user, skill=skill)
                 response_data['message'] = 'Skill Information updated successfully!'
 
             # Hobbie Information Update

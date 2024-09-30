@@ -6,6 +6,11 @@ function submitForm(formId) {
     var form = $('#' + formId);
     var formData = form.serialize(); // Serialize the form data
 
+    // Prevent default form submission (in case it's triggered manually)
+    form.on('submit', function(event) {
+        event.preventDefault(); // Prevent full-page reload on form submit
+    });
+
     $.ajax({
         url: form.attr('action'),
         type: 'POST',

@@ -57,6 +57,13 @@ urlpatterns = [
     path('user/404/error/', views.user_404_view, name='user_404'),  # 404 error page
 
     # ================================
+    #          Payment
+    # ================================
+
+    path('payment/index/', views.user_razorpay_view, name='user_payment_index'),
+    path('user/payment/', views.user_payment_view, name='user_payment'),
+
+    # ================================
     #          Redirects
     # ================================
 
