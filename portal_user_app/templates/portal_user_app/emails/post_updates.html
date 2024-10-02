@@ -66,13 +66,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>{{ job.job_heading }} Hiring</h1>
+            <h1>{{ job_heading }} Hiring</h1>
         </div>
         <div class="content">
-            <p><strong>Eligibility:</strong> {{ job.job_eligibility }}</p>
+            <p><strong>Eligibility:</strong> {{ job_eligibility }}</p>
             <p><strong>Description:</strong> Click on the button below to apply.</p>
-            <p><strong>Posted on:</strong> {{ job.job_created_at }}</p>
-            <a href="#">View Job</a>
+            <p><strong>Posted on:</strong> {{ job_created_at }}</p>
+            <a href="https://www.fresherspark.in">View Job</a>
             <p>If you no longer wish to receive job alerts, you can <a href="{{ unsubscribe_url }}">unsubscribe here</a>.</p>
         </div>
         <div class="footer">

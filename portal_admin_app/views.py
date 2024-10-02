@@ -106,7 +106,9 @@ def jobs_add_view(request):
                 # Call the Celery task
                 send_job_email.delay(
                     subscriber_email=subscriber.subscriber_email,
-                    job_id=job.id,
+                    job_heading=job_heading,
+                    job_eligibility=job_eligibility,
+                    job_created_at=job.job_created_at,
                     unsubscribe_url=unsubscribe_url,
                     site_url=request.build_absolute_uri('/')
                 )
