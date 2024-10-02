@@ -31,7 +31,7 @@ def send_otp_email(email, otp):
     send_mail(
         'Your OTP Code',
         f'Your OTP code is {otp}.',
-        'akhiiltkaniiparampiil@gmail.com',
+        'admin@fresherspark.in',
         [email],
         fail_silently=False,
     )
@@ -44,7 +44,7 @@ def send_account_created_email(email):
         email (str): The recipient's email address.
     """
     subject = 'Freshers Park'
-    from_email = 'akhiiltkaniiparampiil@gmail.com'
+    from_email = 'admin@fresherspark.in'
     to_email = [email]
 
     # Render the HTML content from the template
@@ -61,7 +61,7 @@ def send_subscription_email(email):
         email (str): The recipient's email address.
     """
     subject = 'Freshers Park'
-    from_email = 'akhiiltkaniiparampiil@gmail.com'
+    from_email = 'admin@fresherspark.in'
     to_email = [email]
 
     # Render the HTML content from the template
@@ -115,7 +115,7 @@ def send_contactus_email_to_admin(name, email, project_tech, description ):
         f'Requester Project Description {description}.'
     )
     from_email = settings.DEFAULT_FROM_EMAIL
-    recipient_list = ['akhiiltkaniiparampiil@gmail.com']
+    recipient_list = ['admin@fresherspark.in']
 
     send_mail(
         subject,
