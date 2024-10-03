@@ -54,7 +54,7 @@ def index_view(request):
     """
     Render the home page with featured jobs sorted by the latest date first.
     """
-    featureds = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
+    featureds = Job.objects.filter(job_type='featured').order_by('-job_created_at')  # Fetch and sort jobs by creation date
     current_datetime = timezone.now()  # Get current datetime
 
     for feature in featureds:
@@ -77,7 +77,7 @@ def fresher_jobs_view(request):
     """
     Render the fresher job page with jobs sorted by the latest date, with pagination.
     """
-    jobs = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
+    jobs = Job.objects.filter(job_type='fresher').order_by('-job_created_at')  # Fetch and sort jobs by creation date
     current_datetime = timezone.now()  # Get current datetime
 
     for job in jobs:
@@ -91,17 +91,17 @@ def fresher_jobs_view(request):
             job.days_ago_display = f"{time_diff.days} days ago"
 
     # Pagination
-    paginator = Paginator(jobs, 14)  # Show 14 jobs per page
-    page = request.GET.get('page')
+    paginator_fre = Paginator(jobs, 14)  # Show 14 jobs per page
+    page_fre = request.GET.get('page')
 
     try:
-        paginated_jobs = paginator.page(page)
+        paginated_jobs_fre = paginator_fre.page(page_fre)
     except PageNotAnInteger:
-        paginated_jobs = paginator.page(1)
+        paginated_jobs_fre = paginator_fre.page(1)
     except EmptyPage:
-        paginated_jobs = paginator.page(paginator.num_pages)
+        paginated_jobs_fre = paginator_fre.page(paginator_fre.num_pages)
 
-    return render(request, "portal_user_app/fresher_jobs.html", {'jobs': paginated_jobs})
+    return render(request, "portal_user_app/fresher_jobs.html", {'jobs': paginated_jobs_fre})
 
 # ================================
 #          Experienced Job Page View
@@ -111,7 +111,7 @@ def exp_jobs_view(request):
     """
     Render the experienced job page with jobs sorted by the latest date, with pagination.
     """
-    jobs = Job.objects.all().order_by('-job_created_at')  # Fetch and sort jobs by creation date
+    jobs = Job.objects.filter(job_type='experienced').order_by('-job_created_at')  # Fetch and sort jobs by creation date
     current_datetime = timezone.now()  # Get current datetime
 
     for job in jobs:
@@ -125,17 +125,17 @@ def exp_jobs_view(request):
             job.days_ago_display = f"{time_diff.days} days ago"
 
     # Pagination
-    paginator = Paginator(jobs, 14)  # Show 14 jobs per page
-    page = request.GET.get('page')
+    paginator_exp = Paginator(jobs, 14)  # Show 14 jobs per page
+    page_exp = request.GET.get('page')
 
     try:
-        paginated_jobs = paginator.page(page)
+        paginated_jobs_exp = paginator_exp.page(page_exp)
     except PageNotAnInteger:
-        paginated_jobs = paginator.page(1)
+        paginated_jobs_exp = paginator_exp.page(1)
     except EmptyPage:
-        paginated_jobs = paginator.page(paginator.num_pages)
+        paginated_jobs_exp = paginator_exp.page(paginator_exp.num_pages)
 
-    return render(request, "portal_user_app/exp_jobs.html", {'jobs': paginated_jobs})
+    return render(request, "portal_user_app/exp_jobs.html", {'jobs': paginated_jobs_exp})
 
 # ================================
 #          Fresher Job Search
