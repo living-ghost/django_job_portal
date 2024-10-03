@@ -171,8 +171,8 @@
 
         <!-- Skills Section -->
         <div class="section">
-            <h3 class="section-title">Skills</h3>
             {% if skill_data %}
+            <h3 class="section-title">Skills</h3>
             <ul>
                 {% for skill in skill_data %}
                 <li>{{ skill.skill }}</li>
@@ -197,8 +197,8 @@
 
         <!-- Languages Section -->
         <div class="section">
-            <h3 class="section-title">Languages</h3>
             {% if language_data %}
+            <h3 class="section-title">Languages</h3>
                 {% for language in language_data %}
                     {{ language.language }}
                 {% endfor %}

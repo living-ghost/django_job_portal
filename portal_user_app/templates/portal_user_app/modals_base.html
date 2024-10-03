@@ -47,7 +47,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" minlength="5" maxlength="20" required>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email:</label>
@@ -55,7 +55,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" minlength="8" required>
                     </div>
                     <button type="submit" class="btn btn-info btn-block" id="OtpBtn">Get OTP</button>
                 </form>
@@ -160,12 +160,12 @@
                         <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Your Email" required>
                     </div>
                     <div class="mb-3">
-                        <label for="inputTech">Project Tech:</label>
-                        <input type="text" id="inputTech" name="project_tech" class="form-control" placeholder="Preferred Technology" required>
+                        <label for="inputTech">Technology:</label>
+                        <input type="text" id="inputTech" name="project_tech" class="form-control" placeholder="Technology" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputDescription">Description:</label>
-                        <textarea id="inputDescription" name="description" class="form-control" placeholder="Project Description" rows="4" required></textarea>
+                        <textarea id="inputDescription" name="description" class="form-control" placeholder="Project Requirments" rows="4" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-success btn-block" id="ContactUsBtn">Send</button>
                 </form>

@@ -72,9 +72,8 @@ def resume_index_view(request):
             elif 'project1' in request.POST:
                 project_title = request.POST.get('project1')
                 description = request.POST.get('project_description1')
-                year = request.POST.get('project_year1')
                 user = get_object_or_404(User, id=request.user.id)
-                Project.objects.create(user=user, title=project_title, description=description, year=year)
+                Project.objects.create(user=user, title=project_title, description=description)
                 response_data['message'] = 'Project Information updated successfully!'
             
             # Certificate Information Update
