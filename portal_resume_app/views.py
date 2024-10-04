@@ -287,6 +287,9 @@ def resume_save_view(request):
         'template4.html',
         'template5.html',
         'template6.html',
+        'template7.html',
+        'template8.html',
+        'template9.html',
     ]
 
     # Loop through each template, render HTML content, and save to the database
