@@ -153,18 +153,19 @@ def resume_download_view(request, resume_id):
 
         # Options to set paper size and other settings
         options = {
-            'page-size': 'A4',
+            'page-width': '2480px',  # Width in pixels (matching A4 size at 300 DPI)
+            'page-height': '3508px',  # Height in pixels (matching A4 size at 300 DPI)
             'margin-top': '0mm',
             'margin-right': '0mm',
             'margin-bottom': '0mm',
             'margin-left': '0mm',
-            'zoom': '1.05',
+            'zoom': '1.50',  # Matching zoom level with image options
             'print-media-type': '',
             'orientation': 'Portrait',
             'enable-local-file-access': '',
-            'dpi': 300,
-            'image-dpi': 300,
-            'image-quality': 100,
+            'dpi': 300,  # Same DPI as in image options
+            'image-dpi': 300,  # Image DPI is the same
+            'image-quality': 100,  # Image quality set to maximum
         }
 
         # Convert HTML to PDF with the specified options
