@@ -229,18 +229,19 @@ def save_resume_pdf(user, resume, html_content):
     # Configure pdfkit with path to wkhtmltopdf executable
     pdfkit_config = pdfkit.configuration(wkhtmltopdf=settings.PDFKIT_CONFIG['wkhtmltopdf'])
     pdf_options = {
-        'page-size': 'A4',
+        'page-width': '2480px',  # Width in pixels (matching A4 size at 300 DPI)
+        'page-height': '3508px',  # Height in pixels (matching A4 size at 300 DPI)
         'margin-top': '0mm',
         'margin-right': '0mm',
         'margin-bottom': '0mm',
         'margin-left': '0mm',
-        'zoom': '1.05',
+        'zoom': '1.50',  # Matching zoom level with image options
         'print-media-type': '',
         'orientation': 'Portrait',
         'enable-local-file-access': '',
-        'dpi': 300,
-        'image-dpi': 300,
-        'image-quality': 100,
+        'dpi': 300,  # Same DPI as in image options
+        'image-dpi': 300,  # Image DPI is the same
+        'image-quality': 100,  # Image quality set to maximum
     }
 
     try:
@@ -255,7 +256,7 @@ def save_resume_pdf(user, resume, html_content):
         pdf_content = ContentFile(pdf_file.read(), name=f'{resume.name}.pdf')
 
         # Save the PDF to the Resume instance
-        resume.pdf.save(f'{user}_{resume.name}.pdf', pdf_content, save=True)
+        resume.pdf_file.save(f'{user}_{resume.name}.pdf', pdf_content, save=True)
 
     except Exception as e:
         print(f"Error saving PDF: {e}")
@@ -282,6 +283,10 @@ def resume_save_view(request):
     templates = [
         'template1.html',
         'template2.html',
+        'template3.html',
+        'template4.html',
+        'template5.html',
+        'template6.html',
     ]
 
     # Loop through each template, render HTML content, and save to the database

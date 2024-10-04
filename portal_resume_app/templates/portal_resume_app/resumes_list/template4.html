@@ -5,306 +5,359 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume</title>
     <style>
+        /* Base Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            color: #333;
-            background: linear-gradient(135deg, #e0f7fa, #b9fbc0);
-            font-size: 70%;
+            line-height: 1;
         }
 
-        .page {
+        /* Page Container */
+        .page-container {
             width: 21cm;
             min-height: 29.7cm;
-            padding: 2cm;
+            background: #ffffff;
+            padding: 20mm;
             margin: 0 auto;
-            background: #fff;
         }
 
-        /* Updated blue color for header section */
+        /* Header Section */
         .header-section {
             text-align: center;
-            margin-bottom: 0em;
-            border-bottom: 4px solid #3498db; /* Changed color */
-            padding-bottom: 0em;
-            background: linear-gradient(135deg, #3498db, #2980b9); /* Changed color */
-            color: #fff;
-            border-radius: 12px 12px 0 0;
+            margin-bottom: 0px; /* Add space below header section */
         }
 
-        .header-section h1 {
+        .name-title {
             margin: 0;
-            font-size: 2.5em;
-            font-weight: 600;
+            font-size: 24px; /* Increase font size for name */
         }
 
-        .header-section .contact-info {
-            margin: 0em 0;
-            font-size: 1em;
+        .contact-info-container {
+            margin-top: 0px;
         }
 
-        .header-section .contact-info p {
-            margin: 0em 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .contact-info-container p {
+            margin: 0px 0;
+            line-height: 1.2;
+            font-size: 15px;
         }
 
-        .header-section .contact-info i {
-            margin-right: 0.5em;
-            color: #fff;
-        }
-
-        .section-title {
-            background: linear-gradient(135deg, #3498db, #2980b9); /* Changed color */
-            color: #fff;
-            padding: 0.5em 1em;
-            border-radius: 5px;
-            font-size: 1.4em;
+        .label-address, .label-email, .label-phone {
             font-weight: bold;
-            margin-bottom: 0em;
         }
 
-        .section-content {
-            margin-bottom: .4em;
-            background: #f9f9f9;
-            padding: 1em;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Summary Section */
+        .summary-section {
+            margin-bottom: 20px; /* Space below summary section */
         }
 
-        .highlight-text {
+        .summary-title {
+            margin-bottom: 0px; /* Increase space below summary heading */
+            font-size: 20px; /* Larger font size for summary title */
+        }
+
+        .summary-text-content {
+            text-align: justify;
+            line-height: 1.2; /* Increase line height for readability */
+            font-size: 14px;
+        }
+
+        /* Section Titles */
+        h3 {
+            border-bottom: 2px solid #333; /* Add a border below section titles */
+            padding-bottom: 2px; /* Space between title text and border */
+            margin-bottom: 10px; /* Space below section title */
+            font-size: 18px; /* Larger font size for section titles */
+        }
+
+        /* Education Section */
+        .education-section {
+            margin-bottom: 0px;
+        }
+
+        .education-item {
+            margin-bottom: 0px; /* More space between education items */
+        }
+
+        .degree-name, .college-name, .graduation-year {
+            display: block; /* Ensure each part of education information is on a new line */
+            font-size: 14px; /* Adjust font size for education details */
+        }
+
+        .graduation-year {
+            font-style: italic; /* Italicize the graduation year */
+        }
+
+        /* Experience Section */
+        .experience-section {
+            margin-bottom: 0px;
+        }
+
+        .experience-item {
+            margin-bottom: 0px; /* More space between experience items */
+        }
+
+        .job-role, .work-year {
+            display: block;
+            font-size: 14px;
+        }
+
+        .work-year {
+            font-style: italic;
+        }
+
+        /* General List Styles */
+        ul {
+            padding-left: 20px; /* Add padding for lists */
+        }
+
+        li, th, td {
+            margin-bottom: 0px; /* Space between list items */
+            font-size: 14px; /* Adjust font size for list items */
+        }
+
+        /* Projects Section */
+        .projects-section {
+            margin-bottom: 0px;
+        }
+
+        .project-title {
+            font-size: 16px; /* Increase font size for project titles */
             font-weight: bold;
-            color: #3498db; /* Changed color */
+            margin-bottom: 0px; /* Space below project title */
         }
 
-        .education-info,
-        .experience-info {
-            margin-bottom: 0em;
+        .project-description-content {
+            font-size: 14px; /* Adjust font size for project description */
         }
 
-        .education-info ul,
-        .experience-info div {
-            margin: 0;
-            padding: 0;
+        /* Skills Section */
+        .skills-section {
+            margin-bottom: 0px;
         }
 
-        .education-info li,
-        .experience-info p {
-            margin: 0.1em 0;
+        .skills-title {
+            margin-bottom: 0px; /* Increase space below skills title */
         }
 
-        .year-info {
-            text-align: right;
+        .skills-list {
+            padding-left: 0; /* Remove padding from skills list */
+            list-style-type: none; /* Remove bullet points */
         }
 
-        .summary-text,
-        .project-description {
-            text-align: justify;
-            margin: 0.2em 0;
+        .skill-item {
+            font-size: 14px; /* Adjust font size for skill items */
         }
 
-        p {
-            margin: 0.1em 0;
+        /* Certificates Section */
+        .certificates-section {
+            margin-bottom: 0px;
         }
 
-        .experience-year,
-        .experience-company {
-            text-align: right;
+        .certificates-title {
+            margin-bottom: 0px; /* Increase space below certificates title */
         }
 
-        .skill-language-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0em 0;
+        .certificates-list {
+            padding-left: 0; /* Remove padding from certificates list */
+            list-style-type: none; /* Remove bullet points */
         }
 
-        .skill-language-table th,
-        .skill-language-table td {
-            padding: 12px;
-            vertical-align: top;
-            border: 1px solid #ddd;
+        .certificate-item {
+            margin-bottom: -15px; /* Space between certificate items */
         }
 
-        /* Updated blue color for table headers */
-        .skill-language-table th {
-            background-color: #3498db; /* Changed color */
-            color: #fff;
-            text-align: center;
-        }
-
-        .skill-language-table td {
-            background-color: #fafafa;
-        }
-
-        .skill-language-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .proficiency-right {
-            text-align: center;
-        }
-
-        .proficiency-left {
-            text-align: right;
-        }
-
-        .skill-language-content {
-            text-align: justify;
-        }
-
-        .skill-language-content ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .skill-language-content li {
-            margin-bottom: 8px;
-        }
-
-        .education-info,
-        .experience-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .education-info .degree-container,
-        .experience-info .experience-container {
+        .certificate-description {
             display: flex;
             justify-content: space-between;
+            font-size: 14px; /* Adjust font size for certificate description */
         }
 
-        .education-info .degree-container .degree,
-        .experience-info .experience-container .role {
-            flex: 1;
-            font-size: 1.1em;
+        /* Languages Section */
+        .languages-section {
+            margin-bottom: 0px;
         }
 
-        .education-info .degree-container .details,
-        .experience-info .experience-container .details {
-            text-align: right;
-            flex-shrink: 0;
-            font-size: 1em;
-            color: #7f8c8d;
+        .languages-title {
+            margin-bottom: 0px; /* Increase space below languages title */
+        }
+
+        .languages-list {
+            padding-left: 0; /* Remove padding from languages list */
+            list-style-type: none; /* Remove bullet points */
+        }
+
+        .language-item {
+            font-size: 14px; /* Adjust font size for language items */
+            padding-bottom: -15px;
+        }
+
+        /* Hobbies Section */
+        .hobbies-section {
+            margin-bottom: 0px;
+        }
+
+        .hobbies-title {
+            margin-bottom: 0px; /* Increase space below hobbies title */
+        }
+
+        .hobbies-list {
+            padding-left: 0; /* Remove padding from hobbies list */
+            list-style-type: none; /* Remove bullet points */
+        }
+
+        .hobbie-item {
+            margin-bottom: -15px; /* Space between hobbie items */
+        }
+
+        .hobbie-description {
+            font-size: 14px; /* Adjust font size for hobbie description */
+        }
+
+        /**/
+        .text-justify {
+            text-align: center;
         }
     </style>
-    <!-- Link to FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="page">
-        <!-- Header -->
+    <div class="page-container">
+        <!-- Header Section -->
         {% if personal_data %}
         <div class="header-section">
-            <h1>{{ personal_data.name }}</h1>
-            <div class="contact-info">
-                <p><i class="fas fa-map-marker-alt"></i><span class="highlight-text"></span> {{ personal_data.address }}</p>
-                <p><i class="fas fa-envelope"></i><span class="highlight-text"></span> {{ personal_data.email }}</p>
-                <p><i class="fas fa-phone"></i><span class="highlight-text"></span> {{ personal_data.phone }}</p>
+            <h1 class="name-title">{{ personal_data.name }}</h1>
+            <div class="contact-info-container">
+                <p><span class="label-address"></span> {{ personal_data.address }}</p>
+                <p><span class="label-email"></span> {{ personal_data.email }}</p>
+                <p><span class="label-phone"></span> {{ personal_data.phone }}</p>
             </div>
         </div>
         {% endif %}
 
-        <!-- Summary -->
+        <!-- Summary Section -->
         {% if summary_data %}
-        <div class="section-content">
-            <h2 class="section-title">Summary</h2>
-            <p class="summary-text">{{ summary_data.description }}</p>
+        <div class="summary-section">
+            <h3 class="summary-title">Summary</h3>
+            <p class="summary-text-content">{{ summary_data.description }}</p>
         </div>
         {% endif %}
 
-        <!-- Education -->
+        <!-- Education Section -->
         {% if education_data %}
-        <div class="section-content">
-            <h2 class="section-title">Education</h2>
-            {% for education in education_data %}
-            <div class="education-info">
-                <div class="degree-container">
-                    <p class="degree">{{ education.degree }}</p>
-                    <div class="details">
-                        <p>{{ education.college }}</p>
-                        <p>{{ education.year }}</p>
-                    </div>
-                </div>
+        <div class="education-section">
+            <h3 class="education-title">Education</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="text-justify">Degree</th>
+                            <th class="text-justify">College</th>
+                            <th class="text-justify">CGPA</th>
+                            <th class="text-justify">Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for education in education_data %}
+                        <tr>
+                            <td class="text-justify">{{ education.degree }}</td>
+                            <td class="text-justify">{{ education.college }}</td>
+                            <td class="text-justify">
+                                {% if education.cgpa %}
+                                {{ education.cgpa }}
+                                {% else %}
+                                N/A
+                                {% endif %}
+                            </td>
+                            <td class="text-justify">{{ education.year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% endfor %}
         </div>
         {% endif %}
 
-        <!-- Experience -->
+        <!-- Experience Section -->
         {% if experience_data %}
-        <div class="section-content">
-            <h2 class="section-title">Experience</h2>
+        <div class="experience-section">
+            <h3 class="experience-title">Experience</h3>
             {% for experience in experience_data %}
-            <div class="experience-info">
-                <div class="experience-container">
-                    <p class="role">{{ experience.role }}</p>
-                    <div class="details">
-                        <p>{{ experience.company }}</p>
-                        <p>{{ experience.year }}</p>
-                    </div>
-                </div>
+            <div class="experience-item">
+                <p class="job-role">{{ experience.role }}, {{ experience.company }}</p>
+                <p class="work-year">{{ experience.year }}</p>
             </div>
             {% endfor %}
         </div>
         {% endif %}
 
         {% load custom_filters %}
-        <!-- Projects -->
+        <!-- Projects Section -->
         {% if project_data %}
-        <div class="section-content">
-            <h2 class="section-title">Projects</h2>
+        <div class="projects-section">
+            <h3 class="projects-title">Projects</h3>
             {% for project in project_data %}
-            <p>{{ project.title }}</p>
-            <p class="project-description">{{ project.description|format_description|safe }}</p>
+            <p class="project-title">{{ project.title }}</p>
+            <p class="project-description-content">{{ project.description|format_description|safe }}</p>
             {% endfor %}
         </div>
         {% endif %}
 
-        <!-- Skills -->
-        <div class="section-content">
+        <!-- Skills Section -->
+        <div class="skills-section">
             {% if skill_data %}
-            <table class="skill-language-table">
-                <tr>
-                    <th>Skills</th>
-                </tr>
-                <tr>
-                    <td class="skill-language-content">
-                        {% if skill_data %}
-                        <ul>
-                            {% for skill in skill_data %}
-                            <li class="proficiency-right">{{ skill.skill }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
+            <h3 class="skills-title">Skills</h3>
+            <ul class="skills-list">
+                {% for skill in skill_data %}
+                <li class="skill-item">{{ skill.skill }}</li>
+                {% endfor %}
+            </ul>
             {% endif %}
         </div>
-        <!-- Languages -->
-        <div class="section-content">
+
+        <!-- Certificate Section -->
+        {% if certificate_data %}
+        <div class="certificates-section">
+            <h3 class="certificates-title">Certificates</h3>
+            {% for certificate in certificate_data %}
+            <ul class="certificates-list">
+                <li class="certificate-item">
+                    <p class="certificate-description">
+                        <span class="certificate-text">{{ certificate.certificate }}</span>
+                        {% if certificate.year %}
+                            <span class="certificate-year">, {{ certificate.year }}</span>
+                        {% endif %}
+                    </p>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Languages Section -->
+        <div class="languages-section">
             {% if language_data %}
-            <table class="skill-language-table">
-                <tr>
-                    <th>Languages</th>
-                </tr>
-                <tr>
-                    <td class="skill-language-content">
-                        {% if language_data %}
-                        <ul>
-                            {% for language in language_data %}
-                            <li class="proficiency-right">{{ language.language }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
+            <h3 class="languages-title">Languages</h3>
+            <ul class="languages-list">
+                {% for language in language_data %}
+                <li class="language-item">{{ language.language }}</li>
+                {% endfor %}
+            </ul>
             {% endif %}
         </div>
+
+        <!-- Hobbies Section -->
+        {% if hobbie_data %}
+        <div class="hobbies-section">
+            <h3 class="hobbies-title">Hobbies</h3>
+            {% for hobbie in hobbie_data %}
+            <ul class="hobbies-list">
+                <li class="hobbie-item">
+                    <p class="hobbie-description">{{ hobbie.hobbie }}</p>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>
