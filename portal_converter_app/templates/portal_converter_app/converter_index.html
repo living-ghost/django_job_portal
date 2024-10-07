@@ -22,12 +22,12 @@
     <link href="{% static 'portal_converter_app/css/bootstrap.min.css' %}" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{% static 'portal_converter_app/css/converter_index.css' %}" rel="stylesheet">
-    <!-- CSS -->
+    <!-- Font Awesome CSS -->
     <link href="{% static 'portal_converter_app/css/all.min.css' %}" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'portal_converter_app:converter_index' %}">File Converter</a>
         
         <!-- Toggler button for mobile view -->
@@ -38,63 +38,82 @@
         <!-- Collapsible content -->
         <div class="collapse navbar-collapse" id="navbarContent">
             <div class="navbar-nav ml-auto">
-                <a class="nav-link" href="{% url 'portal_converter_app:converter_index' %}"><i class="fas fa-user"></i> Converter</a>
+                <a class="nav-link" href="{% url 'portal_converter_app:converter_index' %}"><i class="fas fa-file-convert"></i> Converter</a>
                 <a class="nav-link" href="{% url 'portal_user_app:user_dashboard' %}"><i class="fas fa-home"></i> Home</a>
             </div>
         </div>
     </nav>
 
     <!-- File Upload Box -->
-    <div class="content">
-        <div class="upload-box">
+    <div class="content container mt-5">
+        <div class="upload-box p-4 border rounded bg-light">
             <h4>Upload Your File</h4>
-            <p>Select a file from your computer or upload Google Drive to convert it to the desired format.</p>
-            <form method="post" action="{% url 'portal_converter_app:converter_index' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input type="file" class="form-control-file" id="fileUpload" name="file">
+            <p>Select a file from your computer or upload from Google Drive to convert it to the desired format.</p>
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
                 </div>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
                 <div class="form-group">
-                    <select class="form-control" id="conversionOptions" name="format">
+                    <select class="form-control" id="conversionOptions" name="format" required>
                         <option value="">Select conversion type</option>
-                        <option value="pdf">PDF</option>
-                        <option value="docx">DOCX</option>
-                        <option value="jpg">JPG</option>
-                        <option value="png">PNG</option>
+                        <option value="pdf">DOCX to PDF</option>
+                        <option value="docx">PDF to DOCX</option>
+                        <option value="jpg">DOCX to JPG</option>
+                        <option value="png">DOCX to PNG</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload</button>
-                <br>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Convert</button>
+                <br><br>
                 <button type="button" class="btn btn-secondary"><i class="fab fa-google-drive"></i> Upload from Google Drive</button>
             </form>
             <hr>
             <div class="info">
                 <h5>How to Use</h5>
                 <ul>
-                    <strong>Upload a File:</strong> Click 'Choose a file' to select a file from your computer.
-                    <br>
-                    <strong>Select Conversion Type:</strong> Choose the format you want to convert your file to.
-                    <br>
-                    <strong>Upload:</strong> Click 'Upload' to start the conversion process.
+                    <li><strong>Upload a File:</strong> Click 'Choose a file' to select a file from your computer.</li>
+                    <li><strong>Select Conversion Type:</strong> Choose the format you want to convert your file to.</li>
+                    <li><strong>Upload:</strong> Click 'Upload' to start the conversion process.</li>
                 </ul>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="footer text-center">
+    <footer class="footer bg-dark text-center text-white py-4">
         <div class="container">
             <h5>About Freshers Park</h5>
             <p>Empowering fresh talent to connect with top companies. Your gateway to the best job opportunities.</p>
-            <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a>
+            <a href="#" class="text-white">Terms of Service</a> | <a href="#" class="text-white">Privacy Policy</a>
         </div>
     </footer>
 
     <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
+    <button class="back-to-top btn btn-primary" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
 
     <!-- Scripts -->
     <script src="{% static 'portal_converter_app/scripts/jquery-3.5.1.slim.min.js' %}"></script>
     <script src="{% static 'portal_converter_app/scripts/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        // Back to Top Button functionality
+        const backToTopBtn = document.getElementById("backToTopBtn");
+
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                backToTopBtn.style.display = "block";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        }
+
+        backToTopBtn.addEventListener("click", function(){
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+    </script>
 </body>
 </html>

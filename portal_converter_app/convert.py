@@ -1,108 +1,50 @@
-from io import BytesIO
-from docx import Document
-from docx.shared import Pt
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.platypus import SimpleDocTemplate, Paragraph
+import os
+import tempfile
+import subprocess
+from django.conf import settings
 
-def convert_to_pdf_from_text(text):
+
+def convert_docx_to_pdf(docx_path):
     """
-    Convert text to a PDF with styled headings and body text.
-    
-    Args:
-        text: A string containing the text to be converted.
-        
-    Returns:
-        Byte content of the generated PDF.
+    Convert a DOCX file to PDF using LibreOffice in headless mode.
+    Returns the path to the converted PDF file.
     """
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
-    story = []
+    # Ensure the input file exists
+    if not os.path.exists(docx_path):
+        raise FileNotFoundError(f"The file {docx_path} does not exist.")
 
-    # Define styles
-    heading_style = ParagraphStyle(
-        name='HeadingStyle',
-        fontName='Helvetica-Bold',
-        fontSize=14,
-        spaceAfter=9,  # Space after heading
-    )
-    
-    subheading_style = ParagraphStyle(
-        name='SubheadingStyle',
-        fontName='Helvetica-Bold',
-        fontSize=12,
-        spaceAfter=5,  # Space after subheading
-    )
-    
-    body_style = ParagraphStyle(
-        name='BodyStyle',
-        fontName='Helvetica',
-        fontSize=10,
-        spaceAfter=2,  # Space after body text
-    )
+    # Determine the output directory
+    output_dir = tempfile.mkdtemp()
 
-    # Process the text and apply styles
-    paragraphs = text.split('\n')
-    for para in paragraphs:
-        para = para.strip()
-        if para.startswith('# '):  # Heading
-            styled_paragraph = Paragraph(para[2:], heading_style)
-        elif para.startswith('## '):  # Subheading
-            styled_paragraph = Paragraph(para[3:], subheading_style)
-        else:  # Body text
-            styled_paragraph = Paragraph(para, body_style)
-        
-        story.append(styled_paragraph)
+    # Command to convert DOCX to PDF
+    # Adjust the path to 'soffice' if necessary
+    if os.name == 'nt':  # Windows
+        soffice_path = settings.LIBRE_OFFICE
+    elif os.name == 'posix':
+        soffice_path = "soffice"
+    else:
+        raise EnvironmentError("Unsupported operating system.")
 
-    # Build the PDF
-    doc.build(story)
-    buffer.seek(0)
-    return buffer.getvalue()
+    command = [
+        soffice_path,
+        '--headless',
+        '--convert-to', 'pdf',
+        '--outdir', output_dir,
+        docx_path
+    ]
 
-def convert_to_docx_from_text(text):
-    """
-    Convert text to a DOCX file with styled headings and body text.
-    
-    Args:
-        text: A string containing the text to be converted.
-        
-    Returns:
-        Byte content of the generated DOCX file.
-    """
-    buffer = BytesIO()
-    doc = Document()
-    
-    # Define and apply styles
-    heading_style = doc.styles['Heading1']
-    heading_style.font.name = 'Arial'
-    heading_style.font.size = Pt(14)
-    heading_style.font.bold = True
-    heading_style.paragraph_format.space_after = Pt(12)
-    
-    subheading_style = doc.styles['Heading2']
-    subheading_style.font.name = 'Arial'
-    subheading_style.font.size = Pt(12)
-    subheading_style.font.bold = True
-    subheading_style.paragraph_format.space_after = Pt(12)
-    
-    body_style = doc.styles['Normal']
-    body_style.font.name = 'Arial'
-    body_style.font.size = Pt(10)
-    body_style.paragraph_format.line_spacing = Pt(10)
-    body_style.paragraph_format.space_after = Pt(4)
-    
-    # Process the text and apply styles
-    paragraphs = text.split('\n')
-    for para in paragraphs:
-        para = para.strip()
-        if para.startswith('# '):  # Heading
-            doc.add_paragraph(para[2:], style='Heading1')
-        elif para.startswith('## '):  # Subheading
-            doc.add_paragraph(para[3:], style='Heading2')
-        else:  # Body text
-            doc.add_paragraph(para, style='Normal')
-    
-    # Save the document to the BytesIO buffer
-    doc.save(buffer)
-    buffer.seek(0)  # Move the cursor to the beginning of the buffer
-    return buffer.getvalue()  # Return the byte content of the DOCX file
+    # Execute the command
+    process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    if process.returncode != 0:
+        raise RuntimeError(f"LibreOffice conversion failed: {process.stderr}")
+
+    # Determine the PDF file path
+    base_name = os.path.basename(docx_path)
+    pdf_name = os.path.splitext(base_name)[0] + '.pdf'
+    pdf_path = os.path.join(output_dir, pdf_name)
+
+    if not os.path.exists(pdf_path):
+        raise FileNotFoundError(f"Conversion failed. PDF not found at {pdf_path}.")
+
+    return pdf_path
