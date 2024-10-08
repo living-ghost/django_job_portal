@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'portal_admin_app',
     'portal_resume_app',
     'portal_converter_app',
+    'portal_ats_app',
 
     # Django REST Framework (DRF)
     'rest_framework',
@@ -62,6 +63,10 @@ INSTALLED_APPS = [
 
     # Celery
     'celery',
+
+    #
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 # Site ID for the Sites framework
@@ -197,3 +202,6 @@ LIBRE_OFFICE = os.getenv('LIBRE_OFFICE')
 
 RAZOR_KEY_ID = os.getenv('RAZOR_KEY_ID_ENV')
 RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET_ENV')
+
+#
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

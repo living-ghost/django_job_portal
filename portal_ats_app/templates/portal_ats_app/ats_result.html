@@ -1,0 +1,26 @@
+{% extends 'portal_ats_app/ats_base.html' %}
+
+{% block content %}
+<h2>ATS Check Result</h2>
+<p><strong>Score:</strong> {{ score }}%</p>
+
+<h3>Found Keywords:</h3>
+<ul>
+    {% for keyword in found_keywords %}
+        <li>{{ keyword }}</li>
+    {% empty %}
+        <li>No keywords found.</li>
+    {% endfor %}
+</ul>
+
+<h3>Missing Keywords:</h3>
+<ul>
+    {% for keyword in missing_keywords %}
+        <li>{{ keyword }}</li>
+    {% empty %}
+        <li>All keywords found.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'portal_ats_app:ats_upload' %}" class="btn btn-primary">Check Another Resume</a>
+{% endblock %}

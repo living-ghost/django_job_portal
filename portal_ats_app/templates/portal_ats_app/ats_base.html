@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Freshers Park - Your gateway to exciting career opportunities!">
+    <meta name="keywords" content="jobs, freshers, careers, job portal, Freshers Park">
+    <meta name="author" content="Freshers Park">
+    <meta property="og:title" content="Freshers Park - Job Portal">
+    <meta property="og:description" content="Your gateway to exciting career opportunities!">
+    <meta property="og:image" content="{% static 'portal_user_app/images/favicon.png' %}">
+    <meta property="og:url" content="https://www.fresherspark.in">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link href="{% static 'portal_user_app/images/favicon.ico' %}" rel="icon" type="image/x-icon">
+
+    <title>Freshers Park | ATS Checker</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'portal_ats_app/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'portal_ats_app/css/ats_index.css' %}" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="{% static 'portal_ats_app/css/all.min.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{% url 'portal_ats_app:ats_index' %}">ATS Checker</a>
+        
+        <!-- Toggler button for mobile view -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <div class="navbar-nav ml-auto">
+                <a class="nav-link" href="{% url 'portal_ats_app:ats_index' %}"><i class="fas fa-file-convert"></i> ATS Checker</a>
+                <a class="nav-link" href="{% url 'portal_user_app:user_dashboard' %}"><i class="fas fa-home"></i> Home</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- File Upload Box -->
+    <div class="content container mt-5">
+        
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer bg-dark text-center text-white py-4">
+        <div class="container">
+            <h5>About Freshers Park</h5>
+            <p>Empowering fresh talent to connect with top companies. Your gateway to the best job opportunities.</p>
+            <a href="#" class="text-white">Terms of Service</a> | <a href="#" class="text-white">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top btn btn-primary" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Scripts -->
+    <script src="{% static 'portal_ats_app/scripts/jquery-3.5.1.slim.min.js' %}"></script>
+    <script src="{% static 'portal_ats_app/scripts/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

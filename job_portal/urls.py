@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', include(('portal_admin_app.urls', 'portal_admin_app'))),
     path('resume/', include(('portal_resume_app.urls', 'portal_resume_app'))),
     path('converter/', include(('portal_converter_app.urls', 'portal_converter_app'))),
+    path('tracking/', include(('portal_ats_app.urls', 'portal_ats_app'))),
     
     path('', include('django_prometheus.urls')),
 ]

@@ -1,0 +1,10 @@
+{% extends 'portal_ats_app/ats_base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to ATS Checker!</h1>
+    <p class="lead">Upload your resume to check its compatibility with Applicant Tracking Systems.</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="{% url 'portal_ats_app:ats_upload' %}" role="button">Upload Resume</a>
+</div>
+{% endblock %}
