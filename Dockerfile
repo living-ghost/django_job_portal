@@ -16,9 +16,9 @@ RUN apt-get update && \
     libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 \
     xfonts-75dpi xfonts-base cabextract \
     libxinerama1 libxrandr2 libxml2 libxrender1 libxrandr2 libx11-6 libxext6 libfontconfig1 libfreetype6 libsm6 libice6 libglib2.0-0 libglib2.0-bin libatk1.0-0 libatk-bridge2.0-0  \
-    libcairo2 libcups2 libdbus-1-3 libdrm2 libexpat1 libffi6 libfontenc1 libgbm1 libglib2.0-data libgnutls30 libgssapi-krb5-2 libgtk-3-0 libjpeg-turbo8 liblzma5 libpango-1.0-0 \
-    libpangocairo-1.0-0 libpcre3 libpixman-1-0 libpng16-16 libsm6 libsasl2-2 libsasl2-modules libsdl1.2debian libsqlite3-0 libssl1.1 \
-    libtiff5 libudev1 libvorbis0a libvorbisenc2 libvpx6 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 libxss1 libxtst6 zlib1g
+    libcairo2 libcups2 libdbus-1-3 libdrm2 libexpat1 libfontenc1 libgbm1 libglib2.0-data libgnutls30 libgssapi-krb5-2 libgtk-3-0 liblzma5 libpango-1.0-0 \
+    libpangocairo-1.0-0 libpcre3 libpixman-1-0 libpng16-16 libsm6 libsasl2-2 libsasl2-modules libsdl1.2debian libsqlite3-0 \
+    libudev1 libvorbis0a libvorbisenc2 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 libxss1 libxtst6 zlib1g
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
