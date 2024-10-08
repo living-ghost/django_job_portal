@@ -20,7 +20,7 @@ def convert_docx_to_pdf(docx_path):
     if os.name == 'nt':  # Windows
         soffice_path = settings.LIBRE_OFFICE
     elif os.name == 'posix':
-        soffice_path = "soffice"
+        soffice_path = settings.LIBRE_OFFICE
     else:
         raise EnvironmentError("Unsupported operating system.")
 
@@ -76,7 +76,7 @@ def convert_pdf_to_docx(pdf_path):
     if os.name == 'nt':
         soffice_path = settings.LIBRE_OFFICE
     elif os.name == 'posix':
-        soffice_path = "soffice"
+        soffice_path = settings.LIBRE_OFFICE
     else:
         raise EnvironmentError("Unsupported operating system.")
 
@@ -119,7 +119,7 @@ def convert_pdf_to_jpg(pdf_path):
     if os.name == 'nt':
         soffice_path = settings.LIBRE_OFFICE
     elif os.name == 'posix':
-        soffice_path = "soffice"
+        soffice_path = settings.LIBRE_OFFICE
     else:
         raise EnvironmentError("Unsupported operating system.")
 
@@ -161,7 +161,7 @@ def convert_pdf_to_png(pdf_path):
     if os.name == 'nt':
         soffice_path = settings.LIBRE_OFFICE
     elif os.name == 'posix':
-        soffice_path = "soffice"
+        soffice_path = settings.LIBRE_OFFICE
     else:
         raise EnvironmentError("Unsupported operating system.")
 
