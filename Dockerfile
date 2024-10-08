@@ -10,10 +10,11 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Update and install necessary packages for wkhtmltopdf
+# Update and install necessary packages for LibreOffice and wkhtmltopdf
 RUN apt-get update && \
     apt-get install -y wget xz-utils fontconfig libxrender1 libxext6 \
-    libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 xfonts-75dpi xfonts-base cabextract
+    libfreetype6 libjpeg62-turbo libpng16-16 libx11-6 libxcb1 \
+    xfonts-75dpi xfonts-base cabextract
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
@@ -21,12 +22,16 @@ RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libj
     wget http://ftp.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
     dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb
-    
-# Clean up the apt cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install LibreOffice 24.8.2
+RUN wget https://download.documentfoundation.org/libreoffice/stable/24.8.2/deb/x86_64/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
+    tar -xvzf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
+    dpkg -i LibreOffice_24.8.2.*/DEBS/*.deb
+
+# Clean up the apt cache and tarballs
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz LibreOffice_24.8.2.*
 
 # Copy the current directory contents into the container at /app
-# Ensure to include .git if needed for versioning
 COPY . /app/
 
 # Make port 8000 available to the world outside this container

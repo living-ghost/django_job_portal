@@ -57,18 +57,7 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <div class="form-group">
-                    <select class="form-control" id="conversionOptions" name="format" required>
-                        <option value="">Select conversion type</option>
-                        <option value="pdf">DOCX to PDF</option>
-                        <option value="docx">PDF to DOCX</option>
-                        <option value="jpg">DOCX to JPG</option>
-                        <option value="png">DOCX to PNG</option>
-                    </select>
-                </div>
                 <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Convert</button>
-                <br><br>
-                <button type="button" class="btn btn-secondary"><i class="fab fa-google-drive"></i> Upload from Google Drive</button>
             </form>
             <hr>
             <div class="info">
