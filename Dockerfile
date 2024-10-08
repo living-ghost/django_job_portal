@@ -18,7 +18,9 @@ RUN apt-get update && \
     libxinerama1 libxrandr2 libxml2 libxrender1 libxrandr2 libx11-6 libxext6 libfontconfig1 libfreetype6 libsm6 libice6 libglib2.0-0 libglib2.0-bin libatk1.0-0 libatk-bridge2.0-0  \
     libcairo2 libcups2 libdbus-1-3 libdrm2 libexpat1 libfontenc1 libgbm1 libglib2.0-data libgnutls30 libgssapi-krb5-2 libgtk-3-0 liblzma5 libpango-1.0-0 \
     libpangocairo-1.0-0 libpcre3 libpixman-1-0 libpng16-16 libsm6 libsasl2-2 libsasl2-modules libsdl1.2debian libsqlite3-0 \
-    libudev1 libvorbis0a libvorbisenc2 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 libxss1 libxtst6 zlib1g
+    libudev1 libvorbis0a libvorbisenc2 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 libxss1 libxtst6 zlib1g \
+    openjdk-11-jdk \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
@@ -31,6 +33,12 @@ RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libj
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
     tar -xvzf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
     dpkg -i LibreOffice_24.8.2.*/DEBS/*.deb
+
+# Set JAVA_HOME environment variable
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+# Optionally, add LibreOffice to PATH
+ENV PATH="/opt/libreoffice24.8/program:${PATH}"
 
 # Clean up the apt cache and tarballs
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz LibreOffice_24.8.2.*
