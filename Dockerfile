@@ -19,16 +19,16 @@ RUN apt-get update && \
     libcairo2 libcups2 libdbus-1-3 libdrm2 libexpat1 libfontenc1 libgbm1 libglib2.0-data libgnutls30 libgssapi-krb5-2 libgtk-3-0 liblzma5 libpango-1.0-0 \
     libpangocairo-1.0-0 libpcre3 libpixman-1-0 libpng16-16 libsm6 libsasl2-2 libsasl2-modules libsdl1.2debian libsqlite3-0 \
     libudev1 libvorbis0a libvorbisenc2 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxinerama1 libxkbcommon0 libxrandr2 libxrender1 libxss1 libxtst6 zlib1g \
-    libssl3 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
+    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl3_3.0.2-0ubuntu1_arm64.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
     wget http://ftp.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
     wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb && \
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-23_linux-x64_bin.deb
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl3_3.0.2-0ubuntu1_arm64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-23_linux-x64_bin.deb
 
 # Install LibreOffice 24.8.2
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
