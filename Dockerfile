@@ -7,14 +7,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies and LibreOffice
+# Install system dependencies, LibreOffice, and necessary libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # Essential packages
     wget \
     curl \
     gnupg \
     ca-certificates \
-    # LibreOffice dependencies
+    # LibreOffice dependencies and additional libraries
     libreoffice \
     libssl3 \
     xz-utils \
@@ -43,7 +43,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     libglib2.0-bin \
     libatk1.0-0 \
-    libatk-bridge2.0-0  \
+    libatk-bridge2.0-0 \
     libcairo2 \
     libcups2 \
     libdbus-1-3 \
@@ -81,9 +81,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxss1 \
     libxtst6 \
     zlib1g \
+    # Clean up apt cache
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install wkhtmltopdf specific to Ubuntu Bionic
+# Install wkhtmltopdf and related dependencies specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
     wget http://ftp.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
@@ -99,20 +100,20 @@ RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/Libr
 # Clean up the apt cache and tarballs
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz LibreOffice_24.8.2.*
 
-# Copy the requirements file into the container at /app
+# Copy libssl3.so to the LibreOffice program folder to resolve missing SSL dependency
+RUN cp /usr/lib/x86_64-linux-gnu/libssl3.so /opt/libreoffice24.8/program/
+
+# Copy the Python dependencies file into the container
 COPY requirements.txt /app/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container at /app
+# Copy the current directory contents into the container
 COPY . /app/
 
-# Ensure LibreOffice is accessible via 'soffice' command
-# RUN ln -s /usr/bin/libreoffice /usr/bin/soffice
-
-# Make port 8000 available to the world outside this container
+# Make port 8000 available to the outside world (for the Django application)
 EXPOSE 8000
 
-# Run the application
+# Run the Django application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
