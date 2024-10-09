@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     ca-certificates \
     # LibreOffice dependencies
+    libreoffice \
     libssl3 \
     xz-utils \
     fontconfig \
