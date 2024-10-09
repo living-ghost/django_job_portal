@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     ca-certificates \
     # LibreOffice dependencies
-    libreoffice \
     libssl3 \
     xz-utils \
     fontconfig \
@@ -90,6 +89,14 @@ RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libj
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
     wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb && \
     dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-23_linux-x64_bin.deb
+
+# Install LibreOffice 24.8.2
+RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
+    tar -xvzf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
+    dpkg -i LibreOffice_24.8.2.*/DEBS/*.deb
+
+# Clean up the apt cache and tarballs
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz LibreOffice_24.8.2.*
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
