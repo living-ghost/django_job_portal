@@ -7,9 +7,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Set the working directory in the container
 WORKDIR /app
 
-# Update and install necessary packages for LibreOffice and wkhtmltopdf
-RUN apt-get update && \
-    apt-get install -y wget \
+# Install system dependencies and LibreOffice
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Essential packages
+    wget \
+    curl \
+    gnupg \
+    ca-certificates \
+    # LibreOffice dependencies
+    libreoffice \
+    libssl3 \
     xz-utils \
     fontconfig \
     libxrender1 \
@@ -78,17 +85,15 @@ RUN apt-get update && \
 
 # Install wkhtmltopdf specific to Ubuntu Bionic
 RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl3_3.0.2-0ubuntu1_amd64.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
     wget http://ftp.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
     wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
-    wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb && \
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl3_3.0.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-23_linux-x64_bin.deb
-    
-# Install LibreOffice 24.8.2
-RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
-    tar -xvzf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
-    dpkg -i LibreOffice_24.8.2.*/DEBS/*.deb
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb
+
+# Install Java (if required by your application or LibreOffice)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openjdk-11-jdk \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
@@ -96,13 +101,10 @@ COPY requirements.txt /app/
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Clean up the apt cache and tarballs
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz LibreOffice_24.8.2.*
-
 # Copy the current directory contents into the container at /app
 COPY . /app/
 
-# Ensure LibreOffice is accessible (optional: create symbolic link if necessary)
+# Ensure LibreOffice is accessible via 'soffice' command
 RUN ln -s /usr/bin/libreoffice /usr/bin/soffice
 
 # Make port 8000 available to the world outside this container
