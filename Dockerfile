@@ -91,11 +91,6 @@ RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libj
     wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb && \
     dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-23_linux-x64_bin.deb
 
-# Install Java (if required by your application or LibreOffice)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    openjdk-11-jdk \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 # Copy the requirements file into the container at /app
 COPY requirements.txt /app/
 
