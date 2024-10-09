@@ -101,7 +101,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Ensure LibreOffice is accessible via 'soffice' command
-RUN ln -s /usr/bin/libreoffice /usr/bin/soffice
+# RUN ln -s /usr/bin/libreoffice /usr/bin/soffice
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
