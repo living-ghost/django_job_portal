@@ -205,3 +205,12 @@ RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET_ENV')
 
 #
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+
+CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+ 
+CELERY_RESULT_BACKEND = 'rpc://'

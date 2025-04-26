@@ -1,12 +1,6 @@
 migrations
 __pycache__
 media
-<<<<<<< HEAD
 .env
 staticfiles
-=======
-*.env
-static
-prometheus
-app
->>>>>>> 91255fd0163d33e32a0ed3f7f15946d3138ba316
+.venv
