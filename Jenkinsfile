@@ -11,9 +11,9 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'github-jenkins-integration', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'github-jenkins-integrations', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                         git branch: 'master',
-                            url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/living-ghost/Job_Portal.git"
+                            url: "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/living-ghost/django-job-portal.git"
                     }
                 }
             }
