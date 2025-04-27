@@ -6,7 +6,7 @@ variables:
   azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
   resourceGroup: 'Project-Freshers_Park_Resource'
   containerRegistry: 'freshersparkcontainerregistry.azurecr.io'
-  containerAppName: 'django-app'
+  containerAppName: 'Project-Freshers-Park-App'
   containerAppEnv: 'Project-Freshers-Park-App'
   composeFilePath: '**/docker-compose.yml'
   AZURE_KEY_VAULT_NAME: 'Freshers-Park-Keys'
@@ -110,28 +110,51 @@ stages:
             --orderby time_desc \
             --query [0] -o tsv)
           
-          # Create or update container app
-          az containerapp update \
-            --name $(containerAppName) \
-            --resource-group $(resourceGroup) \
-            --environment $(containerAppEnv) \
-            --image $(containerRegistry)/$(containerAppName):$WEB_IMAGE \
-            --target-port 8000 \
-            --ingress external \
-            --env-vars \
-              DJANGO_SETTINGS_MODULE=$(DJANGO_SETTINGS_MODULE) \
-              DB_HOST=$(DB-HOST) \
-              DB_PORT=$(DB-PORT) \
-              DB_NAME=$(DB-NAME) \
-              DB_USER=$(DB-USER) \
-              DEBUG=$(DEBUG) \
-              ALLOWED_HOSTS=$(ALLOWED-HOSTS) \
-              PGADMIN_DEFAULT_EMAIL=$(PGADMIN-DEFAULT-EMAIL) \
-            --secrets \
-              db-password=$(DB-PASSWORD) \
-              secret-key=$(SECRET-KEY) \
-              email-password=$(EMAIL-HOST-PASSWORD) \
-              pgadmin-password=$(PGADMIN-DEFAULT-PASSWORD)
+          # Check if container app exists
+          if ! az containerapp show --name $(containerAppName) --resource-group $(resourceGroup) &>/dev/null; then
+            echo "Creating new Container App..."
+            az containerapp create \
+              --name $(containerAppName) \
+              --resource-group $(resourceGroup) \
+              --environment $(containerAppEnv) \
+              --image $(containerRegistry)/$(containerAppName):$WEB_IMAGE \
+              --target-port 8000 \
+              --ingress external \
+              --env-vars \
+                DJANGO_SETTINGS_MODULE=$(DJANGO_SETTINGS_MODULE) \
+                DB_HOST=$(DB_HOST) \
+                DB_PORT=$(DB_PORT) \
+                DB_NAME=$(DB_NAME) \
+                DB_USER=$(DB_USER) \
+                DEBUG=$(DEBUG) \
+                ALLOWED_HOSTS=$(ALLOWED_HOSTS) \
+                PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
+              --secrets \
+                db-password=$(DB_PASSWORD) \
+                secret-key=$(SECRET_KEY) \
+                email-password=$(EMAIL_HOST_PASSWORD) \
+                pgadmin-password=$(PGADMIN_DEFAULT_PASSWORD)
+          else
+            echo "Updating existing Container App..."
+            az containerapp update \
+              --name $(containerAppName) \
+              --resource-group $(resourceGroup) \
+              --image $(containerRegistry)/$(containerAppName):$WEB_IMAGE \
+              --set-env-vars \
+                DJANGO_SETTINGS_MODULE=$(DJANGO_SETTINGS_MODULE) \
+                DB_HOST=$(DB_HOST) \
+                DB_PORT=$(DB_PORT) \
+                DB_NAME=$(DB_NAME) \
+                DB_USER=$(DB_USER) \
+                DEBUG=$(DEBUG) \
+                ALLOWED_HOSTS=$(ALLOWED_HOSTS) \
+                PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
+              --set-secrets \
+                db-password=$(DB_PASSWORD) \
+                secret-key=$(SECRET_KEY) \
+                email-password=$(EMAIL_HOST_PASSWORD) \
+                pgadmin-password=$(PGADMIN_DEFAULT_PASSWORD)
+          fi
 
           # Show deployment status
           echo "##[section]Deployment completed:"
