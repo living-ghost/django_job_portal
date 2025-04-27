@@ -20,8 +20,8 @@ variables:
 
   # Path to your Dockerfiles for each service (adjust as necessary)
   djangoDockerfile: '$(Build.SourcesDirectory)/Dockerfile.django'
-  postgresDockerfile: '$(Build.SourcesDirectory)/postgres/Dockerfile.postgres'
-  rabbitmqDockerfile: '$(Build.SourcesDirectory)/rabbitmq/Dockerfile.rabbit'
+  postgresDockerfile: '$(Build.SourcesDirectory)/Dockerfile.postgres'
+  rabbitmqDockerfile: '$(Build.SourcesDirectory)/Dockerfile.rabbit'
   celeryDockerfile: '$(Build.SourcesDirectory)/Dockerfile.celery'
   flowerDockerfile: '$(Build.SourcesDirectory)/Dockerfile.flower'
 
