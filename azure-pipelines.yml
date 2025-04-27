@@ -13,9 +13,11 @@ variables:
   
   # Application Settings (non-secrets)
   DJANGO_SETTINGS_MODULE: 'job_portal.settings.production'
+  DB_HOST: 'postgres'
+  DB_PORT: '5432'
   DEBUG: 'False'
   ALLOWED_HOSTS: 'project-freshers-park-app-ezfqg6ezhyhvbzbx.centralindia-01.azurewebsites.net'
-  PGADMIN_DEFAULT_EMAIL: 'admin@fresherspark.in'
+  PGADMIN_DEFAULT_EMAIL: 'akhiiltkaniiparampiil@gmail.com'
 
 stages:
 - stage: Build
@@ -33,11 +35,11 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Get service principal ID
-          spId=$(az ad sp list --display-name "$(servicePrincipalName)" --query [0].id -o tsv)
+          # Get current service principal details
+          spId=$(az account show --query user.name -o tsv)
           
           if [ -z "$spId" ]; then
-            echo "##vso[task.logissue type=error]Could not find service principal"
+            echo "##vso[task.logissue type=error]Could not determine service principal ID"
             exit 1
           fi
 
@@ -47,6 +49,11 @@ stages:
             --resource-group $(resourceGroup) \
             --object-id $spId \
             --secret-permissions get list
+
+          # Verify policy was set
+          az keyvault show --name $(AZURE_KEY_VAULT_NAME) \
+            --query "properties.accessPolicies[?objectId == '$spId'].permissions.secrets" \
+            -o table
 
     - task: AzureKeyVault@1
       displayName: 'Get secrets from Key Vault'
@@ -101,6 +108,7 @@ stages:
         inlineScript: |
           az extension add --name containerapp --upgrade
           az provider register --namespace Microsoft.App
+          az provider register --namespace Microsoft.OperationalInsights
 
     - task: AzureCLI@2
       displayName: 'Deploy Container App'
@@ -135,6 +143,7 @@ stages:
               DB_USER=$(DB-USER) \
               DEBUG=$(DEBUG) \
               ALLOWED_HOSTS=$(ALLOWED-HOSTS) \
+              PGADMIN_DEFAULT_EMAIL=$(PGADMIN_DEFAULT_EMAIL) \
             --secrets \
               db-password=$(DB-PASSWORD) \
               secret-key=$(SECRET-KEY) \
@@ -142,8 +151,12 @@ stages:
               pgadmin-password=$(PGADMIN-DEFAULT-PASSWORD)
 
           # Show deployment status
+          echo "Deployment completed. Application details:"
           az containerapp show \
             --name $(containerAppName) \
             --resource-group $(resourceGroup) \
-            --query "{FQDN:configuration.ingress.fqdn,ProvisioningState:provisioningState}" \
+            --query "{FQDN:configuration.ingress.fqdn,ProvisioningState:provisioningState,Revision:latestRevisionFqdn}" \
             -o table
+
+          # Output the URL
+          echo "##vso[task.setvariable variable=APP_URL]https://$(az containerapp show --name $(containerAppName) --resource-group $(resourceGroup) --query "configuration.ingress.fqdn" -o tsv)"
