@@ -3,13 +3,14 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    container_name: django-app
+    container_name: django_app
     command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application"
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     depends_on:
+      - db
       - rabbitmq
     environment:
       SECRET_KEY: ${SECRET_KEY}
@@ -22,6 +23,44 @@ services:
       DB_PORT: ${DB_PORT}
       EMAIL_HOST_PASSWORD : ${EMAIL_HOST_PASSWORD}
       CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
+    networks:
+      - my_network
+
+  nginx:
+    build:
+      context: ./nginx  # Directory where the Nginx Dockerfile is located
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d  # Nginx config
+      - ./static:/usr/share/nginx/html/static  # Serve static files
+      - ./media:/usr/share/nginx/html/media  # Serve media files
+    depends_on:
+      - django
+    networks:
+      - my_network
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "8089:80"
+    depends_on:
+      - db
     networks:
       - my_network
 
@@ -80,8 +119,30 @@ services:
     networks:
       - my_network
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - my_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3002:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - my_network
+
 volumes:
+  pgdata:
   rabbitmqdata:
+  grafana-storage:
 
 networks:
   my_network:

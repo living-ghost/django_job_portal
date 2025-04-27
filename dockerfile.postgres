@@ -1,0 +1,14 @@
+# Use the official PostgreSQL image as the base
+FROM postgres:16
+
+# Optional: Copy any custom SQL scripts to initialize the database
+# COPY init.sql /docker-entrypoint-initdb.d/
+
+# You can also install extensions or other dependencies if needed
+# RUN apt-get update && apt-get install -y postgresql-contrib
+
+# Expose PostgreSQL port
+EXPOSE 5432
+
+# Command to start PostgreSQL
+CMD ["postgres"]
