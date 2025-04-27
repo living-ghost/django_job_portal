@@ -12,12 +12,10 @@ variables:
   AZURE_KEY_VAULT_NAME: 'Freshers-Park-Keys'
   
   # Application Settings (non-secrets)
-  DJANGO_SETTINGS_MODULE: 'your_project.settings.production'
-  DB_HOST: 'postgres'  # or your Azure Database server name
-  DB_PORT: '5432'
+  DJANGO_SETTINGS_MODULE: 'job_portal.settings.production'
   DEBUG: 'False'
-  ALLOWED_HOSTS: 'your-app-name.azurecontainerapps.io'
-  PGADMIN_DEFAULT_EMAIL: 'admin@yourdomain.com'
+  ALLOWED_HOSTS: 'project-freshers-park-app-ezfqg6ezhyhvbzbx.centralindia-01.azurewebsites.net'
+  PGADMIN_DEFAULT_EMAIL: 'admin@fresherspark.in'
 
 stages:
 - stage: Build
@@ -29,17 +27,26 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: AzureCLI@2
-      displayName: 'Ensure Key Vault Access'
+      displayName: 'Configure Key Vault Access'
       inputs:
         azureSubscription: $(azureSubscription)
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Grant minimum required permissions
+          # Get service principal ID
+          spId=$(az ad sp list --display-name "$(servicePrincipalName)" --query [0].id -o tsv)
+          
+          if [ -z "$spId" ]; then
+            echo "##vso[task.logissue type=error]Could not find service principal"
+            exit 1
+          fi
+
+          # Set Key Vault policy
           az keyvault set-policy \
             --name $(AZURE_KEY_VAULT_NAME) \
-            --secret-permissions get list \
-            --spn $(servicePrincipalId)
+            --resource-group $(resourceGroup) \
+            --object-id $spId \
+            --secret-permissions get list
 
     - task: AzureKeyVault@1
       displayName: 'Get secrets from Key Vault'
@@ -96,7 +103,7 @@ stages:
           az provider register --namespace Microsoft.App
 
     - task: AzureCLI@2
-      displayName: 'Deploy to Container Apps'
+      displayName: 'Deploy Container App'
       inputs:
         azureSubscription: $(azureSubscription)
         scriptType: 'bash'
@@ -140,23 +147,3 @@ stages:
             --resource-group $(resourceGroup) \
             --query "{FQDN:configuration.ingress.fqdn,ProvisioningState:provisioningState}" \
             -o table
-
-    - task: AzureCLI@2
-      displayName: 'Configure Database'
-      inputs:
-        azureSubscription: $(azureSubscription)
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # For production, use Azure Database instead
-          az postgres flexible-server create \
-            --name $(containerAppName)-db \
-            --resource-group $(resourceGroup) \
-            --location centralindia \
-            --admin-user $(DB-USER) \
-            --admin-password $(DB-PASSWORD) \
-            --sku-name Standard_B1ms \
-            --version 13 \
-            --storage-size 32 \
-            --public-access 0.0.0.0 \
-            --tier Burstable
