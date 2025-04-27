@@ -1,0 +1,95 @@
+body {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f9; /* Light gray background */
+    color: #333;
+}
+
+.navbar {
+    background-color: #212529; /* Dark gray background */
+    color: #fff;
+}
+
+.navbar-brand {
+    color: #fff;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #17a2b8; /* Teal color on hover */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.section {
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.footer {
+    background-color: #212529; /* Dark gray background */
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    margin-top: auto;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #17a2b8; /* Teal button color */
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+.back-to-top:hover {
+    background-color: #138496; /* Darker teal on hover */
+}
+
+/* Flexbox for Jobs and Users */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-lg-6 {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+/* Media queries for mobile and tablet responsiveness */
+@media (max-width: 992px) {
+    .content {
+        padding: 10px;
+    }
+
+    .section {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 15px;
+        right: 15px;
+    }
+}

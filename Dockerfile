@@ -85,15 +85,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install wkhtmltopdf and related dependencies specific to Ubuntu Bionic
-RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
+RUN wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
+    wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
     wget http://ftp.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
-    wget https://github.com/living-ghost/releases/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
-    wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb && \
-    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-23_linux-x64_bin.deb
+    wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/wkhtmltox_0.12.6-1.bionic_amd64.deb && \
+    wget https://download.oracle.com/java/24/latest/jdk-24_linux-x64_bin.deb && \
+    dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-24_linux-x64_bin.deb
 
 # Install LibreOffice 24.8.2
-RUN wget https://github.com/living-ghost/releases/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
+RUN wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
     tar -xvzf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
     dpkg -i LibreOffice_24.8.2.*/DEBS/*.deb
 
@@ -107,6 +107,7 @@ RUN cp /usr/lib/x86_64-linux-gnu/libssl3.so /opt/libreoffice24.8/program/
 COPY requirements.txt /app/
 
 # Install any needed packages specified in requirements.txt
+RUN pip install --upgrade pip setuptools
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container

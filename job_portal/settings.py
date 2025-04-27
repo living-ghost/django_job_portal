@@ -133,22 +133,24 @@ WSGI_APPLICATION = 'job_portal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'db',
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
 # Email backend configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtpout.secureserver.net')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 465))  # Convert to integer
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'True').lower() == 'true'  # Proper boolean conversion
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'False').lower() == 'true'  # Proper boolean conversion
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_TIMEOUT = 30  # 30 seconds timeout
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -185,18 +187,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'app/media')  # Directory where media files 
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Path to wkhtmltopdf executable
+# Path to wkhtmltopdf (fallback to default if env not set)
 PDFKIT_CONFIG = {
-    'wkhtmltopdf': os.getenv('WKHTMLTOPDF_PATH'),
+    'wkhtmltopdf': os.getenv('WKHTMLTOPDF_PATH', '/usr/bin/wkhtmltopdf'),
 }
 
-# Path to wkhtmltoimage executable
+# Path to wkhtmltoimage
 IMGKIT_CONFIG = {
-    'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH'),
+    'wkhtmltoimage': os.getenv('WKHTMLTOIMAGE_PATH', '/usr/bin/wkhtmltoimage'),
 }
 
-#
-LIBRE_OFFICE = os.getenv('LIBRE_OFFICE')
+# Path to LibreOffice
+LIBRE_OFFICE = os.getenv('LIBRE_OFFICE', '/usr/bin/libreoffice')
 
 # Razor Pay integration
 
@@ -205,12 +207,3 @@ RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET_ENV')
 
 #
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
-
-
-CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Kolkata'
- 
-CELERY_RESULT_BACKEND = 'rpc://'

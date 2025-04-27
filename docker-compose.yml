@@ -19,7 +19,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
+      DB_HOST: 'db'
       DB_PORT: ${DB_PORT}
       EMAIL_HOST_PASSWORD : ${EMAIL_HOST_PASSWORD}
       CELERY_BROKER_URL: 'amqp://guest:guest@rabbitmq//'
