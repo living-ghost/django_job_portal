@@ -5,7 +5,7 @@ variables:
   # Azure Resources
   azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
   resourceGroup: 'Project-Freshers_Park_Resource'
-  containerRegistry: 'freshersparkcontainerregistry'
+  containerRegistry: 'FreshersParkContainerregistry.azurecr.io'
   containerAppName: 'django-app'
   containerAppEnv: 'Project-Freshers-Park-App'
   composeFilePath: '**/docker-compose.yml'
