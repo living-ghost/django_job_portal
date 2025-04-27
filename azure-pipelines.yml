@@ -2,7 +2,7 @@ trigger:
 - main
 
 variables:
-  azureSubscription: 'Your-Azure-Service-Connection'
+  azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
   resourceGroup: 'your-resource-group'
   containerRegistry: 'yourregistry.azurecr.io'
   containerAppName: 'django-app'
