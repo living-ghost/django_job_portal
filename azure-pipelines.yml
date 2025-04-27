@@ -35,20 +35,30 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Get current service principal ID
-          spId=$(az account show --query user.name -o tsv)
+          # Get the service principal ID for the current Azure DevOps connection
+          spId=$(az ad sp show --id $(servicePrincipalId) --query id -o tsv)
           
           if [ -z "$spId" ]; then
-            echo "##vso[task.logissue type=error]Could not determine service principal ID"
+            echo "##vso[task.logissue type=error]Failed to get service principal ID"
             exit 1
           fi
 
-          # Set Key Vault policy
+          echo "Service Principal ID: $spId"
+          
+          # Grant Key Vault access
           az keyvault set-policy \
             --name $(AZURE_KEY_VAULT_NAME) \
             --resource-group $(resourceGroup) \
             --object-id $spId \
-            --secret-permissions get list
+            --secret-permissions get list \
+            --output table
+
+          # Verify access was granted
+          echo "Current Key Vault access policies:"
+          az keyvault show \
+            --name $(AZURE_KEY_VAULT_NAME) \
+            --query "properties.accessPolicies[?objectId == '$spId']" \
+            --output table
 
     - task: AzureKeyVault@1
       displayName: 'Get secrets from Key Vault'
@@ -65,7 +75,7 @@ stages:
         echo "##vso[task.setvariable variable=SECRET_KEY]$(SECRET-KEY)"
         echo "##vso[task.setvariable variable=EMAIL_HOST_PASSWORD]$(EMAIL-HOST-PASSWORD)"
         echo "##vso[task.setvariable variable=PGADMIN_DEFAULT_PASSWORD]$(PGADMIN-DEFAULT-PASSWORD)"
-      displayName: 'Map Key Vault Secrets to Variables'
+      displayName: 'Map Key Vault Secrets to Pipeline Variables'
 
     - task: DockerCompose@0
       displayName: 'Build services'
@@ -154,9 +164,9 @@ stages:
               pgadmin-password=$(PGADMIN_DEFAULT_PASSWORD)
 
           # Show deployment status
-          echo "Deployment completed. Application details:"
+          echo "##[section]Deployment Details:"
           az containerapp show \
             --name $(containerAppName) \
             --resource-group $(resourceGroup) \
-            --query "{FQDN:configuration.ingress.fqdn,ProvisioningState:provisioningState,Revision:latestRevisionFqdn}" \
-            -o table
+            --query "{FQDN:configuration.ingress.fqdn, ProvisioningState:provisioningState, Revision:latestRevisionName}" \
+            --output table
