@@ -5,7 +5,7 @@ variables:
   # Azure Resources
   azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
   resourceGroup: 'Project-Freshers_Park_Resource'
-  containerRegistry: 'FreshersParkContainerregistry.azurecr.io'
+  containerRegistry: 'freshersparkcontainerregistry.azurecr.io'
   containerAppName: 'django-app'
   containerAppEnv: 'Project-Freshers-Park-App'
   composeFilePath: '**/docker-compose.yml'
@@ -100,9 +100,9 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Login to ACR
+          # Login to ACR using Azure CLI
           az acr login --name $(containerRegistry)
-          
+
           # Get the latest image tag
           WEB_IMAGE=$(az acr repository show-tags \
             --name $(containerRegistry) \
