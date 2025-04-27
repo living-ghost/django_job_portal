@@ -1,8 +1,11 @@
+version: '3.8'
+
 services:
   django:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ./  # Assuming Django Dockerfile is at the root
+      dockerfile: Dockerfile.django
+    image: myacr.azurecr.io/django:latest  # ACR URL for the Django image
     container_name: django_app
     command: bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application"
     volumes:
@@ -26,23 +29,12 @@ services:
     networks:
       - my_network
 
-  nginx:
-    build:
-      context: ./nginx  # Directory where the Nginx Dockerfile is located
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d  # Nginx config
-      - ./static:/usr/share/nginx/html/static  # Serve static files
-      - ./media:/usr/share/nginx/html/media  # Serve media files
-    depends_on:
-      - django
-    networks:
-      - my_network
-
   db:
-    image: postgres:16
+    build:
+      context: ./postgres  # Directory where the PostgreSQL Dockerfile is located
+      dockerfile: Dockerfile.postgres
+    image: myacr.azurecr.io/postgres:latest  # ACR URL for PostgreSQL image
+    container_name: postgres_db
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -54,6 +46,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
@@ -65,7 +58,11 @@ services:
       - my_network
 
   rabbitmq:
-    image: rabbitmq:3-management
+    build:
+      context: ./rabbitmq  # Directory where the RabbitMQ Dockerfile is located
+      dockerfile: Dockerfile.rabbitmq
+    image: myacr.azurecr.io/rabbitmq:latest  # ACR URL for RabbitMQ image
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -76,8 +73,9 @@ services:
 
   celery:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ./  # Assuming Celery Dockerfile is at the root
+      dockerfile: Dockerfile.celery
+    image: myacr.azurecr.io/celery:latest  # ACR URL for Celery image
     container_name: celery_worker
     command: celery -A job_portal.celery worker --pool=solo -l info
     depends_on:
@@ -98,8 +96,9 @@ services:
 
   flower:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ./  # Assuming Flower Dockerfile is at the root
+      dockerfile: Dockerfile.flower
+    image: myacr.azurecr.io/flower:latest  # ACR URL for Flower image
     container_name: celery_flower
     command: celery -A job_portal flower
     depends_on:
@@ -119,30 +118,9 @@ services:
     networks:
       - my_network
 
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - my_network
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "3002:3000"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    networks:
-      - my_network
-
 volumes:
   pgdata:
   rabbitmqdata:
-  grafana-storage:
 
 networks:
   my_network:
