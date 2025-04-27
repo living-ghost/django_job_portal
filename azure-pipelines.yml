@@ -9,6 +9,7 @@ variables:
   containerAppName: 'django-app'
   containerAppEnv: 'Project-Freshers-Park-App'
   composeFilePath: '**/docker-compose.yml'
+  AZURE_KEY_VAULT_NAME: 'Freshers-Park-Keys'
   
   # Application Settings (non-secrets)
   DJANGO_SETTINGS_MODULE: 'your_project.settings.production'
@@ -27,11 +28,24 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: AzureCLI@2
+      displayName: 'Ensure Key Vault Access'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Grant minimum required permissions
+          az keyvault set-policy \
+            --name $(AZURE_KEY_VAULT_NAME) \
+            --secret-permissions get list \
+            --spn $(servicePrincipalId)
+
     - task: AzureKeyVault@1
       displayName: 'Get secrets from Key Vault'
       inputs:
         azureSubscription: $(azureSubscription)
-        KeyVaultName: 'Freshers-Park-Keys'  # Replace with your Key Vault name
+        KeyVaultName: $(AZURE_KEY_VAULT_NAME)
         SecretsFilter: '*'
         RunAsPreJob: true
 
@@ -72,27 +86,38 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: AzureCLI@2
+      displayName: 'Install Container Apps Extension'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az extension add --name containerapp --upgrade
+          az provider register --namespace Microsoft.App
+
+    - task: AzureCLI@2
       displayName: 'Deploy to Container Apps'
       inputs:
         azureSubscription: $(azureSubscription)
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Install Container Apps extension
-          az extension add --name containerapp --upgrade
-          
           # Login to ACR
           az acr login --name $(containerRegistry)
           
-          # Get the latest image tags
-          WEB_IMAGE=$(az acr repository show-tags --name $(containerRegistry) --repository your_web_image_name --orderby time_desc --query [0] -o tsv)
+          # Get the latest image tag
+          WEB_IMAGE=$(az acr repository show-tags \
+            --name $(containerRegistry) \
+            --repository $(containerAppName) \
+            --orderby time_desc \
+            --query [0] -o tsv)
           
           # Create or update container app
-          az containerapp create \
+          az containerapp update \
             --name $(containerAppName) \
             --resource-group $(resourceGroup) \
             --environment $(containerAppEnv) \
-            --image $(containerRegistry)/your_web_image_name:$WEB_IMAGE \
+            --image $(containerRegistry)/$(containerAppName):$WEB_IMAGE \
             --target-port 8000 \
             --ingress external \
             --env-vars \
@@ -106,7 +131,32 @@ stages:
             --secrets \
               db-password=$(DB-PASSWORD) \
               secret-key=$(SECRET-KEY) \
-              email-password=$(EMAIL-HOST-PASSWORD)
-          
-          # For production, consider using Azure Database instead of containerized DB
-          echo "For production, use Azure Database for PostgreSQL instead of containerized database"
+              email-password=$(EMAIL-HOST-PASSWORD) \
+              pgadmin-password=$(PGADMIN-DEFAULT-PASSWORD)
+
+          # Show deployment status
+          az containerapp show \
+            --name $(containerAppName) \
+            --resource-group $(resourceGroup) \
+            --query "{FQDN:configuration.ingress.fqdn,ProvisioningState:provisioningState}" \
+            -o table
+
+    - task: AzureCLI@2
+      displayName: 'Configure Database'
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # For production, use Azure Database instead
+          az postgres flexible-server create \
+            --name $(containerAppName)-db \
+            --resource-group $(resourceGroup) \
+            --location centralindia \
+            --admin-user $(DB-USER) \
+            --admin-password $(DB-PASSWORD) \
+            --sku-name Standard_B1ms \
+            --version 13 \
+            --storage-size 32 \
+            --public-access 0.0.0.0 \
+            --tier Burstable
