@@ -3,10 +3,10 @@ trigger:
 
 variables:
   azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
-  resourceGroup: 'your-resource-group'
-  containerRegistry: 'yourregistry.azurecr.io'
+  resourceGroup: 'Project-Freshers_Park_Resource'
+  containerRegistry: 'Project-Freshers-Park-App.azurecr.io'
   containerAppName: 'django-app'
-  containerAppEnv: 'your-container-apps-env'
+  containerAppEnv: 'Project-Freshers-Park-App'
   composeFilePath: '**/docker-compose.yml'
 
 stages:
