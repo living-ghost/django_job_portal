@@ -62,6 +62,7 @@ stages:
           SECRET_KEY=$(SECRET_KEY)
           EMAIL_HOST_PASSWORD=$(EMAIL_HOST_PASSWORD)
           PGADMIN_DEFAULT_PASSWORD=$(PGADMIN_DEFAULT_PASSWORD)
+          DEBUG=$(DEBUG)
 
     - task: DockerCompose@0
       displayName: 'Push services'
