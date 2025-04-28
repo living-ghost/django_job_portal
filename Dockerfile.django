@@ -9,12 +9,10 @@ WORKDIR /app
 
 # Install system dependencies, LibreOffice, and necessary libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # Essential packages
     wget \
     curl \
     gnupg \
     ca-certificates \
-    # LibreOffice dependencies and additional libraries
     libreoffice \
     libssl3 \
     xz-utils \
@@ -32,12 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxinerama1 \
     libxrandr2 \
     libxml2 \
-    libxrender1 \
-    libxrandr2 \
-    libx11-6 \
-    libxext6 \
     libfontconfig1 \
-    libfreetype6 \
     libsm6 \
     libice6 \
     libglib2.0-0 \
@@ -60,8 +53,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpangocairo-1.0-0 \
     libpcre3 \
     libpixman-1-0 \
-    libpng16-16 \
-    libsm6 \
     libsasl2-2 \
     libsasl2-modules \
     libsdl1.2debian \
@@ -74,17 +65,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxdamage1 \
     libxfixes3 \
     libxi6 \
-    libxinerama1 \
     libxkbcommon0 \
-    libxrandr2 \
-    libxrender1 \
     libxss1 \
     libxtst6 \
     zlib1g \
-    # Clean up apt cache
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install wkhtmltopdf and related dependencies specific to Ubuntu Bionic
+# Install wkhtmltopdf, Java, fonts
 RUN wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb && \
     wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/libssl1.1_1.1.1f-1ubuntu2_amd64.deb && \
     wget http://ftp.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.8_all.deb && \
@@ -92,50 +79,33 @@ RUN wget https://github.com/living-ghost/releases_for_project/releases/download/
     wget https://download.oracle.com/java/24/latest/jdk-24_linux-x64_bin.deb && \
     dpkg -i libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb libssl1.1_1.1.1f-1ubuntu2_amd64.deb ttf-mscorefonts-installer_3.8_all.deb wkhtmltox_0.12.6-1.bionic_amd64.deb jdk-24_linux-x64_bin.deb
 
-# Install LibreOffice 24.8.2
+# Install LibreOffice
 RUN wget https://github.com/living-ghost/releases_for_project/releases/download/v0.12.6/LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
     tar -xvzf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz && \
     dpkg -i LibreOffice_24.8.2.*/DEBS/*.deb
 
-# Clean up the apt cache and tarballs
+# Clean up extra files
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf LibreOffice_24.8.2_Linux_x86-64_deb.tar.gz LibreOffice_24.8.2.*
 
-# Copy libssl3.so to the LibreOffice program folder to resolve missing SSL dependency
+# Fix SSL dependency inside LibreOffice folder
 RUN cp /usr/lib/x86_64-linux-gnu/libssl3.so /opt/libreoffice24.8/program/
 
-# Copy the Python dependencies file into the container
+# Copy Python dependencies
 COPY requirements.txt /app/
 
-# Install any needed packages specified in requirements.txt
+# Install Python packages
 RUN pip install --upgrade pip setuptools
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container
+# Copy application code
 COPY . /app/
 
-# Make port 8000 available to the outside world (for the Django application)
+# Copy the start script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expose port 8000
 EXPOSE 8000
 
-# Set environment variables for Django settings
-ENV SECRET_KEY=${SECRET_KEY}
-ENV DEBUG=${DEBUG}
-ENV ALLOWED_HOSTS=${ALLOWED_HOSTS}
-ENV DB_NAME=${DB_NAME}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV DB_PORT=${DB_PORT}
-ENV EMAIL_HOST=${EMAIL_HOST}
-ENV EMAIL_PORT=${EMAIL_PORT}
-ENV EMAIL_USE_SSL=${EMAIL_USE_SSL}
-ENV EMAIL_USE_TLS=${EMAIL_USE_TLS}
-ENV EMAIL_HOST_USER=${EMAIL_HOST_USER}
-ENV EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-ENV DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
-ENV WKHTMLTOPDF_PATH=${WKHTMLTOPDF_PATH}
-ENV WKHTMLTOIMAGE_PATH=${WKHTMLTOIMAGE_PATH}
-ENV LIBRE_OFFICE=${LIBRE_OFFICE}
-ENV RAZOR_KEY_ID_ENV=${RAZOR_KEY_ID_ENV}
-ENV RAZOR_KEY_SECRET_ENV=${RAZOR_KEY_SECRET_ENV}
-
-# Set the command to run Django with Gunicorn
-CMD bash -c "python manage.py makemigrations portal_admin_app && python manage.py makemigrations portal_user_app && python manage.py makemigrations portal_converter_app && python manage.py makemigrations portal_resume_app && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application"
+# Set startup command
+CMD ["bash", "/start.sh"]
