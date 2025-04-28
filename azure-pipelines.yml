@@ -10,100 +10,30 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '3c446b14-03e7-4b46-aaa3-882b10c6c95e'  # Replace with your actual service connection ID
+  dockerRegistryServiceConnection: 'd932d5a2-7e91-48b9-b339-918c998b3ae9'
   imageRepository: 'freshersparkimg'
-  containerRegistry: 'freshersparkdeployregistry.azurecr.io'  # Your ACR URL
+  containerRegistry: 'freshersparkregistry.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.django'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
-
-  # Path to your Dockerfiles for each service (adjust as necessary)
-  djangoDockerfile: '$(Build.SourcesDirectory)/Dockerfile.django'
-  postgresDockerfile: '$(Build.SourcesDirectory)/Dockerfile.postgres'
-  rabbitmqDockerfile: '$(Build.SourcesDirectory)/Dockerfile.rabbit'
-  celeryDockerfile: '$(Build.SourcesDirectory)/Dockerfile.celery'
-  flowerDockerfile: '$(Build.SourcesDirectory)/Dockerfile.flower'
 
 stages:
 - stage: Build
   displayName: Build and push stage
   jobs:
   - job: Build
-    displayName: Build Docker images
+    displayName: Build
     pool:
       vmImage: $(vmImageName)
     steps:
-    # Django Image Build and Push
     - task: Docker@2
-      displayName: 'Build and push Django image'
+      displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: '$(containerRegistry)/django'
-        dockerfile: $(djangoDockerfile)
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-
-    # PostgreSQL Image Build and Push
-    - task: Docker@2
-      displayName: 'Build and push PostgreSQL image'
-      inputs:
-        command: buildAndPush
-        repository: '$(containerRegistry)/postgres'
-        dockerfile: $(postgresDockerfile)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-
-    # RabbitMQ Image Build and Push
-    - task: Docker@2
-      displayName: 'Build and push RabbitMQ image'
-      inputs:
-        command: buildAndPush
-        repository: '$(containerRegistry)/rabbitmq'
-        dockerfile: $(rabbitmqDockerfile)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-
-    # Celery Image Build and Push
-    - task: Docker@2
-      displayName: 'Build and push Celery image'
-      inputs:
-        command: buildAndPush
-        repository: '$(containerRegistry)/celery'
-        dockerfile: $(celeryDockerfile)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-
-    # Flower Image Build and Push
-    - task: Docker@2
-      displayName: 'Build and push Flower image'
-      inputs:
-        command: buildAndPush
-        repository: '$(containerRegistry)/flower'
-        dockerfile: $(flowerDockerfile)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
-
-# Optional: Deploy to Azure Kubernetes or VM after build
-# Add another stage for deployment if needed
-# For example:
-# - stage: Deploy
-#   displayName: Deploy to AKS or VM
-#   jobs:
-#     - job: Deploy
-#       steps:
-#         - task: Kubernetes@1
-#           displayName: 'Deploy to AKS'
-#           inputs:
-#             connectionType: 'Azure Resource Manager'
-#             azureSubscription: '<your-azure-subscription>'
-#             azureResourceGroup: '<your-resource-group>'
-#             kubernetesCluster: '<your-cluster-name>'
-#             namespace: 'default'
-#             command: 'apply'
-#             arguments: '-f k8s/deployment.yaml'
