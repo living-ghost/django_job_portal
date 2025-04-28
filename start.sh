@@ -1,13 +1,14 @@
 #!/bin/bash
 
-# Run Django commands
+# Run Django migrations
 python manage.py makemigrations portal_admin_app
 python manage.py makemigrations portal_user_app
 python manage.py makemigrations portal_converter_app
 python manage.py makemigrations portal_resume_app
 python manage.py migrate
 
-RUN python manage.py collectstatic --noinput
+# Collect static files
+python manage.py collectstatic --noinput
 
 # Start Gunicorn server
-gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application
+exec gunicorn --bind 0.0.0.0:8000 job_portal.wsgi:application
