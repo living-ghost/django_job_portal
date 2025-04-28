@@ -1,17 +1,17 @@
-# Use the official Nginx image as a base
 FROM nginx:latest
 
-# Remove the default Nginx config
+# Create directory and set permissions
+RUN mkdir -p /staticfiles && chown -R nginx:nginx /staticfiles
+
+# Remove default config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy your custom Nginx config to the container
+# Copy config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy static files to container
-COPY staticfiles/ /staticfiles/
+# Copy static files (ensure they exist in your build context)
+COPY ./staticfiles/ /staticfiles/
 
-# Expose port 80
 EXPOSE 80
 
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]

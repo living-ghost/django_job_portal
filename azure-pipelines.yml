@@ -6,19 +6,17 @@ resources:
 
 variables:
   dockerRegistryServiceConnection: 'd932d5a2-7e91-48b9-b339-918c998b3ae9'
-
   containerRegistry: 'freshersparkregistry.azurecr.io'
-
-  # Django app variables (already built, so commented section below)
+  
+  # Django app variables
   djangoImageRepository: 'freshersparkimg'
   djangoDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.django'
-
+  
   # Nginx app variables
   nginxImageRepository: 'freshersparknginximg'
   nginxDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.nginx'
-
+  
   tag: '$(Build.BuildId)'
-
   vmImageName: 'ubuntu-latest'
 
 stages:
@@ -30,7 +28,16 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-
+    
+    # First collect static files (required for both containers)
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python manage.py collectstatic --noinput
+        ls -la staticfiles/  # Verify files were collected
+      displayName: 'Collect static files'
+      workingDirectory: '$(Build.SourcesDirectory)'
+    
     # ---- Django Image Build (Commented out) ----
     # - task: Docker@2
     #   displayName: Build and push Django image
@@ -41,6 +48,7 @@ stages:
     #     containerRegistry: $(dockerRegistryServiceConnection)
     #     tags: |
     #       $(tag)
+    #     buildContext: '$(Build.SourcesDirectory)'
 
     # ---- Nginx Image Build (Active) ----
     - task: Docker@2
@@ -52,3 +60,4 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+        buildContext: '$(Build.SourcesDirectory)'
