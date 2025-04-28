@@ -4,10 +4,13 @@ FROM nginx:latest
 # Remove the default Nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy your custom Nginx config to the correct place
+# Copy your custom Nginx config to the container
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80 for HTTP traffic
+# Copy static files to container
+COPY staticfiles/ /staticfiles/
+
+# Expose port 80
 EXPOSE 80
 
 # Start Nginx
