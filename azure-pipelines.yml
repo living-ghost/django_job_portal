@@ -31,7 +31,7 @@ stages:
       vmImage: $(vmImageName)
     steps:
 
-
+    # ---- Django Image Build (Commented out) ----
     # - task: Docker@2
     #   displayName: Build and push Django image
     #   inputs:
@@ -42,10 +42,10 @@ stages:
     #     tags: |
     #       $(tag)
 
-
-     - task: Docker@2
-       displayName: Build and push Nginx image
-       inputs:
+    # ---- Nginx Image Build (Active) ----
+    - task: Docker@2
+      displayName: Build and push Nginx image
+      inputs:
         command: buildAndPush
         repository: $(nginxImageRepository)
         dockerfile: $(nginxDockerfilePath)
