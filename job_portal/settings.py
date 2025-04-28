@@ -181,6 +181,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'portal_converter_app' / 'static',
 ]
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 # Media files configuration
 MEDIA_URL = '/media/'  # URL for accessing media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'app/media')  # Directory where media files are stored
