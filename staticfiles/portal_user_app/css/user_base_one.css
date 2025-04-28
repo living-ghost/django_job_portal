@@ -1,0 +1,729 @@
+/* Global Styles */
+html, body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9em; /* Reduce global font size */
+}
+
+/* Main Content Wrapper */
+.main-content {
+    flex: 1;
+    padding-bottom: 4rem; /* Add space at the bottom for the fixed contact section */
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #333333;
+    padding: 0.4rem; /* Reduce padding */
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.navbar.scrolled {
+    background-color: #004d40;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.4rem 0.8rem; /* Reduce padding */
+    margin: 0 0.4rem; /* Reduce margin */
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover, .navbar-nav .nav-link:hover {
+    color: #f7c6c7;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    transform: scale(1.05);
+}
+
+.collapse {
+    display: none;
+}
+
+.collapsing {
+    transition: height 0.35s ease;
+}
+
+.collapse.show {
+    display: block;
+}
+
+@media (max-width: 992px) {
+    .navbar-expand-lg .navbar-collapse {
+        display: none !important;
+    }
+
+    .navbar-expand-lg .navbar-collapse.show {
+        display: block !important;
+    }
+}
+
+/* Hero Section */
+.hero {
+    background-image: url('/static/portal_user_app/images/bg3.png');
+    background-size: cover;  /* Ensures the image covers the section */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat;  /* Prevents the image from repeating */
+    width: 100%;  /* Full width */
+    height: 300px;  /* Default height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1080px) {
+    .hero {
+        height: 150px;  /* Adjust height for smaller screens */
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero {
+        height: 150px;  /* Adjust height for smaller screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        height: 120px;  /* Further adjust height for very small screens */
+    }
+}
+
+/* Styles for tablets */
+@media (max-width: 768px) {
+    .hero {
+        padding: 80px 0;
+    }
+    .navbar-nav {
+        text-align: center;
+    }
+    .navbar-toggler {
+        margin-right: 0;
+    }
+}
+
+/* Styles for mobile devices */
+@media (max-width: 576px) {
+    .hero {
+        padding: 60px 0;
+    }
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    .faq-card {
+        padding: 20px;
+    }
+    .back-to-top {
+        display: block;
+    }
+}
+
+/* Card Styles */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.2);
+    padding: 0.8rem; /* Reduce padding */
+    margin-bottom: 1rem; /* Reduce margin */
+}
+
+.card h1 {
+    color: #0077b6;
+    font-size: 1.5rem; /* Reduce font size */
+}
+
+.card p {
+    color: #333333;
+    font-size: 0.9rem; /* Reduce font size */
+}
+
+.card a {
+    background-color: #0077b6;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 6px 12px; /* Reduce padding */
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.card a:hover {
+    background-color: #005f73;
+}
+
+@media (max-width: 992px) {
+    .card {
+        padding: 0.4rem; /* Reduce padding */
+    }
+
+    .card h1 {
+        font-size: 1.25rem; /* Reduce font size */
+    }
+
+    .card p {
+        font-size: 0.8rem; /* Reduce font size */
+    }
+
+    .card a {
+        padding: 5px 10px; /* Reduce padding */
+        font-size: 0.8rem; /* Reduce font size */
+    }
+}
+
+@media (max-width: 600px) {
+    .card {
+        padding: .2rem; /* Reduce padding */
+    }
+
+    .card h1 {
+        font-size: 1rem; /* Reduce font size */
+    }
+
+    .card p {
+        font-size: 0.75rem; /* Reduce font size */
+    }
+
+    .card a {
+        padding: 4px 8px; /* Reduce padding */
+        font-size: 0.75rem; /* Reduce font size */
+    }
+}
+
+/* Back to Top Button Styles */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #0077b6;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    padding: 8px 12px; /* Reduce padding */
+    font-size: 12px; /* Reduce font size */
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.back-to-top:hover {
+    background-color: #005f73;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #004d40;
+    color: white;
+    padding: 10px 0; /* Reduce padding */
+    box-sizing: border-box;
+    position: relative; /* Change to relative */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    margin-top: 2rem; /* Add space above the footer */
+}
+
+footer a {
+    color: #ff9f00;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    background-color: #333333;
+    padding: 10px; /* Reduce padding */
+    box-sizing: border-box;
+}
+
+.footer h5 {
+    font-size: 1.25rem; /* Reduce font size */
+    margin-bottom: 5px; /* Reduce margin */
+}
+
+.footer p {
+    font-size: 0.8rem; /* Reduce font size */
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .footer h5 {
+        font-size: 1rem; /* Reduce font size */
+    }
+
+    .footer p {
+        font-size: 0.75rem; /* Reduce font size */
+    }
+}
+
+/* Animate On Scroll */
+[data-aos="fade-up"], [data-aos="fade-down"] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+[data-aos="fade-up"].aos-animate, [data-aos="fade-down"].aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-link {
+        padding: 0.3rem 0.5rem; /* Reduce padding */
+    }
+}
+
+/* Search Bar */
+.navbar .d-flex {
+    position: relative;
+}
+
+.navbar .form-control {
+    width: 180px; /* Reduce width */
+    border-radius: 20px; /* Reduce border radius */
+    padding: 4px 12px; /* Reduce padding */
+    box-shadow: none;
+}
+
+.navbar .btn-outline-light {
+    border-radius: 20px; /* Reduce border radius */
+    margin-left: 8px; /* Reduce margin */
+    padding: 4px 12px; /* Reduce padding */
+}
+
+.navbar .btn-outline-light .fa-search {
+    font-size: 16px; /* Reduce font size */
+}
+
+/* Hide the dropdown icon */
+.no-icon::after {
+    display: none !important; /* Hide the dropdown icon */
+}
+
+/* Additional Styles */
+
+/* Make the submit button smaller */
+.submit-btn {
+    padding: 4px 8px; /* Reduce padding */
+    font-size: 0.85em; /* Reduce font size */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Customize posted date styles */
+.posted-date {
+    text-align: right;
+    font-size: smaller;
+}
+
+
+/**/
+
+/* About Us Section */
+.about-us {
+    background-color: #ffffff;
+    padding: 1rem 1rem; /* Padding for the section */
+    margin: 5rem auto; /* Center the section and add vertical margin */
+    border-radius: 10px; /* Rounded corners for the section */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 1200px; /* Max width for the section */
+}
+
+/* About Us Heading */
+.about-heading {
+    font-size: 2.5rem; /* Font size for the heading */
+    color: #0077b6; /* Heading color */
+    margin-bottom: 1rem; /* Space below the heading */
+    text-align: center; /* Center the heading text */
+}
+
+/* About Us Text */
+.about-text {
+    color: #333333; /* Text color */
+    font-size: 1rem; /* Font size for the text */
+    line-height: 1.6; /* Line height for readability */
+    margin-bottom: 1rem; /* Space between paragraphs */
+    text-align: center; /* Center text alignment */
+}
+
+/* About Us List */
+.about-list {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    text-align: left; /* Align text to the left */
+}
+
+/* List Items */
+.about-list li {
+    font-size: 1rem; /* Font size for list items */
+    color: #333333; /* Text color */
+    margin-bottom: 0.75rem; /* Space between list items */
+}
+
+/* List Item Icons */
+.about-list i {
+    color: #2b7a78; /* Icon color */
+    margin-right: 0.5rem; /* Space between icon and text */
+}
+
+/* Responsive Styles for About Us Section */
+@media (max-width: 992px) {
+    .about-us {
+        padding: 1.5rem 0.5rem; /* Adjust padding for medium screens */
+    }
+
+    .about-heading {
+        font-size: 2rem; /* Reduce font size for heading */
+    }
+
+    .about-text {
+        font-size: 0.9rem; /* Reduce font size for text */
+    }
+
+    .about-list li {
+        font-size: 0.9rem; /* Reduce font size for list items */
+    }
+}
+
+@media (max-width: 600px) {
+    .about-us {
+        padding: 1rem 0.5rem; /* Adjust padding for small screens */
+    }
+
+    .about-heading {
+        font-size: 1.5rem; /* Reduce font size for heading */
+    }
+
+    .about-text {
+        font-size: 0.85rem; /* Reduce font size for text */
+    }
+
+    .about-list li {
+        font-size: 0.85rem; /* Reduce font size for list items */
+    }
+}
+
+
+/**/
+
+/* Badge Styles */
+.badge-secondary {
+    background-color: #ba2121; /* Red background color */
+    color: #ffffff; /* White text color */
+    padding: 0.3rem 0.5rem; /* Padding */
+    border-radius: 0.5rem; /* Rounded corners */
+    font-size: 0.9rem; /* Font size */
+    font-weight: 600; /* Font weight */
+}
+
+/* Badge Hover Effect */
+.badge-secondary:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Small Badge Styles */
+.small-badge {
+    font-size: 0.9rem; /* Smaller font size */
+}
+
+/**/
+
+.cta-section {
+    margin-bottom: 0; /* Remove margin between CTA and footer */
+    padding-bottom: 0; /* Adjust padding if necessary */
+}
+
+.footer {
+    margin-top: 0; /* Remove margin between footer and CTA */
+    padding-top: 1; /* Adjust padding if necessary */
+}
+
+
+/* Custom styles for smaller screens */
+@media (max-width: 767px) {
+    .newsletter-section .container,
+    .interview-faqs-section .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .newsletter-section h2,
+    .interview-faqs-section h2 {
+        font-size: 1.3rem;
+    }
+    .newsletter-section p,
+    .faq-card h4{
+        font-size: 1rem;
+    }
+    .faq-card p {
+        font-size: .875rem;
+    }
+    .faq-card {
+        padding: 1rem;
+    }
+}
+
+/* Custom styles for smaller screens */
+@media (max-width: 767px) {
+    .cta-section .container,
+    .interview-faqs-section .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .cta-section h2,
+    .cta-faqs-section h2 {
+        font-size: 1.3rem;
+    }
+    .cta-section p{
+        font-size: 1rem;
+    }
+}
+
+/* Custom styles for smaller screens */
+@media (max-width: 767px) {
+    .resume-tips-section .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .resume-tips-section h2 {
+        font-size: 1.3rem;
+    }
+    .resume-tip-card h4 {
+        font-size: 1rem;
+    }
+    .resume-tip-card p {
+        font-size: .875rem;
+    }
+    .resume-tip-card {
+        padding: 1rem;
+    }
+}
+
+
+/* Custom styles for smaller screens */
+@media (max-width: 767px) {
+    .resume-tips-section .container,
+    .top-skills-section .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    .resume-tips-section h2,
+    .top-skills-section h2 {
+        font-size: 1.3rem;
+    }
+    .resume-tip-card h4,
+    .skills-card h4 {
+        font-size: 1.2rem;
+    }
+    .resume-tip-card p,
+    .skills-card p {
+        font-size: .875rem;
+    }
+    .resume-tip-card,
+    .skills-card {
+        padding: 1rem;
+    }
+}
+
+
+/* Mobile Menu Alignment */
+@media (max-width: 1500px) {
+    .navbar-expand-lg .navbar-collapse {
+        display: block !important;
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: row; /* Stack nav items horizontally */
+        align-items: flex-start; /* Align items to the left */
+        padding-left: 0; /* Remove padding */
+        margin-left: 0; /* Remove margin */
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1rem; /* Adjust padding for mobile */
+        text-align: left; /* Align text to the left */
+        width: 100%; /* Ensure full width for each item */
+        border-top: 1px solid #ddd; /* Optional: add a border between items */
+        font-size: 0.875rem; /* Adjust font size (smaller size) */
+    }
+
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 0; /* Remove border-radius for sharp edges */
+    }
+
+    .navbar-toggler {
+        margin: 0; /* Remove margin */
+    }
+
+    .collapse.show {
+        display: flex !important;
+    }
+}
+
+
+/* Mobile Menu Alignment */
+@media (max-width: 767px) {
+    .navbar-expand-lg .navbar-collapse {
+        display: block !important;
+    }
+
+    .navbar-nav {
+        display: flex;
+        flex-direction: column; /* Stack nav items horizontally */
+        align-items: flex-start; /* Align items to the left */
+        padding-left: 0; /* Remove padding */
+        margin-left: 0; /* Remove margin */
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.5rem 1rem; /* Adjust padding for mobile */
+        text-align: left; /* Align text to the left */
+        width: 100%; /* Ensure full width for each item */
+        border-top: 1px solid #ddd; /* Optional: add a border between items */
+        font-size: 0.875rem; /* Adjust font size (smaller size) */
+    }
+
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 0; /* Remove border-radius for sharp edges */
+    }
+
+    .navbar-toggler {
+        margin: 0; /* Remove margin */
+    }
+
+    .collapse.show {
+        display: flex !important;
+    }
+}
+
+/* Ensure dropdown is visible and aligned properly on small screens */
+@media (max-width: 767px) {
+    .navbar-nav .dropdown-menu {
+        left: 0; /* Align dropdown to the left */
+        right: auto; /* Reset right alignment */
+        width: 100%; /* Ensure dropdown takes full width */
+        padding: 0; /* Remove padding */
+        border: none; /* Remove border */
+        box-shadow: none; /* Remove shadow */
+    }
+
+    .navbar-nav .dropdown-menu .dropdown-item {
+        padding: 1rem; /* Adjust padding for dropdown items */
+        text-align: left; /* Align text to the left */
+        font-size: 0.875rem; /* Adjust font size (smaller size) */
+    }
+}
+
+/* Job List Section Styling */
+.job-list {
+    list-style: none;
+    padding: 0;
+}
+
+.job-list .list-group-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.job-list .job-details {
+    flex: 1;
+}
+
+.job-list .job-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 1rem;
+}
+
+.job-list .days-ago {
+    margin-top: 2.5rem;
+    color: #6c757d; /* Gray color for days ago */
+}
+
+.job-list .badge {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.2rem;
+}
+
+.job-list .badge.bg-danger {
+    background-color: #dc3545; /* Red color for the badge */
+}
+
+/* Ensure that items are displayed in a grid */
+@media (min-width: 768px) {
+    .job-list .list-group-item {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+}
+
+/* Additional spacing for better presentation */
+.job-list .btn {
+    margin-bottom: 0.5rem; /* Space between button and days ago text */
+}
+
+
+/* Style the button to have curved corners */
+.btn-primary {
+    border-radius: 25px; /* Adjust the value for more or less curvature */
+    padding: 0.2rem .5rem; /* Adjust padding to ensure the button text fits well */
+    /* Optional: Add box-shadow for a more pronounced effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/**/
+.custom-alert {
+    padding: 15px;
+    font-size: 1.1em;
+    border-radius: 5px;
+}
+
+/**/
+
+/* Center the modal content */
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 3.5rem);
+}
+/* Blur background effect */
+.modal-backdrop.show {
+    background: rgba(0, 0, 0, 0.5);
+}
+.modal-header .btn-close {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+.modal-header .btn-close::before {
+    content: '×';
+    font-size: 1.5rem;
+    color: #000;
+}
