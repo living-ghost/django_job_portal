@@ -38,19 +38,19 @@ stages:
       displayName: 'Collect static files'
       workingDirectory: '$(Build.SourcesDirectory)'
     
-    # ---- Django Image Build (Commented out) ----
-    # - task: Docker@2
-    #   displayName: Build and push Django image
-    #   inputs:
-    #     command: buildAndPush
-    #     repository: $(djangoImageRepository)
-    #     dockerfile: $(djangoDockerfilePath)
-    #     containerRegistry: $(dockerRegistryServiceConnection)
-    #     tags: |
-    #       $(tag)
-    #     buildContext: '$(Build.SourcesDirectory)'
+     
+    - task: Docker@2
+      displayName: Build and push Django image
+      inputs:
+        command: buildAndPush
+        repository: $(djangoImageRepository)
+        dockerfile: $(djangoDockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+        buildContext: '$(Build.SourcesDirectory)'
 
-    # ---- Nginx Image Build (Active) ----
+    
     - task: Docker@2
       displayName: Build and push Nginx image
       inputs:
