@@ -1,0 +1,108 @@
+/* General Styles */
+body {
+    background-color: #2c3e50; /* Dark background color */
+    color: #ecf0f1; /* Light text color */
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 1rem; /* Add some padding for smaller screens */
+    box-sizing: border-box; /* Ensure padding is included in the width and height */
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.login-box {
+    background-color: #ecf0f1; /* White background color */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+    transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+}
+
+.login-box:hover {
+    transform: translateY(-10px); /* Slight hover effect */
+}
+
+/* Header Styles */
+.login-box h4 {
+    color: #2c3e50; /* Dark text color */
+    margin-bottom: 1rem;
+    font-size: 1.5rem; /* Adjust font size for better readability */
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #bdc3c7;
+    box-shadow: none;
+    padding: 0.75rem 1rem;
+    width: 100%; /* Ensure full width on mobile */
+    font-size: 1rem; /* Adjust font size for better readability */
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #3498db; /* Primary color */
+    border-color: #2980b9; /* Darker primary color */
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    width: 100%; /* Ensure full width on mobile */
+    font-size: 1rem; /* Adjust font size for better readability */
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #1c5985;
+}
+
+/* Alert Styles */
+.alert {
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color */
+    border: 1px solid #dcdcdc;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem; /* Adjust font size for better readability */
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .login-box {
+        width: 100%; /* Ensure almost full width on small screens */
+        padding: 1.5rem; /* Adjust padding for better spacing */
+    }
+    
+    .login-box h4 {
+        font-size: 1.25rem; /* Adjust header size for smaller screens */
+    }
+    
+    .form-control, .btn-primary {
+        font-size: 0.9rem; /* Adjust input and button font size for smaller screens */
+    }
+}
