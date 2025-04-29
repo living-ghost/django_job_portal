@@ -29,7 +29,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Debug mode - should be False in production
-DEBUG = False
+DEBUG = os.getenv('DEBUG')
 
 # Fetch the ALLOWED_HOSTS environment variable, default to an empty string if not set
 allowed_hosts_env = os.getenv('ALLOWED_HOSTS', '')
