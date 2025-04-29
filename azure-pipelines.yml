@@ -27,26 +27,14 @@ stages:
     displayName: Build Docker Images
     pool:
       vmImage: $(vmImageName)
-    steps:   
+    steps:
      
-    #- task: Docker@2
-    #  displayName: Build and push Django image
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: $(djangoImageRepository)
-    #    dockerfile: $(djangoDockerfilePath)
-    #    containerRegistry: $(dockerRegistryServiceConnection)
-    #    tags: |
-    #      $(tag)
-    #    buildContext: '$(Build.SourcesDirectory)'
-
-    
     - task: Docker@2
-      displayName: Build and push Nginx image
+      displayName: Build and push Django image
       inputs:
         command: buildAndPush
-        repository: $(nginxImageRepository)
-        dockerfile: $(nginxDockerfilePath)
+        repository: $(djangoImageRepository)
+        dockerfile: $(djangoDockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
