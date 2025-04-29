@@ -78,6 +78,8 @@ HTTP_SCHEME = 'http'
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware', # Prometheus middleware for monitoring
 
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
+
     'django.middleware.security.SecurityMiddleware',  # Provides security enhancements
     'django.contrib.sessions.middleware.SessionMiddleware',  # Manages user sessions
     'django.middleware.common.CommonMiddleware',  # Adds various common middleware functionalities
@@ -170,7 +172,7 @@ USE_TZ = True
 
 # Static files configuration
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Correct path joining
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -182,10 +184,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'portal_converter_app', 'static'),
 ]
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files configuration
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
