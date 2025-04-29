@@ -170,9 +170,9 @@ USE_TZ = True
 
 # Static files configuration
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'app', 'staticfiles')
+STATIC_ROOT = BASE_DIR / '/app/staticfiles'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'portal_user_app' / 'static',
@@ -184,8 +184,8 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # Media files configuration
-MEDIA_URL = '/media/'  # URL for accessing media files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'app/media')  # Directory where media files are stored
+MEDIA_URL = 'media/'  # URL for accessing media files
+MEDIA_ROOT = os.path.join(BASE_DIR, '/app/media')  # Directory where media files are stored
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
