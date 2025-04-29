@@ -34,7 +34,7 @@ stages:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         python manage.py collectstatic --noinput
-        ls -la staticfiles/  # Verify files were collected
+        ls -la app/staticfiles/
       displayName: 'Collect static files'
       workingDirectory: '$(Build.SourcesDirectory)'
     
