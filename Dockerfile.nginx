@@ -1,11 +1,11 @@
 FROM nginx:latest
 
 # Create directory with correct permissions
-RUN mkdir -p /staticfiles && chown nginx:nginx /staticfiles
+RUN mkdir -p /app/staticfiles && chown nginx:nginx /app/staticfiles
 
 # Copy config and static files
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --chown=nginx:nginx staticfiles/ /staticfiles/
+COPY --chown=nginx:nginx staticfiles/ /app/staticfiles/
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
