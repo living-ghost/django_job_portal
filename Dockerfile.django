@@ -96,7 +96,6 @@ COPY requirements.txt /app/
 # Install Python packages
 RUN pip install --upgrade pip setuptools
 RUN pip install --no-cache-dir -r requirements.txt
-RUN python manage.py collectstatic --noinput
 
 # Copy application code
 COPY . /app/
