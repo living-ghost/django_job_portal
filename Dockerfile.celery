@@ -1,5 +1,5 @@
-# Use Python 3.9 with additional build tools
-FROM python:3.9-slim as builder
+# Update to Python 3.10 or higher in Dockerfile.celery
+FROM python:3.10-slim as builder
 
 WORKDIR /app
 
@@ -12,10 +12,9 @@ RUN apt-get update && \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install pip requirements
-COPY requirements.txt .
+# In the builder stage:
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+pip install --no-cache-dir --use-deprecated=legacy-resolver -r requirements.txt
 
 # Final lightweight image
 FROM python:3.9-slim
