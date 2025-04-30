@@ -8,11 +8,7 @@ variables:
   dockerRegistryServiceConnection: 'd932d5a2-7e91-48b9-b339-918c998b3ae9'
   containerRegistry: 'freshersparkregistry.azurecr.io'
   
-  # Django app variables
-  # djangoImageRepository: 'freshersparkimg'
-  # djangoDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.django'
-  
-  # Nginx app variables
+  # RabbitMQ variables
   rabbitmqImageRepository: 'freshersparkrabbitmq'
   rabbitmqDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.rabbitmq'
   
@@ -21,14 +17,13 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build and push stage
+  displayName: Build and push RabbitMQ image
   jobs:
-  - job: BuildImages
-    displayName: Build Docker Images
+  - job: BuildRabbitMQ
+    displayName: Build RabbitMQ Image
     pool:
       vmImage: $(vmImageName)
     steps:
-
     - task: Docker@2
       displayName: Build and push RabbitMQ image
       inputs:
@@ -38,23 +33,42 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+          latest
         buildContext: '$(Build.SourcesDirectory)'
-    
-    # First collect static files (required for both containers)
-    #- script: |
-    #    pip install -r requirements.txt
-    #    python manage.py collectstatic --noinput
-    #  displayName: 'Collect static files'
-    #  workingDirectory: '$(Build.SourcesDirectory)'
-    
-     
-    #- task: Docker@2
-    #  displayName: Build and push Django image
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: $(djangoImageRepository)
-    #    dockerfile: $(djangoDockerfilePath)
-    #    containerRegistry: $(dockerRegistryServiceConnection)
-    #    tags: |
-    #      $(tag)
-    #    buildContext: '$(Build.SourcesDirectory)'
+
+- stage: Deploy
+  displayName: Deploy RabbitMQ with Key Vault
+  dependsOn: Build
+  jobs:
+  - job: DeployRabbitMQ
+    displayName: Deploy RabbitMQ
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Deploy RabbitMQ to Container Apps'
+      inputs:
+        azureSubscription: 'Your_Azure_Service_Connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Update container app with proper ports configuration
+          az containerapp update \
+            --name freshersparkrabbitmq \
+            --resource-group freshersparkresource \
+            --image $(containerRegistry)/$(rabbitmqImageRepository):$(tag) \
+            --container-name rabbitmq \
+            --set properties.template.containers[0].ports='[{"port": 5672}, {"port": 15672}]'
+          
+          # Configure ingress for management UI
+          az containerapp ingress update \
+            --name freshersparkrabbitmq \
+            --resource-group freshersparkresource \
+            --type external \
+            --target-port 15672 \
+            --transport auto
+          
+          # Assign managed identity (if using Key Vault)
+          az containerapp identity assign \
+            --name freshersparkrabbitmq \
+            --resource-group freshersparkresource
