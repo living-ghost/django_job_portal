@@ -1,37 +1,41 @@
-# Update to Python 3.10 or higher in Dockerfile.celery
+# Use consistent Python version (3.10 for both stages)
 FROM python:3.10-slim as builder
 
 WORKDIR /app
 
-# Install system dependencies first
+# Install system dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc python3-dev && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create and activate virtual environment
+# Create virtual environment
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# In the builder stage:
+# Install requirements with dependency resolution
+COPY requirements.txt .
 RUN pip install --upgrade pip && \
-pip install --no-cache-dir --use-deprecated=legacy-resolver -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
-# Final lightweight image
-FROM python:3.9-slim
+# Final image
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copy only necessary files from builder
+# Copy virtual environment and application code
 COPY --from=builder /opt/venv /opt/venv
 COPY . .
 
 # Set environment variables
 ENV PATH="/opt/venv/bin:$PATH" \
-    CELERY_ACCEPT_CONTENT=application/json \
-    CELERY_RESULT_SERIALIZER=json \
-    CELERY_TASK_SERIALIZER=json \
-    CELERY_TIMEZONE=Asia/Kolkata \
-    CELERY_RESULT_BACKEND=rpc:// \
+    CELERY_BROKER_URL='amqp://guest:guest@rabbitmq//' \
+    CELERY_ACCEPT_CONTENT='application/json' \
+    CELERY_RESULT_SERIALIZER='json' \
+    CELERY_TASK_SERIALIZER='json' \
+    CELERY_TIMEZONE='Asia/Kolkata' \
+    CELERY_RESULT_BACKEND='rpc://' \
     PYTHONUNBUFFERED=1
 
 # Run Celery worker
