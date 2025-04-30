@@ -55,40 +55,43 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Assign managed identity and wait for propagation
+          # Enable system-assigned identity with explicit wait
+          echo "Assigning system identity..."
           az containerapp identity assign \
             --name freshersparkapp \
-            --resource-group freshersparkresource
+            --resource-group freshersparkresource \
+            --system-assigned \
+            --query principalId --output tsv
           
-          echo "Waiting 30 seconds for identity propagation..."
-          sleep 30
+          # Wait for identity propagation (up to 2 minutes)
+          MAX_RETRIES=12
+          RETRY_DELAY=10
           
-          # Get principal ID with retry logic
-          for i in {1..5}; do
+          for ((i=1; i<=$MAX_RETRIES; i++)); do
             PRINCIPAL_ID=$(az containerapp identity show \
               --name freshersparkapp \
               --resource-group freshersparkresource \
               --query principalId --output tsv)
             
             if [ -n "$PRINCIPAL_ID" ]; then
-              break
+              echo "Successfully obtained principal ID: $PRINCIPAL_ID"
+              
+              # Grant Key Vault access
+              echo "Granting Key Vault access..."
+              az keyvault set-policy \
+                --name $(keyVaultName) \
+                --object-id $PRINCIPAL_ID \
+                --secret-permissions get list
+              
+              exit 0
             fi
-            echo "Retrying to get principal ID... Attempt $i"
-            sleep 10
+            
+            echo "Identity not ready yet (attempt $i/$MAX_RETRIES)..."
+            sleep $RETRY_DELAY
           done
           
-          if [ -z "$PRINCIPAL_ID" ]; then
-            echo "##vso[task.logissue type=error]Failed to get principal ID"
-            exit 1
-          fi
-          
-          echo "Principal ID: $PRINCIPAL_ID"
-          
-          # Grant Key Vault access
-          az keyvault set-policy \
-            --name $(keyVaultName) \
-            --object-id $PRINCIPAL_ID \
-            --secret-permissions get list
+          echo "##vso[task.logissue type=error]Failed to obtain principal ID after $MAX_RETRIES attempts"
+          exit 1
 
     - task: AzureCLI@2
       displayName: 'Deploy Celery Worker'
@@ -113,7 +116,7 @@ stages:
                 CELERY_RESULT_BACKEND='rpc://' \
                 DJANGO_SETTINGS_MODULE='job_portal.settings'
           else
-            # Development - Use local secrets
+            # Development - Use local secrets (set these as pipeline variables)
             az containerapp secret set \
               --name freshersparkapp \
               --resource-group freshersparkresource \
