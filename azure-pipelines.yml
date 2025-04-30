@@ -9,37 +9,25 @@ variables:
   containerRegistry: 'freshersparkregistry.azurecr.io'
   
   # Image repositories
-  # rabbitmqImageRepository: 'freshersparkrabbitmq'
-  # rabbitmqDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.rabbitmq'
   celeryImageRepository: 'freshersparkcelery'
   celeryDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.celery'
   
   tag: '$(Build.BuildId)'
   vmImageName: 'ubuntu-latest'
 
+  # Environment configuration
+  environmentType: 'dev'  # Set to 'prod' for production
+  keyVaultName: 'freshersparkkeyvault'  # Your Azure Key Vault name
+
 stages:
 - stage: Build
-  displayName: Build and push images
+  displayName: Build and push Celery image
   jobs:
-  - job: BuildImages
-    displayName: Build Docker Images
+  - job: BuildCelery
+    displayName: Build Celery Image
     pool:
       vmImage: $(vmImageName)
     steps:
-    # Build and push RabbitMQ image
-    #- task: Docker@2
-    #  displayName: Build and push RabbitMQ image
-    #  inputs:
-    #    command: buildAndPush
-    #    repository: $(rabbitmqImageRepository)
-    #    dockerfile: $(rabbitmqDockerfilePath)
-    #    containerRegistry: $(dockerRegistryServiceConnection)
-    #    tags: |
-    #      $(tag)
-    #      latest
-    #    buildContext: '$(Build.SourcesDirectory)'
-    
-    # Build and push Celery image
     - task: Docker@2
       displayName: Build and push Celery image
       inputs:
@@ -52,44 +40,38 @@ stages:
         buildContext: '$(Build.SourcesDirectory)'
 
 - stage: Deploy
-  displayName: Deploy Services
+  displayName: Deploy Celery Worker
   dependsOn: Build
   jobs:
-  - job: DeployServices
-    displayName: Deploy Services
+  - job: DeployCelery
+    displayName: Deploy Celery Worker
     pool:
       vmImage: $(vmImageName)
     steps:
-    # Deploy RabbitMQ
-    #- task: AzureCLI@2
-    #  displayName: 'Deploy RabbitMQ'
-    #  inputs:
-    #    azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
-    #    scriptType: 'bash'
-    #    scriptLocation: 'inlineScript'
-    #    inlineScript: |
-    #      # Update RabbitMQ container
-    #      az containerapp update \
-    #        --name freshersparkapp \
-    #        --resource-group freshersparkresource \
-    #        --container-name rabbitmq \
-    #        --image $(containerRegistry)/$(rabbitmqImageRepository):$(tag) \
-    #        --set properties.template.containers[0].ports='[{"port": 5672}, {"port": 15672}]'
+    - task: AzureCLI@2
+      displayName: 'Configure Managed Identity'
+      inputs:
+        azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Assign managed identity
+          az containerapp identity assign \
+            --name freshersparkapp \
+            --resource-group freshersparkresource
           
-          # Configure ingress for management UI
-    #     az containerapp ingress update \
-    #        --name freshersparkapp \
-    #        --resource-group freshersparkresource \
-    #        --type external \
-    #        --target-port 15672 \
-    #        --transport auto
+          # Get principal ID
+          PRINCIPAL_ID=$(az containerapp identity show \
+            --name freshersparkapp \
+            --resource-group freshersparkresource \
+            --query principalId --output tsv)
           
-          # Assign managed identity for Key Vault access
-    #      az containerapp identity assign \
-    #        --name freshersparkapp \
-    #        --resource-group freshersparkresource
-    
-    # Deploy Celery Worker
+          # Grant Key Vault access
+          az keyvault set-policy \
+            --name $(keyVaultName) \
+            --object-id $PRINCIPAL_ID \
+            --secret-permissions get list
+
     - task: AzureCLI@2
       displayName: 'Deploy Celery Worker'
       inputs:
@@ -97,25 +79,46 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Add Celery worker container
-          az containerapp update \
-            --name freshersparkapp \
-            --resource-group freshersparkresource \
-            --container-name celery-worker \
-            --image $(containerRegistry)/$(celeryImageRepository):$(tag) \
-            --env-vars \
-              CELERY_BROKER_URL='amqp://$(secretref:rabbitmq-user):$(secretref:rabbitmq-pass)@rabbitmq//' \
-              CELERY_ACCEPT_CONTENT='application/json' \
-              CELERY_RESULT_SERIALIZER='json' \
-              CELERY_TASK_SERIALIZER='json' \
-              CELERY_TIMEZONE='Asia/Kolkata' \
-              CELERY_RESULT_BACKEND='rpc://' \
-              DJANGO_SETTINGS_MODULE='job_portal.settings' \
-            --secrets \
-              rabbitmq-user=yourrabbitmquser \
-              rabbitmq-pass=yourrabbitmqpassword
+          if [ "$(environmentType)" = "prod" ]; then
+            # Production - Use Key Vault references
+            az containerapp update \
+              --name freshersparkapp \
+              --resource-group freshersparkresource \
+              --container-name celery-worker \
+              --image $(containerRegistry)/$(celeryImageRepository):$(tag) \
+              --set-env-vars \
+                CELERY_BROKER_URL='amqp://@Microsoft.KeyVault(SecretUri=https://$(keyVaultName).vault.azure.net/secrets/rabbitmq-user/):@Microsoft.KeyVault(SecretUri=https://$(keyVaultName).vault.azure.net/secrets/rabbitmq-pass/)@rabbitmq//' \
+                CELERY_ACCEPT_CONTENT='application/json' \
+                CELERY_RESULT_SERIALIZER='json' \
+                CELERY_TASK_SERIALIZER='json' \
+                CELERY_TIMEZONE='Asia/Kolkata' \
+                CELERY_RESULT_BACKEND='rpc://' \
+                DJANGO_SETTINGS_MODULE='job_portal.settings'
+          else
+            # Development - Use local secrets
+            az containerapp secret set \
+              --name freshersparkapp \
+              --resource-group freshersparkresource \
+              --secrets \
+                "rabbitmq-user=$(RABBITMQ_USER)" \
+                "rabbitmq-pass=$(RABBITMQ_PASS)"
+            
+            az containerapp update \
+              --name freshersparkapp \
+              --resource-group freshersparkresource \
+              --container-name celery-worker \
+              --image $(containerRegistry)/$(celeryImageRepository):$(tag) \
+              --set-env-vars \
+                CELERY_BROKER_URL='amqp://$(secretref:rabbitmq-user):$(secretref:rabbitmq-pass)@rabbitmq//' \
+                CELERY_ACCEPT_CONTENT='application/json' \
+                CELERY_RESULT_SERIALIZER='json' \
+                CELERY_TASK_SERIALIZER='json' \
+                CELERY_TIMEZONE='Asia/Kolkata' \
+                CELERY_RESULT_BACKEND='rpc://' \
+                DJANGO_SETTINGS_MODULE='job_portal.settings'
+          fi
           
-          # Optionally scale Celery workers
+          # Scale settings
           az containerapp update \
             --name freshersparkapp \
             --resource-group freshersparkresource \
