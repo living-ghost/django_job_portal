@@ -48,7 +48,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Deploy RabbitMQ to Container Apps'
       inputs:
-        azureSubscription: 'Your_Azure_Service_Connection'
+        azureSubscription: '8ce37efe-06df-47c4-b146-001d3ddfb1ba'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
