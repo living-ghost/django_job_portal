@@ -56,17 +56,13 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Enable system-assigned identity
-          echo "Assigning system identity..."
-          az containerapp identity assign \
+          # Verify system identity exists
+          echo "Checking existing identity..."
+          az containerapp identity show \
             --name freshersparkapp \
-            --resource-group freshersparkresource \
-            --system-assigned
+            --resource-group freshersparkresource
           
-          # Wait for propagation
-          sleep 30
-          
-          # Get principal ID with error handling
+          # Get principal ID
           PRINCIPAL_ID=$(az containerapp identity show \
             --name freshersparkapp \
             --resource-group freshersparkresource \
@@ -77,11 +73,18 @@ stages:
             exit 1
           fi
           
-          echo "Granting Key Vault access..."
-          az keyvault set-policy \
-            --name $(keyVaultName) \
-            --object-id $PRINCIPAL_ID \
-            --secret-permissions get list
+          echo "Assigning Key Vault roles..."
+          # For RBAC-enabled Key Vault
+          az role assignment create \
+            --assignee $PRINCIPAL_ID \
+            --role "Key Vault Secrets User" \
+            --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/freshersparkresource/providers/Microsoft.KeyVault/vaults/$(keyVaultName)"
+          
+          # Optional: Verify role assignment
+          az role assignment list \
+            --assignee $PRINCIPAL_ID \
+            --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/freshersparkresource/providers/Microsoft.KeyVault/vaults/$(keyVaultName)" \
+            --query [].roleDefinitionName
 
     - task: AzureCLI@2
       displayName: 'Deploy Celery Worker'
