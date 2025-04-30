@@ -99,7 +99,7 @@ stages:
           
           BROKER_URL="amqp://$RABBITMQ_USER:$RABBITMQ_PASS@${{variables.rabbitmqHost}}:5672//"
           
-          # Update container using YAML to avoid CLI issues
+          # Update container using YAML
           echo "Updating Celery worker configuration..."
           az containerapp show \
             --name freshersparkapp \
@@ -125,7 +125,16 @@ stages:
             --min-replicas 2 \
             --max-replicas 4
           
-          # Restart to ensure changes take effect
+          # Get latest revision name
+          LATEST_REVISION=$(az containerapp revision list \
+            --name freshersparkapp \
+            --resource-group freshersparkresource \
+            --query "[?properties.active].name" -o tsv | head -1)
+          
+          echo "Restarting revision: $LATEST_REVISION"
+          
+          # Restart the revision
           az containerapp revision restart \
             --name freshersparkapp \
-            --resource-group freshersparkresource
+            --resource-group freshersparkresource \
+            --revision $LATEST_REVISION
