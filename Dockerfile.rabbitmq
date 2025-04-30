@@ -1,0 +1,23 @@
+# Use the official RabbitMQ management image
+FROM rabbitmq:3.12-management-alpine
+
+# Expose required ports
+EXPOSE 5672/tcp 15672/tcp
+
+# Create persistent volume mount point
+VOLUME /var/lib/rabbitmq
+
+# Enable essential plugins (credentials will be injected at runtime)
+RUN rabbitmq-plugins enable --offline \
+    rabbitmq_management \
+    rabbitmq_consistent_hash_exchange \
+    rabbitmq_prometheus
+
+# Health check configuration
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD rabbitmq-diagnostics -q ping
+
+# Use custom entrypoint to handle Key Vault secrets
+COPY --chmod=755 entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["rabbitmq-server"]

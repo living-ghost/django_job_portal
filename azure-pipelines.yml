@@ -9,12 +9,12 @@ variables:
   containerRegistry: 'freshersparkregistry.azurecr.io'
   
   # Django app variables
-  djangoImageRepository: 'freshersparkimg'
-  djangoDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.django'
+  # djangoImageRepository: 'freshersparkimg'
+  # djangoDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.django'
   
   # Nginx app variables
-  nginxImageRepository: 'freshersparknginximg'
-  nginxDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.nginx'
+  rabbitmqImageRepository: 'freshersparkrabbitmq'
+  rabbitmqDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.rabbitmq'
   
   tag: '$(Build.BuildId)'
   vmImageName: 'ubuntu-latest'
@@ -28,22 +28,33 @@ stages:
     pool:
       vmImage: $(vmImageName)
     steps:
-    
-    # First collect static files (required for both containers)
-    - script: |
-        pip install -r requirements.txt
-        python manage.py collectstatic --noinput
-      displayName: 'Collect static files'
-      workingDirectory: '$(Build.SourcesDirectory)'
-    
-     
+
     - task: Docker@2
-      displayName: Build and push Django image
+      displayName: Build and push RabbitMQ image
       inputs:
         command: buildAndPush
-        repository: $(djangoImageRepository)
-        dockerfile: $(djangoDockerfilePath)
+        repository: $(rabbitmqImageRepository)
+        dockerfile: $(rabbitmqDockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
         buildContext: '$(Build.SourcesDirectory)'
+    
+    # First collect static files (required for both containers)
+    #- script: |
+    #    pip install -r requirements.txt
+    #    python manage.py collectstatic --noinput
+    #  displayName: 'Collect static files'
+    #  workingDirectory: '$(Build.SourcesDirectory)'
+    
+     
+    #- task: Docker@2
+    #  displayName: Build and push Django image
+    #  inputs:
+    #    command: buildAndPush
+    #    repository: $(djangoImageRepository)
+    #    dockerfile: $(djangoDockerfilePath)
+    #    containerRegistry: $(dockerRegistryServiceConnection)
+    #    tags: |
+    #      $(tag)
+    #    buildContext: '$(Build.SourcesDirectory)'
