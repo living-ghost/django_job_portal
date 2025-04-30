@@ -55,16 +55,34 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Assign managed identity
+          # Assign managed identity and wait for propagation
           az containerapp identity assign \
             --name freshersparkapp \
             --resource-group freshersparkresource
           
-          # Get principal ID
-          PRINCIPAL_ID=$(az containerapp identity show \
-            --name freshersparkapp \
-            --resource-group freshersparkresource \
-            --query principalId --output tsv)
+          echo "Waiting 30 seconds for identity propagation..."
+          sleep 30
+          
+          # Get principal ID with retry logic
+          for i in {1..5}; do
+            PRINCIPAL_ID=$(az containerapp identity show \
+              --name freshersparkapp \
+              --resource-group freshersparkresource \
+              --query principalId --output tsv)
+            
+            if [ -n "$PRINCIPAL_ID" ]; then
+              break
+            fi
+            echo "Retrying to get principal ID... Attempt $i"
+            sleep 10
+          done
+          
+          if [ -z "$PRINCIPAL_ID" ]; then
+            echo "##vso[task.logissue type=error]Failed to get principal ID"
+            exit 1
+          fi
+          
+          echo "Principal ID: $PRINCIPAL_ID"
           
           # Grant Key Vault access
           az keyvault set-policy \
