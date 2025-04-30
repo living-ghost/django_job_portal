@@ -1,21 +1,39 @@
-# Dockerfile.celery
+# Use Python 3.9 with additional build tools
+FROM python:3.9-slim as builder
+
+WORKDIR /app
+
+# Install system dependencies first
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create and activate virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install pip requirements
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Final lightweight image
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy project files
+# Copy only necessary files from builder
+COPY --from=builder /opt/venv /opt/venv
 COPY . .
 
-# Set environment variables (secrets will be injected by Azure)
-ENV CELERY_ACCEPT_CONTENT=application/json \
+# Set environment variables
+ENV PATH="/opt/venv/bin:$PATH" \
+    CELERY_ACCEPT_CONTENT=application/json \
     CELERY_RESULT_SERIALIZER=json \
     CELERY_TASK_SERIALIZER=json \
     CELERY_TIMEZONE=Asia/Kolkata \
-    CELERY_RESULT_BACKEND=rpc://
+    CELERY_RESULT_BACKEND=rpc:// \
+    PYTHONUNBUFFERED=1
 
 # Run Celery worker
 CMD ["celery", "-A", "job_portal.celery", "worker", "--pool=solo", "-l", "info"]
