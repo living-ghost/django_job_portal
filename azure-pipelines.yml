@@ -17,7 +17,8 @@ variables:
 
   # Environment configuration
   environmentType: 'dev'  # Set to 'prod' for production
-  keyVaultName: 'freshersparkkeyvault'  # Your Azure Key Vault name
+  keyVaultName: 'freshersparkkeyvault'
+  rabbitmqHost: 'freshersparkrabbitmq.internal'  # Added internal hostname
 
 stages:
 - stage: Build
@@ -55,43 +56,32 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Enable system-assigned identity with explicit wait
+          # Enable system-assigned identity
           echo "Assigning system identity..."
           az containerapp identity assign \
             --name freshersparkapp \
             --resource-group freshersparkresource \
-            --system-assigned \
-            --query principalId --output tsv
+            --system-assigned
           
-          # Wait for identity propagation (up to 2 minutes)
-          MAX_RETRIES=12
-          RETRY_DELAY=10
+          # Wait for propagation
+          sleep 30
           
-          for ((i=1; i<=$MAX_RETRIES; i++)); do
-            PRINCIPAL_ID=$(az containerapp identity show \
-              --name freshersparkapp \
-              --resource-group freshersparkresource \
-              --query principalId --output tsv)
-            
-            if [ -n "$PRINCIPAL_ID" ]; then
-              echo "Successfully obtained principal ID: $PRINCIPAL_ID"
-              
-              # Grant Key Vault access
-              echo "Granting Key Vault access..."
-              az keyvault set-policy \
-                --name $(keyVaultName) \
-                --object-id $PRINCIPAL_ID \
-                --secret-permissions get list
-              
-              exit 0
-            fi
-            
-            echo "Identity not ready yet (attempt $i/$MAX_RETRIES)..."
-            sleep $RETRY_DELAY
-          done
+          # Get principal ID with error handling
+          PRINCIPAL_ID=$(az containerapp identity show \
+            --name freshersparkapp \
+            --resource-group freshersparkresource \
+            --query principalId -o tsv)
           
-          echo "##vso[task.logissue type=error]Failed to obtain principal ID after $MAX_RETRIES attempts"
-          exit 1
+          if [ -z "$PRINCIPAL_ID" ]; then
+            echo "##vso[task.logissue type=error]Failed to get principal ID"
+            exit 1
+          fi
+          
+          echo "Granting Key Vault access..."
+          az keyvault set-policy \
+            --name $(keyVaultName) \
+            --object-id $PRINCIPAL_ID \
+            --secret-permissions get list
 
     - task: AzureCLI@2
       displayName: 'Deploy Celery Worker'
@@ -100,44 +90,27 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          if [ "$(environmentType)" = "prod" ]; then
-            # Production - Use Key Vault references
-            az containerapp update \
-              --name freshersparkapp \
-              --resource-group freshersparkresource \
-              --container-name celery-worker \
-              --image $(containerRegistry)/$(celeryImageRepository):$(tag) \
-              --set-env-vars \
-                CELERY_BROKER_URL='amqp://@Microsoft.KeyVault(SecretUri=https://$(keyVaultName).vault.azure.net/secrets/rabbitmq-user/):@Microsoft.KeyVault(SecretUri=https://$(keyVaultName).vault.azure.net/secrets/rabbitmq-pass/)@rabbitmq//' \
-                CELERY_ACCEPT_CONTENT='application/json' \
-                CELERY_RESULT_SERIALIZER='json' \
-                CELERY_TASK_SERIALIZER='json' \
-                CELERY_TIMEZONE='Asia/Kolkata' \
-                CELERY_RESULT_BACKEND='rpc://' \
-                DJANGO_SETTINGS_MODULE='job_portal.settings'
-          else
-            # Development - Use local secrets (set these as pipeline variables)
-            az containerapp secret set \
-              --name freshersparkapp \
-              --resource-group freshersparkresource \
-              --secrets \
-                "rabbitmq-user=$(RABBITMQ_USER)" \
-                "rabbitmq-pass=$(RABBITMQ_PASS)"
-            
-            az containerapp update \
-              --name freshersparkapp \
-              --resource-group freshersparkresource \
-              --container-name celery-worker \
-              --image $(containerRegistry)/$(celeryImageRepository):$(tag) \
-              --set-env-vars \
-                CELERY_BROKER_URL='amqp://$(secretref:rabbitmq-user):$(secretref:rabbitmq-pass)@rabbitmq//' \
-                CELERY_ACCEPT_CONTENT='application/json' \
-                CELERY_RESULT_SERIALIZER='json' \
-                CELERY_TASK_SERIALIZER='json' \
-                CELERY_TIMEZONE='Asia/Kolkata' \
-                CELERY_RESULT_BACKEND='rpc://' \
-                DJANGO_SETTINGS_MODULE='job_portal.settings'
-          fi
+          # Always use internal hostname
+          BROKER_URL="amqp://$(secretref:rabbitmq-user):$(secretref:rabbitmq-pass)@$(rabbitmqHost):5672//"
+          
+          # Update container using YAML to avoid CLI issues
+          echo "Updating Celery worker configuration..."
+          az containerapp show \
+            --name freshersparkapp \
+            --resource-group freshersparkresource \
+            --output yaml > config.yaml
+          
+          # Add/update environment variables
+          yq e -i '(.properties.template.containers[] | select(.name == "celery-worker").env) += [
+            {"name": "CELERY_BROKER_URL", "value": "'"$BROKER_URL"'"},
+            {"name": "CELERY_RESULT_BACKEND", "value": "rpc://"},
+            {"name": "DJANGO_SETTINGS_MODULE", "value": "job_portal.settings"}
+          ]' config.yaml
+          
+          az containerapp update \
+            --name freshersparkapp \
+            --resource-group freshersparkresource \
+            --yaml config.yaml
           
           # Scale settings
           az containerapp update \
@@ -146,3 +119,9 @@ stages:
             --container-name celery-worker \
             --min-replicas 2 \
             --max-replicas 4
+          
+          # Restart to ensure changes take effect
+          az containerapp restart \
+            --name freshersparkapp \
+            --resource-group freshersparkresource \
+            --container-name celery-worker
