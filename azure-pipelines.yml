@@ -57,7 +57,7 @@ stages:
             --name freshersparkrabbitmq \
             --resource-group freshersparkresource \
             --image $(containerRegistry)/$(rabbitmqImageRepository):$(tag) \
-            --container-name rabbitmq \
+            --container-name freshersparkrabbitmq \
             --set properties.template.containers[0].ports='[{"port": 5672}, {"port": 15672}]'
           
           # Configure ingress for management UI
