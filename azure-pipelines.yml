@@ -78,12 +78,12 @@ stages:
           az role assignment create \
             --assignee $PRINCIPAL_ID \
             --role "Key Vault Secrets User" \
-            --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/freshersparkresource/providers/Microsoft.KeyVault/vaults/$(keyVaultName)"
+            --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/freshersparkresource/providers/Microsoft.KeyVault/vaults/${{variables.keyVaultName}}"
           
           # Optional: Verify role assignment
           az role assignment list \
             --assignee $PRINCIPAL_ID \
-            --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/freshersparkresource/providers/Microsoft.KeyVault/vaults/$(keyVaultName)" \
+            --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/freshersparkresource/providers/Microsoft.KeyVault/vaults/${{variables.keyVaultName}}" \
             --query [].roleDefinitionName
 
     - task: AzureCLI@2
@@ -93,8 +93,11 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Always use internal hostname
-          BROKER_URL="amqp://$(secretref:rabbitmq-user):$(secretref:rabbitmq-pass)@$(rabbitmqHost):5672//"
+          # Get secrets from Key Vault
+          RABBITMQ_USER=$(az keyvault secret show --name rabbitmq-user --vault-name ${{variables.keyVaultName}} --query value -o tsv)
+          RABBITMQ_PASS=$(az keyvault secret show --name rabbitmq-pass --vault-name ${{variables.keyVaultName}} --query value -o tsv)
+          
+          BROKER_URL="amqp://$RABBITMQ_USER:$RABBITMQ_PASS@${{variables.rabbitmqHost}}:5672//"
           
           # Update container using YAML to avoid CLI issues
           echo "Updating Celery worker configuration..."
@@ -119,12 +122,10 @@ stages:
           az containerapp update \
             --name freshersparkapp \
             --resource-group freshersparkresource \
-            --container-name celery-worker \
             --min-replicas 2 \
             --max-replicas 4
           
           # Restart to ensure changes take effect
-          az containerapp restart \
+          az containerapp revision restart \
             --name freshersparkapp \
-            --resource-group freshersparkresource \
-            --container-name celery-worker
+            --resource-group freshersparkresource
