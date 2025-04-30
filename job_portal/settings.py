@@ -98,6 +98,11 @@ MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusAfterMiddleware', # Prometheus middleware for monitoring
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://freshersparkapp.victoriousocean-8dff7969.centralindia.azurecontainerapps.io',
+    # Add other trusted domains if needed
+]
+
 # URL to redirect users for login
 LOGIN_URL = 'portal_user_app:user_index'
 
