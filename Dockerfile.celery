@@ -1,13 +1,13 @@
-# Use consistent Python version (3.10 for both stages)
+# Use consistent Python version
 FROM python:3.10-slim as builder
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies (minimal set)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    gcc \
-    python3-dev \
+    build-essential \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Create virtual environment
@@ -24,19 +24,37 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
+# Install runtime dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy virtual environment and application code
 COPY --from=builder /opt/venv /opt/venv
 COPY . .
 
-# Set environment variables
+# Set environment variables (use ENV for required ones, ARG for build-time)
 ENV PATH="/opt/venv/bin:$PATH" \
-    CELERY_BROKER_URL='amqp://guest:guest@rabbitmq//' \
-    CELERY_ACCEPT_CONTENT='application/json' \
-    CELERY_RESULT_SERIALIZER='json' \
-    CELERY_TASK_SERIALIZER='json' \
-    CELERY_TIMEZONE='Asia/Kolkata' \
-    CELERY_RESULT_BACKEND='rpc://' \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    CELERY_ACCEPT_CONTENT=json \
+    CELERY_RESULT_SERIALIZER=json \
+    CELERY_TASK_SERIALIZER=json \
+    CELERY_TIMEZONE=Asia/Kolkata
 
-# Run Celery worker
-CMD ["celery", "-A", "job_portal.celery", "worker", "--pool=solo", "-l", "info"]
+# Use ARG for broker URL (override in Azure deployment)
+ARG CELERY_BROKER_URL=amqp://guest:guest@freshersparkrabbitmq.internal:5672//
+ENV CELERY_BROKER_URL=$CELERY_BROKER_URL
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD celery inspect ping -A job_portal.celery || exit 1
+
+# Run Celery worker (better production settings)
+CMD ["celery", "-A", "job_portal.celery", "worker", \
+     "--loglevel=info", \
+     "--without-heartbeat", \
+     "--without-mingle", \
+     "--without-gossip", \
+     "--pool=solo"]
