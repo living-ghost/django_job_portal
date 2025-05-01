@@ -1,29 +1,22 @@
-import os
-from celery import Celery
+# Celery retry configuration
 
-# Set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'job_portal.settings')
+from celery import Celery
+from kombu.exceptions import OperationalError
 
 app = Celery('job_portal')
 
-# Configuring Celery to use the settings from Django.
-app.config_from_object('django.conf:settings', namespace='CELERY')
+app.config_from_object({
+    'broker_url': 'amqp://guest:guest@freshersparkrabbitmq:5672//',
+    'result_backend': 'rpc://',
+    'task_default_retry_delay': 30,  # Retry every 30 seconds
+    'task_max_retries': 10,  # Max retries before failing
+})
 
-# Optional: Updated result_backend for more robustness
-app.conf.update(
-
-    broker_connection_retry_on_startup=True,
-)
-
-# Set broker connection timeout
-app.conf.broker_connection_timeout = 30
-
-# Load task modules from all registered Django app configs.
-app.autodiscover_tasks()
-
-# Optional: Enable detailed logging for debugging
-app.conf.update(
-    task_track_started=True,
-    worker_redirect_stdouts=True,
-    worker_redirect_stdouts_level='INFO',
-)
+# Task with retry logic
+@app.task(bind=True)
+def my_task(self):
+    try:
+        # Your task code here
+        pass
+    except OperationalError as exc:
+        raise self.retry(exc=exc)
