@@ -64,15 +64,15 @@ stages:
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP
 
-          # Reference secrets from Key Vault using identityref:system
-          az containerapp update \
+          # Set Key Vault secrets to be used as environment variables
+          az containerapp secret set \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
-            --set-env-vars \
+            --secrets \
               $RABBITMQ_USER_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_USER_SECRET,identityref:system \
               $RABBITMQ_PASS_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_PASS_SECRET,identityref:system
 
-          # Update container image and environment variables
+          # Update container with new image and environment variables
           az containerapp update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
@@ -83,7 +83,7 @@ stages:
               RABBITMQ_DEFAULT_USER=secretref:$RABBITMQ_USER_SECRET \
               RABBITMQ_DEFAULT_PASS=secretref:$RABBITMQ_PASS_SECRET
 
-          # Enable external ingress
+          # Enable external ingress for RabbitMQ management UI
           az containerapp ingress update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
