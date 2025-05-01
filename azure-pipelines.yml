@@ -14,7 +14,6 @@ variables:
   tag: '$(Build.BuildId)'
   vmImageName: 'ubuntu-latest'
 
-  # Replace with your Key Vault name
   keyVaultName: 'freshersparkkeyvault'
 
 stages:
@@ -54,27 +53,26 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          # Variables
-          APP_NAME=freshersparkapp
-          RESOURCE_GROUP=freshersparkresource
-          KEYVAULT_NAME=$(keyVaultName)
-          RABBITMQ_USER_SECRET=rabbitmq-user
-          RABBITMQ_PASS_SECRET=rabbitmq-pass
+          APP_NAME="freshersparkapp"
+          RESOURCE_GROUP="freshersparkresource"
+          KEYVAULT_NAME="$(keyVaultName)"
+          RABBITMQ_USER_SECRET="rabbitmq-user"
+          RABBITMQ_PASS_SECRET="rabbitmq-pass"
 
-          # Assign managed identity to the app (only needed once)
+          # Assign system-managed identity (only needs to be done once)
           az containerapp identity assign \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP
 
-          # Set secrets using Key Vault references
-          az containerapp secret set \
+          # Reference secrets from Key Vault using identityref:system
+          az containerapp update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
-            --secrets \
-              $RABBITMQ_USER_SECRET=keyvaultref:$KEYVAULT_NAME:$RABBITMQ_USER_SECRET \
-              $RABBITMQ_PASS_SECRET=keyvaultref:$KEYVAULT_NAME:$RABBITMQ_PASS_SECRET
+            --set-env-vars \
+              $RABBITMQ_USER_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_USER_SECRET,identityref:system \
+              $RABBITMQ_PASS_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_PASS_SECRET,identityref:system
 
-          # Update container with image and secret-based env vars
+          # Update container image and environment variables
           az containerapp update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
@@ -85,7 +83,7 @@ stages:
               RABBITMQ_DEFAULT_USER=secretref:$RABBITMQ_USER_SECRET \
               RABBITMQ_DEFAULT_PASS=secretref:$RABBITMQ_PASS_SECRET
 
-          # Configure ingress
+          # Enable external ingress
           az containerapp ingress update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
