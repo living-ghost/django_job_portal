@@ -16,10 +16,6 @@ variables:
 
   # Replace with your Key Vault name
   keyVaultName: 'freshersparkkeyvault'
-<<<<<<< HEAD
-=======
-  rabbitmqHost: 'freshersparkrabbitmq.victoriousocean-8dff7969.centralindia.azurecontainerapps.io'  # Added internal hostname
->>>>>>> a6d4afda17033ce2013002b3e619fae752cdf1b3
 
 stages:
 - stage: Build
