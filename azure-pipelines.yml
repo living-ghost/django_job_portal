@@ -18,7 +18,7 @@ variables:
   # Environment configuration
   environmentType: 'dev'  # Set to 'prod' for production
   keyVaultName: 'freshersparkkeyvault'
-  rabbitmqHost: 'freshersparkrabbitmq.internal'  # Added internal hostname
+  rabbitmqHost: 'freshersparkrabbitmq.victoriousocean-8dff7969.centralindia.azurecontainerapps.io'  # Added internal hostname
 
 stages:
 - stage: Build
