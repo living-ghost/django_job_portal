@@ -1,0 +1,45 @@
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  dockerRegistryServiceConnection: 'd932d5a2-7e91-48b9-b339-918c998b3ae9'
+  containerRegistry: 'freshersparkregistry.azurecr.io'
+  
+  # Django app variables
+  djangoImageRepository: 'freshersparkimg'
+  djangoDockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.django'
+
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: BuildImages
+    displayName: Build Docker Images
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    
+    # First collect static files (required for both containers)
+    - script: |
+        pip install -r requirements.txt
+        python manage.py collectstatic --noinput
+      displayName: 'Collect static files'
+      workingDirectory: '$(Build.SourcesDirectory)'
+    
+     
+    - task: Docker@2
+      displayName: Build and push Django image
+      inputs:
+        command: buildAndPush
+        repository: $(djangoImageRepository)
+        dockerfile: $(djangoDockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+        buildContext: '$(Build.SourcesDirectory)'
