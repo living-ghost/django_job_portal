@@ -53,20 +53,31 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          set -e
-
           APP_NAME="freshersparkapp"
           RESOURCE_GROUP="freshersparkresource"
           KEYVAULT_NAME="$(keyVaultName)"
           RABBITMQ_USER_SECRET="rabbitmq-user"
           RABBITMQ_PASS_SECRET="rabbitmq-pass"
 
-          echo "Assigning managed identity to container app..."
+          # Assign system-managed identity
           az containerapp identity assign \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP
 
-          echo "Setting secrets using Key Vault references..."
+          # Get the principal ID of the system identity
+          PRINCIPAL_ID=$(az containerapp show \
+            --name $APP_NAME \
+            --resource-group $RESOURCE_GROUP \
+            --query "identity.principalId" \
+            --output tsv)
+
+          # Grant 'get' permission to secrets in Key Vault
+          az keyvault set-policy \
+            --name $KEYVAULT_NAME \
+            --object-id $PRINCIPAL_ID \
+            --secret-permissions get
+
+          # Set secrets using Key Vault references
           az containerapp secret set \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
@@ -74,7 +85,7 @@ stages:
               $RABBITMQ_USER_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_USER_SECRET,identityref:system \
               $RABBITMQ_PASS_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_PASS_SECRET,identityref:system
 
-          echo "Updating container image and environment variables..."
+          # Update container with image and environment variables
           az containerapp update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
@@ -84,7 +95,7 @@ stages:
               RABBITMQ_DEFAULT_USER=secretref:$RABBITMQ_USER_SECRET \
               RABBITMQ_DEFAULT_PASS=secretref:$RABBITMQ_PASS_SECRET
 
-          echo "Exposing management port via ingress..."
+          # Enable external ingress for RabbitMQ dashboard
           az containerapp ingress update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
