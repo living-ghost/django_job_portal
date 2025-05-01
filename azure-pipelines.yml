@@ -59,25 +59,25 @@ stages:
           RABBITMQ_USER_SECRET="rabbitmq-user"
           RABBITMQ_PASS_SECRET="rabbitmq-pass"
 
-          # Assign system-managed identity
+          # Assign managed identity
           az containerapp identity assign \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP
 
-          # Get the principal ID of the system identity
+          # Get principal ID
           PRINCIPAL_ID=$(az containerapp show \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
             --query "identity.principalId" \
             --output tsv)
 
-          # Grant 'get' permission to secrets in Key Vault
-          az keyvault set-policy \
-            --name $KEYVAULT_NAME \
-            --object-id $PRINCIPAL_ID \
-            --secret-permissions get
+          # Assign RBAC role (Key Vault Secrets User)
+          az role assignment create \
+            --assignee $PRINCIPAL_ID \
+            --role "Key Vault Secrets User" \
+            --scope $(az keyvault show --name $KEYVAULT_NAME --query id -o tsv)
 
-          # Set secrets using Key Vault references
+          # Set secrets in container app using Key Vault ref
           az containerapp secret set \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
@@ -85,17 +85,16 @@ stages:
               $RABBITMQ_USER_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_USER_SECRET,identityref:system \
               $RABBITMQ_PASS_SECRET=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/$RABBITMQ_PASS_SECRET,identityref:system
 
-          # Update container with image and environment variables
+          # Update container app with image and env vars
           az containerapp update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
-            --container-name rabbitmq \
             --image $(containerRegistry)/$(rabbitmqImageRepository):$(tag) \
-            --env-vars \
+            --set-env-vars \
               RABBITMQ_DEFAULT_USER=secretref:$RABBITMQ_USER_SECRET \
               RABBITMQ_DEFAULT_PASS=secretref:$RABBITMQ_PASS_SECRET
 
-          # Enable external ingress for RabbitMQ dashboard
+          # Enable ingress
           az containerapp ingress update \
             --name $APP_NAME \
             --resource-group $RESOURCE_GROUP \
