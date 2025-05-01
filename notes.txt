@@ -1,0 +1,8 @@
+1.
+
+To check container app logs : 
+
+az containerapp logs show --name freshersparkapp --resource-group freshersparkresource --follow
+
+2.
+
