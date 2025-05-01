@@ -44,7 +44,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
     CELERY_TIMEZONE=Asia/Kolkata
 
 # Use ARG for broker URL (override in Azure deployment)
-ARG CELERY_BROKER_URL=amqp://guest:guest@rabbitmq//
+ARG CELERY_BROKER_URL=amqp://guest:guest@freshersparkrabbitmq.victoriousocean-8dff7969.centralindia.azurecontainerapps.io:5672//
 ENV CELERY_BROKER_URL=$CELERY_BROKER_URL
 
 # Health check
