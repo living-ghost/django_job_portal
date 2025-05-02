@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-  dockerRegistryServiceConnection: 'd932d5a2-7e91-48b9-b339-918c998b3ae9'
+  dockerRegistryServiceConnection: 'e5381067-f49d-495b-ae15-d479dfb194fe'
   containerRegistry: 'freshersparkregistry.azurecr.io'
   
   # Django app variables
