@@ -99,7 +99,7 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://freshersparkapp.victoriousocean-8dff7969.centralindia.azurecontainerapps.io',
+    'https://freshersparkdjango.livelytree-a2300b9c.centralindia.azurecontainerapps.io',
     # Add other trusted domains if needed
 ]
 
