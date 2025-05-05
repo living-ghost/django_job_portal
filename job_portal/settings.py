@@ -220,8 +220,9 @@ RAZOR_KEY_SECRET = os.getenv('RAZOR_KEY_SECRET_ENV')
 #
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-CELERY_BROKER_URL = 'amqp://guest:guest@freshersparkrabbitmq.victoriousocean-8dff7969.centralindia.azurecontainerapps.io:5672//'
-
-# Optional Celery settings
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
+CELERY_BROKER_URL= 'amqp://guest:guest@rabbitmq//'
+CELERY_ACCEPT_CONTENT= 'application/json'
+CELERY_RESULT_SERIALIZER= 'json'
+CELERY_TASK_SERIALIZER= 'json'
+CELERY_TIMEZONE= 'Asia/Kolkata'
+CELERY_RESULT_BACKEND= 'rpc://'

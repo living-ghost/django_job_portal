@@ -4,6 +4,27 @@ FROM python:3.12-slim
 # Set environment variables to prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Define build arguments
+ARG SECRET_KEY
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_HOST
+ARG DB_PORT
+ARG PGADMIN_DEFAULT_EMAIL
+ARG PGADMIN_DEFAULT_PASSWORD
+
+
+# Optionally export them to runtime environment
+ENV SECRET_KEY=${SECRET_KEY}
+ENV DB_NAME=${DB_NAME}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+ENV PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+
 # Set the working directory in the container
 WORKDIR /app
 
