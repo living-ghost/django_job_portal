@@ -37,7 +37,6 @@ pipeline {
                         string(credentialsId: 'DB_PORT', variable: 'DB_PORT'),
                         string(credentialsId: 'PGADMIN_DEFAULT_EMAIL', variable: 'PGADMIN_DEFAULT_EMAIL'),
                         string(credentialsId: 'PGADMIN_DEFAULT_PASSWORD', variable: 'PGADMIN_DEFAULT_PASSWORD'),
-                        string(credentialsId: 'ALLOWED_HOSTS_ID', variable: 'ALLOWED_HOSTS')
                     ]) {
                         bat """
                         docker build ^
@@ -49,7 +48,6 @@ pipeline {
                             --build-arg DB_PORT=%DB_PORT% ^
                             --build-arg PGADMIN_DEFAULT_EMAIL=%PGADMIN_DEFAULT_EMAIL% ^
                             --build-arg PGADMIN_DEFAULT_PASSWORD=%PGADMIN_DEFAULT_PASSWORD% ^
-                            --build-arg ALLOWED_HOSTS=%ALLOWED_HOSTS% ^
                             -t %BUILD_TAG% .
                         """
                     }
