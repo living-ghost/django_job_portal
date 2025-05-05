@@ -29,14 +29,14 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                        string(credentialsId: 'SECRET_KEY_ID', variable: 'SECRET_KEY'),
-                        string(credentialsId: 'DB_NAME_ID', variable: 'DB_NAME'),
-                        string(credentialsId: 'DB_USER_ID', variable: 'DB_USER'),
-                        string(credentialsId: 'DB_PASSWORD_ID', variable: 'DB_PASSWORD'),
-                        string(credentialsId: 'DB_HOST_ID', variable: 'DB_HOST'),
-                        string(credentialsId: 'DB_PORT_ID', variable: 'DB_PORT'),
-                        string(credentialsId: 'PGADMIN_DEFAULT_EMAIL_ID', variable: 'PGADMIN_DEFAULT_EMAIL'),
-                        string(credentialsId: 'PGADMIN_DEFAULT_PASSWORD_ID', variable: 'PGADMIN_DEFAULT_PASSWORD'),
+                        string(credentialsId: 'SECRET_KEY', variable: 'SECRET_KEY'),
+                        string(credentialsId: 'DB_NAME', variable: 'DB_NAME'),
+                        string(credentialsId: 'DB_USER', variable: 'DB_USER'),
+                        string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                        string(credentialsId: 'DB_HOST', variable: 'DB_HOST'),
+                        string(credentialsId: 'DB_PORT', variable: 'DB_PORT'),
+                        string(credentialsId: 'PGADMIN_DEFAULT_EMAIL', variable: 'PGADMIN_DEFAULT_EMAIL'),
+                        string(credentialsId: 'PGADMIN_DEFAULT_PASSWORD', variable: 'PGADMIN_DEFAULT_PASSWORD'),
                         string(credentialsId: 'ALLOWED_HOSTS_ID', variable: 'ALLOWED_HOSTS')
                     ]) {
                         bat """
