@@ -24,8 +24,9 @@ docker exec -it django bash
 
 # Nginx
 docker run -d --name nginx --network job_portal_net \
-  -p 80:80 -v ./django/static:/usr/share/nginx/html/static \
-  yourusername/jobportal-nginx
+  -p 80:80 \
+  -v $(pwd)/staticfiles:/usr/share/nginx/html/staticfiles \
+  living9host/job_portal_nginx
 
 # Celery
 docker run -d --name celery \
