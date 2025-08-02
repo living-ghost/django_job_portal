@@ -94,6 +94,7 @@ MIDDLEWARE = [
     'job_portal.middleware.SkipUserLoginMiddleware',  # Custom middleware for user login bypass
     'job_portal.middleware.SkipResumeLoginMiddleware',  # Custom middleware for resume login bypass
     'job_portal.middleware.SkipConverterLoginMiddleware',  # Custom middleware for converter login bypass
+    'job_portal.middleware.BlockDeletedUserDashboardMiddleware',  # Custom middleware for dashboard login bypass
 
     'django_prometheus.middleware.PrometheusAfterMiddleware', # Prometheus middleware for monitoring
 ]

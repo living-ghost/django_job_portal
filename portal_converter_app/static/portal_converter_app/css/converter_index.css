@@ -1,4 +1,65 @@
-/* Global Styles */
+/* New styles for middle portion only */
+.converter-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.converter-card {
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    padding: 1.25rem;
+    background-color: #004d40;
+    color: white;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.custom-file-label::after {
+    content: "Browse";
+}
+
+.step-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    height: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.step-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #004d40;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-weight: bold;
+}
+
+.instructions {
+    background-color: rgba(0, 77, 64, 0.05);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+/* Original styles remain unchanged below this line */
 html, body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f4f8;
@@ -9,22 +70,20 @@ html, body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-size: 0.9em; /* Reduce global font size */
+    font-size: 0.9em;
 }
 
-/* Content Styles */
 .content {
     flex: 1;
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    padding: 20px; /* Add padding for spacing */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-/* Navbar Styles */
 .navbar {
-    padding: 0.5rem 1rem; /* Adjust padding if necessary */
-    background-color: #00497a; /* Dark blue background for the navbar */
+    padding: 0.5rem 1rem;
+    background-color: #00497a;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,30 +91,29 @@ html, body {
 
 .navbar-brand {
     color: #ffffff;
-    font-size: 1.25rem; /* Font size for the brand name */
-    margin-left: 10px; /* Move the brand to the right */
+    font-size: 1.25rem;
+    margin-left: 10px;
 }
 
 .navbar-brand:hover {
-    color: #ff9f00; /* Hover color for the brand name */
+    color: #ff9f00;
 }
 
 .navbar-nav .nav-link {
-    color: #ffffff; /* Text color for the nav links */
-    padding: 0.5rem 1rem; /* Adjust padding if necessary */
+    color: #ffffff;
+    padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
 }
 
 .navbar-nav .nav-link i {
-    margin-right: 0.5rem; /* Space between icon and text */
+    margin-right: 0.5rem;
 }
 
 .navbar-nav .nav-link:hover {
-    color: #ff9f00; /* Hover color for the nav links */
+    color: #ff9f00;
 }
 
-/* Back to Top Button Styles */
 .back-to-top {
     position: fixed;
     bottom: 30px;
@@ -64,8 +122,8 @@ html, body {
     color: #ffffff;
     border: none;
     border-radius: 50%;
-    padding: 8px 12px; /* Reduce padding */
-    font-size: 12px; /* Reduce font size */
+    padding: 8px 12px;
+    font-size: 12px;
     cursor: pointer;
     display: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -80,10 +138,11 @@ html, body {
 footer {
     background-color: #004d40;
     color: white;
-    padding: 10px 0; /* Reduce padding */
+    padding: 10px 0;
     box-sizing: border-box;
-    text-align: center;
     width: 100%;
+    text-align: center;
+    margin-top: auto;
 }
 
 footer a {
@@ -95,73 +154,49 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Footer Specific */
 .footer {
     background-color: #333333;
-    padding: 10px; /* Reduce padding */
-    box-sizing: border-box;
+    padding: 10px;
 }
 
 .footer h5 {
-    font-size: 1.25rem; /* Reduce font size */
-    margin-bottom: 5px; /* Reduce margin */
+    font-size: 1.25rem;
+    margin-bottom: 5px;
 }
 
 .footer p {
-    font-size: 0.8rem; /* Reduce font size */
+    font-size: 0.8rem;
     margin: 0;
 }
 
 @media (max-width: 600px) {
     .footer h5 {
-        font-size: 1rem; /* Reduce font size */
+        font-size: 1rem;
     }
 
     .footer p {
-        font-size: 0.75rem; /* Reduce font size */
+        font-size: 0.75rem;
     }
 }
 
-/* File Upload Box Styles */
-.upload-box {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 30px; /* Increase padding for more space */
-    max-width: 600px; /* Increase the maximum width */
-    width: 100%; /* Ensure it doesn’t overflow */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow for better visibility */
-    text-align: center; /* Center align text inside */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center all child elements horizontally */
+/* Add this to maintain consistent red link color */
+footer a.text-danger {
+    color: #dc3545 !important; /* Bootstrap's danger/red color */
 }
 
-.upload-box h4 {
-    margin-bottom: 20px; /* Increase margin for better spacing */
+footer a.text-danger:hover {
+    color: #c82333 !important; /* Slightly darker red on hover */
+    text-decoration: underline;
 }
 
-.upload-box p {
-    margin-bottom: 20px; /* Add space below the paragraph */
-}
-
-.upload-box .form-group {
-    margin-bottom: 20px; /* Add space between form elements */
-    width: 100%;
-    display: flex;
-    justify-content: center; /* Center form elements horizontally */
-}
-
-.upload-box .form-group input[type="file"] {
-    display: block;
-    width: auto; /* Set width to auto for better centering */
-}
-
-.upload-box .form-group select {
-    width: 100%; /* Make sure the select element fills the width */
-    max-width: 300px; /* Limit width for better appearance */
-    margin: 0 auto; /* Center the select element */
-}
-
-.upload-box .btn {
-    margin: 10px; /* Increase margin for better spacing */
+/* Responsive adjustments for new middle content */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .step-card {
+        margin-bottom: 1rem;
+    }
 }

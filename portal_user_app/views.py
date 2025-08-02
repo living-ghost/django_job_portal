@@ -473,6 +473,9 @@ def user_del_ac_view(request):
     user.is_active = False
     user.save()
 
+    # Log out the user to clear the session
+    logout(request)
+
     return JsonResponse({'success': True, 'message': 'Account deleted successfully!'})
 
 # ================================

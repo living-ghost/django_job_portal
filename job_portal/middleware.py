@@ -99,3 +99,18 @@ class SkipConverterLoginMiddleware:
 
         response = self.get_response(request)
         return response
+
+class BlockDeletedUserDashboardMiddleware:
+    """
+    Prevents access to /user/dashboard/ for unauthenticated users (e.g., after account deletion).
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Match exact or subpaths under /user/dashboard/
+        if request.path.startswith('/user/dashboard/') and not request.user.is_authenticated:
+            return redirect('portal_user_app:user_index')
+
+        return self.get_response(request)

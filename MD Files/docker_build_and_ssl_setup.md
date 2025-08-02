@@ -1,20 +1,35 @@
-# Django
+
+# Docker Image Build & Push
+
+## Django
+```bash
 docker build -t living9host/job_portal -f django/Dockerfile .
 docker push living9host/job_portal
+```
 
-# Nginx
+## Nginx
+```bash
 docker build -t living9host/job_portal_nginx -f nginx/Dockerfile .
 docker push living9host/job_portal_nginx
+```
 
-# Celery
+## Celery
+```bash
 docker build -t living9host/job_portal_celery -f celery/Dockerfile .
 docker push living9host/job_portal_celery
+```
 
-# Flower
-docker build -t yourusername/jobportal-flower -f flower/Dockerfile .
-docker push yourusername/jobportal-flower
+## Flower
+```bash
+docker build -t living9host/jobportal-flower -f flower/Dockerfile .
+docker push living9host/jobportal-flower
+```
 
+---
 
+# SSL Certificate with Certbot
+
+```bash
 azureuser@freshersparkvm:~/fresherspark$ sudo certbot --nginx -d fresherspark.in -d www.fresherspark.in
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Requesting a certificate for fresherspark.in and www.fresherspark.in
@@ -30,10 +45,11 @@ Deploying certificate
 Successfully deployed certificate for fresherspark.in to /etc/nginx/sites-enabled/default
 Successfully deployed certificate for www.fresherspark.in to /etc/nginx/sites-enabled/default
 Congratulations! You have successfully enabled HTTPS on https://fresherspark.in and https://www.fresherspark.in
+```
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-If you like Certbot, please consider supporting our work by:
- * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
- * Donating to EFF:                    https://eff.org/donate-le
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-azureuser@freshersparkvm:~/fresherspark$
+---
+
+👍 If you like Certbot, consider donating:
+
+- [Donate to Let's Encrypt](https://letsencrypt.org/donate)
+- [Donate to EFF](https://eff.org/donate-le)

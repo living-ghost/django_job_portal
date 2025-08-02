@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#deleteAccountBtn').on('click', function(e) {
-        e.preventDefault(); // Prevent the default link behavior
+        e.preventDefault();
 
         Swal.fire({
             title: 'Are you sure?',
@@ -13,11 +13,13 @@ $(document).ready(function() {
             cancelButtonText: 'No, cancel!'
         }).then((result) => {
             if (result.isConfirmed) {
+                const csrfToken = $('#csrfTokenInput').val(); // Get token from hidden input
+
                 $.ajax({
-                    url: UserAcDel,  // Ensure this URL matches your view's URL
+                    url: UserAcDel,
                     method: 'POST',
                     data: {
-                        csrfmiddlewaretoken: '{{ csrf_token }}'  // Include CSRF token
+                        csrfmiddlewaretoken: csrfToken
                     },
                     success: function(response) {
                         if (response.success) {
@@ -26,7 +28,7 @@ $(document).ready(function() {
                                 title: 'Deleted!',
                                 text: response.message,
                             }).then(() => {
-                                window.location.href = UserIndexUrl; // Redirect after deletion
+                                window.location.href = UserIndexUrl;
                             });
                         } else {
                             Swal.fire({

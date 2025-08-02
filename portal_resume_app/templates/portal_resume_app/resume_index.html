@@ -4,343 +4,458 @@
 
 {% block content %}
 
-    <div class="container my-5">
-        <div class="accordion" id="resumeAccordion">
+<div class="container my-5">
+    <!-- Resume Builder Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0"><i class="fas fa-file-alt text-primary mr-2"></i> Resume Builder</h2>
+        <div class="action-buttons">
+            <a href="{% url 'portal_resume_app:resume_list' %}" target="_blank" class="btn btn-outline-primary mr-2">
+                <i class="fas fa-list mr-1"></i> Generated Resumes
+            </a>
+            <a href="{% url 'portal_resume_app:resume_save' %}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-magic mr-1"></i> Generate Resume
+            </a>
+        </div>
+    </div>
 
-            <!-- Personal Information -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-primary text-white" id="headingPersonal">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapsePersonal" aria-expanded="false" aria-controls="collapsePersonal">
-                            <i class="fas fa-user"></i> Personal
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapsePersonal" class="collapse show" aria-labelledby="headingPersonal" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="personalForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label for="name">Name:</label>
-                                        <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" value="{{ personal_data.name }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" id="email" name="email" class="form-control" placeholder="email@example.com" value="{{ personal_data.email }}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label for="address">Address:</label>
-                                        <input type="text" id="address" name="address" class="form-control" placeholder="123 Main St, City, Country" value="{{ personal_data.address }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="phone">Phone:</label>
-                                        <input type="text" id="phone" name="phone" class="form-control" placeholder="(123) 456-7890" value="{{ personal_data.phone }}">
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" onclick="submitForm('personalForm')" class="btn btn-primary btn-equal">Save</button>
-                        </form>
-                    </div>
-                </div>
+    <!-- Vertical Tabs Navigation -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="nav flex-column nav-pills resume-sections" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-personal-tab" data-toggle="pill" href="#v-pills-personal" role="tab" aria-controls="v-pills-personal" aria-selected="true">
+                    <i class="fas fa-user mr-2"></i> Personal
+                </a>
+                <a class="nav-link" id="v-pills-summary-tab" data-toggle="pill" href="#v-pills-summary" role="tab" aria-controls="v-pills-summary" aria-selected="false">
+                    <i class="fas fa-suitcase mr-2"></i> Summary
+                </a>
+                <a class="nav-link" id="v-pills-education-tab" data-toggle="pill" href="#v-pills-education" role="tab" aria-controls="v-pills-education" aria-selected="false">
+                    <i class="fas fa-graduation-cap mr-2"></i> Education
+                </a>
+                <a class="nav-link" id="v-pills-experience-tab" data-toggle="pill" href="#v-pills-experience" role="tab" aria-controls="v-pills-experience" aria-selected="false">
+                    <i class="fas fa-briefcase mr-2"></i> Experience
+                </a>
+                <a class="nav-link" id="v-pills-skills-tab" data-toggle="pill" href="#v-pills-skills" role="tab" aria-controls="v-pills-skills" aria-selected="false">
+                    <i class="fas fa-cogs mr-2"></i> Skills
+                </a>
+                <a class="nav-link" id="v-pills-projects-tab" data-toggle="pill" href="#v-pills-projects" role="tab" aria-controls="v-pills-projects" aria-selected="false">
+                    <i class="fas fa-tasks mr-2"></i> Projects
+                </a>
+                <a class="nav-link" id="v-pills-certificates-tab" data-toggle="pill" href="#v-pills-certificates" role="tab" aria-controls="v-pills-certificates" aria-selected="false">
+                    <i class="fas fa-certificate mr-2"></i> Certificates
+                </a>
+                <a class="nav-link" id="v-pills-languages-tab" data-toggle="pill" href="#v-pills-languages" role="tab" aria-controls="v-pills-languages" aria-selected="false">
+                    <i class="fas fa-language mr-2"></i> Languages
+                </a>
+                <a class="nav-link" id="v-pills-hobbies-tab" data-toggle="pill" href="#v-pills-hobbies" role="tab" aria-controls="v-pills-hobbies" aria-selected="false">
+                    <i class="fas fa-gamepad mr-2"></i> Hobbies
+                </a>
             </div>
-
-            <!-- Summary -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-dark text-white" id="headingSummary">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseSummary" aria-expanded="false" aria-controls="collapseSummary">
-                            <i class="fas fa-suitcase"></i> Summary
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseSummary" class="collapse show" aria-labelledby="headingSummary" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="summaryForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="sum">
-                                    <div class="form-group">
-                                        <label for="description2">Summary:</label>
-                                        <textarea id="description2" name="description2" class="form-control" rows="3" placeholder="Professional Summary">{{ summary_data.description }}</textarea>
+        </div>
+        
+        <div class="col-md-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- Personal Information -->
+                <div class="tab-pane fade show active" id="v-pills-personal" role="tabpanel" aria-labelledby="v-pills-personal-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-user mr-2"></i> Personal Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="personalForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="name">Full Name</label>
+                                            <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" value="{{ personal_data.name }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email Address</label>
+                                            <input type="email" id="email" name="email" class="form-control" placeholder="email@example.com" value="{{ personal_data.email }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="address">Address</label>
+                                            <input type="text" id="address" name="address" class="form-control" placeholder="123 Main St, City, Country" value="{{ personal_data.address }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone">Phone Number</label>
+                                            <input type="text" id="phone" name="phone" class="form-control" placeholder="(123) 456-7890" value="{{ personal_data.phone }}">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <button type="submit" onclick="submitForm('summaryForm')" class="btn btn-primary btn-equal">Save</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Education -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-secondary text-white" id="headingEducation">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseEducation" aria-expanded="false" aria-controls="collapseEducation">
-                            <i class="fas fa-graduation-cap"></i> Education
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseEducation" class="collapse show" aria-labelledby="headingEducation" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="educationForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="ed">
-                                    <div class="form-group">
-                                        <label for="degree1">Degree:</label>
-                                        <input type="text" id="degree1" name="degree1" class="form-control" placeholder="Bachelor of Science in Computer Science" value="{{ education_data.degree }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="college1">College:</label>
-                                        <input type="text" id="college1" name="college1" class="form-control" placeholder="University Name" value="{{ education_data.college }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="cgpa1">CGPA:</label>
-                                        <input type="text" id="cgpa1" name="cgpa1" class="form-control" placeholder="CGPA" value="{{ education_data.cgpa }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="year1">Year:</label>
-                                        <input type="text" id="year1" name="year1" class="form-control" placeholder="2014 - 2017" value="{{ education_data.year }}">
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" onclick="submitForm('educationForm')" class="btn btn-primary btn-equal">Save</button>
-                            {% if education_data%}
-                                {% for education in education_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteEducation('{{ education.id }}')">
-                                        {{ education.degree }} &times;
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('personalForm')" class="btn btn-primary">
+                                        <i class="fas fa-save mr-1"></i> Save Information
                                     </button>
-                                {% endfor %}
-                            {% endif %}
-                        </form>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Experience -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-info text-white" id="headingExperience">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseExperience" aria-expanded="false" aria-controls="collapseExperience">
-                            <i class="fas fa-briefcase"></i> Experience
-                        </button>
-                    </h5>
+                <!-- Summary -->
+                <div class="tab-pane fade" id="v-pills-summary" role="tabpanel" aria-labelledby="v-pills-summary-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-suitcase mr-2"></i> Professional Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="summaryForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="description2">Summary</label>
+                                    <textarea id="description2" name="description2" class="form-control" rows="5" placeholder="Write a brief summary of your professional background, skills, and achievements...">{{ summary_data.description }}</textarea>
+                                    <small class="form-text text-muted">Keep it concise (3-5 sentences). Highlight your key qualifications.</small>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('summaryForm')" class="btn btn-primary">
+                                        <i class="fas fa-save mr-1"></i> Save Summary
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div id="collapseExperience" class="collapse show" aria-labelledby="headingExperience" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="experienceForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="exp">
-                                    <div class="form-group">
-                                        <label for="role1">Role:</label>
-                                        <input type="text" id="role1" name="role1" class="form-control" placeholder="Software Developer" value="{{ experience_data.role }}">
+
+                <!-- Education -->
+                <div class="tab-pane fade" id="v-pills-education" role="tabpanel" aria-labelledby="v-pills-education-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0"><i class="fas fa-graduation-cap mr-2"></i> Education</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="educationForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="degree1">Degree</label>
+                                            <input type="text" id="degree1" name="degree1" class="form-control" placeholder="Bachelor of Science in Computer Science" value="{{ education_data.degree }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="college1">Institution</label>
+                                            <input type="text" id="college1" name="college1" class="form-control" placeholder="University Name" value="{{ education_data.college }}">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="company1">Company:</label>
-                                        <input type="text" id="company1" name="company1" class="form-control" placeholder="Tech Company Inc." value="{{ experience_data.company }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="year1">Year:</label>
-                                        <input type="text" id="year1" name="year1" class="form-control" placeholder="Year to Present" value="{{ experience_data.year }}">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="cgpa1">CGPA/GPA</label>
+                                            <input type="text" id="cgpa1" name="cgpa1" class="form-control" placeholder="3.8/4.0 or 9.2/10" value="{{ education_data.cgpa }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="year1">Years Attended</label>
+                                            <input type="text" id="year1" name="year1" class="form-control" placeholder="2014 - 2018" value="{{ education_data.year }}">
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('educationForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Education
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {% if education_data %}
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Saved Education</h6>
+                                <div class="list-group">
+                                    {% for education in education_data %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ education.degree }}</strong> at {{ education.college }}
+                                            <div class="text-muted small">{{ education.year }} | CGPA: {{ education.cgpa }}</div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteEducation('{{ education.id }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <button type="submit" onclick="submitForm('experienceForm')" class="btn btn-primary btn-equal">Save</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div class="tab-pane fade" id="v-pills-experience" role="tabpanel" aria-labelledby="v-pills-experience-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-briefcase mr-2"></i> Work Experience</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="experienceForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="role1">Job Title</label>
+                                            <input type="text" id="role1" name="role1" class="form-control" placeholder="Software Developer" value="{{ experience_data.role }}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="company1">Company</label>
+                                            <input type="text" id="company1" name="company1" class="form-control" placeholder="Tech Company Inc." value="{{ experience_data.company }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group">
+                                            <label for="year1">Duration</label>
+                                            <input type="text" id="year1" name="year1" class="form-control" placeholder="June 2018 - Present" value="{{ experience_data.year }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('experienceForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Experience
+                                    </button>
+                                </div>
+                            </form>
+                            
                             {% if experience_data %}
-                                {% for experience in experience_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteExperience('{{ experience.id }}')">
-                                        {{ experience.company }} &times;
-                                    </button>
-                                {% endfor %}
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Languages -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-warning text-dark" id="headingLanguages">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-dark" type="button" data-toggle="collapse" data-target="#collapseLanguages" aria-expanded="false" aria-controls="collapseLanguages">
-                            <i class="fas fa-language"></i> Languages
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseLanguages" class="collapse show" aria-labelledby="headingLanguages" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="languageForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="language1">Language:</label>
-                                <input type="text" id="language1" name="language1" class="form-control mb-2" placeholder="English, Spanish, German" value="{{ language_data.language }}">
-                            </div>
-                            <button type="submit" onclick="submitForm('languageForm')" class="btn btn-primary btn-equal">Save</button>
-                            {% if language_data %}
-                                {% for language in language_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteLanguage('{{ language.id }}')">
-                                        {{ language.language }} &times;
-                                    </button>
-                                {% endfor %}
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Projects -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-success text-white" id="headingProjects">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseProjects" aria-expanded="false" aria-controls="collapseProjects">
-                            <i class="fas fa-tachometer-alt"></i> Projects
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseProjects" class="collapse show" aria-labelledby="headingProjects" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="projectForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="proj">
-                                    <div class="form-group">
-                                        <label for="project1">Project Title:</label>
-                                        <input type="text" id="project1" name="project1" class="form-control" placeholder="Project Title" value="{{ project_data.title }}">
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Saved Experience</h6>
+                                <div class="list-group">
+                                    {% for experience in experience_data %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ experience.role }}</strong> at {{ experience.company }}
+                                            <div class="text-muted small">{{ experience.year }}</div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteExperience('{{ experience.id }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="project_description1">Description:</label>
-                                        <textarea id="project_description1" name="project_description1" class="form-control" rows="3" placeholder="TO CONVERT TO BULLETED POINTS GIVE ENTER AFTER EACH LINE END">{{ project_data.formatted_description }}</textarea>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
-                            <button type="submit" onclick="submitForm('projectForm')" class="btn btn-primary btn-equal">Save</button>
-                            {% if project_data %}
-                                {% for project in project_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteProject('{{ project.id }}')">
-                                        {{ project.title }} &times;
-                                    </button>
-                                {% endfor %}
                             {% endif %}
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Certificates -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-info text-white" id="headingCertificate">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseCertificate" aria-expanded="false" aria-controls="collapseCertificate">
-                            <i class="fas fa-certificate"></i> Certificates
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseCertificate" class="collapse show" aria-labelledby="headingCertificate" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="certificateForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <div class="exp">
-                                    <div class="form-group">
-                                        <label for="certificate1">Certificate:</label>
-                                        <input type="text" id="certificate1" name="certificate1" class="form-control" placeholder="Certificate" value="{{ certificate_data.certificate }}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="certificateyear1">Year:</label>
-                                        <input type="text" id="certificateyear1" name="certificateyear1" class="form-control" placeholder="Month, Year" value="{{ certificate_data.year }}">
-                                    </div>
+                <!-- Skills -->
+                <div class="tab-pane fade" id="v-pills-skills" role="tabpanel" aria-labelledby="v-pills-skills-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="fas fa-cogs mr-2"></i> Skills</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="skillForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="skill1">Add Skills</label>
+                                    <input type="text" id="skill1" name="skill1" class="form-control" placeholder="Python, Java, Django, etc." value="{{ skill_data.skill }}">
+                                    <small class="form-text text-muted">Separate multiple skills with commas</small>
                                 </div>
-                            </div>
-                            <button type="submit" onclick="submitForm('certificateForm')" class="btn btn-primary btn-equal">Save</button>
-                            {% if certificate_data %}
-                                {% for certificate in certificate_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteCertificate('{{ certificate.id }}')">
-                                        {{ certificate.certificate }} &times;
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('skillForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Skills
                                     </button>
-                                {% endfor %}
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Skills -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-danger text-white" id="headingSkills">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseSkills" aria-expanded="false" aria-controls="collapseSkills">
-                            <i class="fas fa-cogs"></i> Skills
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseSkills" class="collapse show" aria-labelledby="headingSkills" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="skillForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="skill1">Skill:</label>
-                                <input type="text" id="skill1" name="skill1" class="form-control mb-2" placeholder="Python, Java, Django" value="{{ skill_data.skill }}">
-                            </div>
-                            <button type="submit" onclick="submitForm('skillForm')" class="btn btn-primary btn-equal">Save</button>
+                                </div>
+                            </form>
+                            
                             {% if skill_data %}
-                                {% for skill in skill_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteSkill('{{ skill.id }}')">
-                                        {{ skill.skill }} &times;
-                                    </button>
-                                {% endfor %}
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <!-- Hobbies -->
-            <div class="card border-light mb-2">
-                <div class="card-header bg-dark text-white" id="headingHobbies">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link text-white" type="button" data-toggle="collapse" data-target="#collapseHobbies" aria-expanded="false" aria-controls="collapseHobbies">
-                            <i class="fas fa-gamepad"></i> Hobbies
-                        </button>
-                    </h5>
-                </div>
-                <div id="collapseHobbies" class="collapse show" aria-labelledby="headingHobbies" data-parent="#resumeAccordion">
-                    <div class="card-body">
-                        <form id="hobbieForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="hobbies1">Hobbies:</label>
-                                <input type="text" id="hobbies1" name="hobbies1" class="form-control mb-2" placeholder="Cricket, Football, Tennis">
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Your Skills</h6>
+                                <div class="d-flex flex-wrap">
+                                    {% for skill in skill_data %}
+                                    <div class="skill-badge mr-2 mb-2">
+                                        <span class="badge badge-primary p-2">{{ skill.skill }}</span>
+                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 ml-1" onclick="deleteSkill('{{ skill.id }}')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <button type="submit" onclick="submitForm('hobbieForm')" class="btn btn-primary btn-equal">Save</button>
-                            {% if hobbie_data %}
-                                {% for hobbie in hobbie_data %}
-                                    <br><br>
-                                    <button type="button" class="btn btn-danger btn-equal" onclick="deleteHobbie('{{ hobbie.id }}')">
-                                        {{ hobbie.hobbie }} &times;
-                                    </button>
-                                {% endfor %}
                             {% endif %}
-                        </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects -->
+                <div class="tab-pane fade" id="v-pills-projects" role="tabpanel" aria-labelledby="v-pills-projects-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fas fa-tasks mr-2"></i> Projects</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="projectForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="project1">Project Title</label>
+                                    <input type="text" id="project1" name="project1" class="form-control" placeholder="E-commerce Website" value="{{ project_data.title }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="project_description1">Description</label>
+                                    <textarea id="project_description1" name="project_description1" class="form-control" rows="4" placeholder="Describe the project, your role, technologies used, and outcomes...">{{ project_data.formatted_description }}</textarea>
+                                    <small class="form-text text-muted">For bullet points, press Enter after each point</small>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('projectForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Project
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {% if project_data %}
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Your Projects</h6>
+                                <div class="list-group">
+                                    {% for project in project_data %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <strong>{{ project.title }}</strong>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteProject('{{ project.id }}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="project-description">
+                                            {{ project.formatted_description|linebreaks }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certificates -->
+                <div class="tab-pane fade" id="v-pills-certificates" role="tabpanel" aria-labelledby="v-pills-certificates-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-certificate mr-2"></i> Certifications</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="certificateForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-group">
+                                            <label for="certificate1">Certificate Name</label>
+                                            <input type="text" id="certificate1" name="certificate1" class="form-control" placeholder="AWS Certified Developer" value="{{ certificate_data.certificate }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="form-group">
+                                            <label for="certificateyear1">Date Earned</label>
+                                            <input type="text" id="certificateyear1" name="certificateyear1" class="form-control" placeholder="June 2020" value="{{ certificate_data.year }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('certificateForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Certificate
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {% if certificate_data %}
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Your Certifications</h6>
+                                <div class="list-group">
+                                    {% for certificate in certificate_data %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ certificate.certificate }}</strong>
+                                            <div class="text-muted small">Earned: {{ certificate.year }}</div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteCertificate('{{ certificate.id }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Languages -->
+                <div class="tab-pane fade" id="v-pills-languages" role="tabpanel" aria-labelledby="v-pills-languages-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fas fa-language mr-2"></i> Languages</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="languageForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="language1">Languages You Speak</label>
+                                    <input type="text" id="language1" name="language1" class="form-control" placeholder="English, Spanish, French" value="{{ language_data.language }}">
+                                    <small class="form-text text-muted">Separate multiple languages with commas</small>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('languageForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Languages
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {% if language_data %}
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Your Languages</h6>
+                                <div class="d-flex flex-wrap">
+                                    {% for language in language_data %}
+                                    <div class="skill-badge mr-2 mb-2">
+                                        <span class="badge badge-warning text-dark p-2">{{ language.language }}</span>
+                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 ml-1" onclick="deleteLanguage('{{ language.id }}')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hobbies -->
+                <div class="tab-pane fade" id="v-pills-hobbies" role="tabpanel" aria-labelledby="v-pills-hobbies-tab">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fas fa-gamepad mr-2"></i> Hobbies & Interests</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="hobbieForm" action="{% url 'portal_resume_app:resume_index' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="hobbies1">Your Hobbies</label>
+                                    <input type="text" id="hobbies1" name="hobbies1" class="form-control" placeholder="Photography, Hiking, Chess" value="{{ hobbie_data.hobbie }}">
+                                    <small class="form-text text-muted">Separate multiple hobbies with commas</small>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" onclick="submitForm('hobbieForm')" class="btn btn-primary mr-2">
+                                        <i class="fas fa-plus mr-1"></i> Add Hobbies
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {% if hobbie_data %}
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2">Your Hobbies</h6>
+                                <div class="d-flex flex-wrap">
+                                    {% for hobbie in hobbie_data %}
+                                    <div class="skill-badge mr-2 mb-2">
+                                        <span class="badge badge-dark p-2">{{ hobbie.hobbie }}</span>
+                                        <button type="button" class="btn btn-sm btn-link text-danger p-0 ml-1" onclick="deleteHobbie('{{ hobbie.id }}')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-            <button class="stylish-button btn-small-right" type="submit">
-                <a href="{% url 'portal_resume_app:resume_list' %}" target="_blank" class="stylish-button">Generated Resumes</a>
-            </button>
-            <button class="stylish-button btn-small-right" type="submit">
-                <a href="{% url 'portal_resume_app:resume_save' %}" target="_blank" class="stylish-button">Generate Resumes</a>
-            </button>
-            <br>
         </div>
     </div>
 

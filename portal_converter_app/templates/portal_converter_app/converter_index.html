@@ -26,7 +26,7 @@
     <link href="{% static 'portal_converter_app/css/all.min.css' %}" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar (unchanged) -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="{% url 'portal_converter_app:converter_index' %}">File Converter</a>
         
@@ -44,48 +44,99 @@
         </div>
     </nav>
 
-    <!-- File Upload Box -->
+    <!-- Updated File Upload Box (middle portion) -->
     <div class="content container mt-5">
-        <div class="upload-box p-4 border rounded bg-light">
-            <h4>Upload Your File</h4>
-            <p>Select a file from your computer or upload from Google Drive to convert it to the desired format.</p>
-            {% if error %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
+        <div class="converter-container">
+            <div class="converter-card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-file-upload mr-2"></i> File Conversion</h4>
                 </div>
-            {% endif %}
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Convert</button>
-            </form>
-            <hr>
-            <div class="info">
-                <h5>How to Use</h5>
-                <ul>
-                    <strong>Upload a File:</strong> Click 'Choose a file' to select a file from your computer.
-                    <br>
-                    <strong>Select Conversion Type:</strong> Choose the format you want to convert your file to.
-                    <br>
-                    <strong>Convert:</strong> Click 'Convert' to start the conversion process.
-                </ul>
+                <div class="card-body">
+                    {% if error %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle mr-2"></i>{{ error }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_file" class="font-weight-bold">Select File</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="id_file" name="any_file" required>
+                                <label class="custom-file-label" for="id_file">Choose file...</label>
+                                <div class="invalid-feedback">Please select a file to convert.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_conversion_type" class="font-weight-bold">Conversion Format</label>
+                            <select class="custom-select" id="id_conversion_type" name="conversion_type" required>
+                                <option value="" selected disabled>Select conversion type...</option>
+                                {% for value, name in form.conversion_type.field.choices %}
+                                    <option value="{{ value }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">Please select a conversion format.</div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-exchange-alt mr-2"></i> Convert File
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="instructions">
+                        <h5 class="text-primary mb-3"><i class="fas fa-info-circle mr-2"></i>How to Use</h5>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="step-card">
+                                    <div class="step-number">1</div>
+                                    <h6>Upload File</h6>
+                                    <p>Click 'Choose file' to select a document from your device</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="step-card">
+                                    <div class="step-number">2</div>
+                                    <h6>Select Format</h6>
+                                    <p>Choose the format you want to convert your file to</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="step-card">
+                                    <div class="step-number">3</div>
+                                    <h6>Convert</h6>
+                                    <p>Click the convert button to process your file</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer (unchanged) -->
     <footer class="footer bg-dark text-center text-white py-4">
         <div class="container">
             <h5>About Freshers Park</h5>
             <p>Empowering fresh talent to connect with top companies. Your gateway to the best job opportunities.</p>
-            <a href="#" class="text-white">Terms of Service</a> | <a href="#" class="text-white">Privacy Policy</a>
+            <a href="#" class="text-red">Terms of Service</a> | <a href="#" class="text-red">Privacy Policy</a>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
+    <!-- Back to Top Button (unchanged) -->
     <button class="back-to-top btn btn-primary" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
 
-    <!-- Scripts -->
+    <!-- Scripts (unchanged) -->
     <script src="{% static 'portal_converter_app/scripts/jquery-3.5.1.slim.min.js' %}"></script>
     <script src="{% static 'portal_converter_app/scripts/bootstrap.bundle.min.js' %}"></script>
     <script>
@@ -105,6 +156,30 @@
         backToTopBtn.addEventListener("click", function(){
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
+
+        // File input label update
+        document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
     </script>
 </body>
 </html>
